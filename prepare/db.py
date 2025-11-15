@@ -2,7 +2,7 @@ import os
 import sqlite3
 import pandas as pd
 
-CSV_PATH = os.path.join("data", "db_commerce")
+CSV_PATH = os.path.join("data")
 DB_PATH = "olist.db"
 
 conn = sqlite3.connect(DB_PATH)
