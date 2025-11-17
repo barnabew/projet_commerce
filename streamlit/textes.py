@@ -19,3 +19,16 @@ Cette page analyse les performances logistiques :
 - **analyse origine/destination**
 - **lien entre retard et notes clients**
 """
+
+texte_fm = """
+Segmentation RFM simplifiée :
+- **Frequency** : nombre de commandes du client
+- **Monetary** : montant total dépensé (produits + livraison)
+
+Objectif :
+Identifier les segments stratégiques :
+- **Best Customers**
+- **High-Value One-Timers**
+- **Loyal Customers**
+- **Low-Value Customers**
+"""
