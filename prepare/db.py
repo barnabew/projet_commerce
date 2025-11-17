@@ -1,29 +1,24 @@
 import os
 import sqlite3
 import pandas as pd
-import zipfile
 
-ZIP_PATH = os.path.join("data", "olist_db.zip") 
+CSV_PATH = os.path.join("data", "db_commerce")   
 DB_PATH = "olist.db"
 
 conn = sqlite3.connect(DB_PATH)
 
-with zipfile.ZipFile(ZIP_PATH, "r") as z:
-    csv_files = [f for f in z.namelist() if f.endswith(".csv")]
+files = [f for f in os.listdir(CSV_PATH) if f.endswith(".csv")]
 
-    for file in csv_files:
-        with z.open(file) as csv_file:
-            df = pd.read_csv(csv_file)
-            table_name = file.replace(".csv", "")
+for file in files:
+    csv_file_path = os.path.join(CSV_PATH, file)
+    df = pd.read_csv(csv_file_path)
 
-            df.to_sql(table_name, conn, if_exists="replace", index=False)
-            
-
+    table_name = file.replace(".csv", "")
+    df.to_sql(table_name, conn, if_exists="replace", index=False)
 
 
 queries = [
 
-    # Clean orders
     """
     DROP TABLE IF EXISTS clean_orders;
     CREATE TABLE clean_orders AS
@@ -78,7 +73,6 @@ queries = [
     FROM olist_customers_dataset;
     """,
 
-
     """
     DROP TABLE IF EXISTS clean_sellers;
     CREATE TABLE clean_sellers AS
@@ -122,8 +116,7 @@ for q in queries:
 conn.commit()
 
 
-tables = pd.read_sql(
-    "SELECT name FROM sqlite_master WHERE type='table' ORDER BY name", conn
-)
+tables = pd.read_sql("SELECT name FROM sqlite_master WHERE type='table' ORDER BY name", conn)
+print(tables)
 
 conn.close()
