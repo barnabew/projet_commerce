@@ -1,6 +1,4 @@
 import streamlit as st
-from ml import reg_lineaire, train_test
-from data import chargement_nettoyage
 from textes import intro
 import pickle
 
