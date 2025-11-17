@@ -1,4 +1,114 @@
 import plotly.express as px
+import plotly.graph_objects as go
+
+# ===========================
+# Delivery Time by State
+# ===========================
+
+def plot_delivery_by_state(df):
+    fig = px.bar(
+        df,
+        x="customer_state",
+        y="avg_delivery_days",
+        title="Average Delivery Time per Destination State",
+        color="avg_delivery_days",
+        color_continuous_scale="Viridis"
+    )
+    fig.update_xaxes(categoryorder="total descending")
+    return fig
+
+
+# ===========================
+# Seller → Customer Flows (Sankey)
+# ===========================
+
+def plot_logistic_flow(df):
+    fig = px.sunburst(
+        df,
+        path=["seller_state", "customer_state"],
+        values="nb_orders",
+        title="Seller → Customer State Flow"
+    )
+    return fig
+
+
+# ===========================
+# Heatmap state-to-state delivery
+# ===========================
+
+def plot_state_heatmap(df):
+    fig = px.density_heatmap(
+        df,
+        x="seller_state",
+        y="customer_state",
+        z="nb_orders",
+        color_continuous_scale="Viridis",
+        title="Orders Flow Heatmap (Seller → Customer State)"
+    )
+    return fig
+
+
+# ===========================
+# Scatter: delivery time vs review score
+# ===========================
+
+def plot_delay_vs_review(df):
+    fig = px.scatter(
+        df,
+        x="delivery_days",
+        y="review_score",
+        opacity=0.4,
+        trendline="ols",
+        title="Impact of Delivery Delay on Review Score"
+    )
+    return fig
+
+# ===========================
+# FM Heatmap
+# ===========================
+
+def plot_fm_heatmap(df):
+    fig = px.density_heatmap(
+        df,
+        x="frequency",
+        y="monetary",
+        nbinsx=20,
+        nbinsy=20,
+        title="FM Density Heatmap"
+    )
+    return fig
+
+
+# ===========================
+# FM Scatter (log monetary)
+# ===========================
+
+def plot_fm_scatter(df):
+    import numpy as np
+    fig = px.scatter(
+        df,
+        x="frequency",
+        y=np.log1p(df["monetary"]),
+        color="segment",
+        title="FM Scatter (log monetary)",
+        opacity=0.6
+    )
+    return fig
+
+
+# ===========================
+# Distribution of segments
+# ===========================
+
+def plot_segment_distribution(df):
+    fig = px.bar(
+        df.groupby("segment")["customer_unique_id"].count().reset_index(),
+        x="segment",
+        y="customer_unique_id",
+        title="Customer Segment Distribution",
+        color="segment"
+    )
+    return fig
 
 # ===========================
 # Top Revenue Categories
