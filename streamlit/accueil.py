@@ -1,3 +1,8 @@
+import streamlit as st
+from ml import reg_lineaire, train_test
+from data import chargement_nettoyage
+from textes import intro
+import pickle
 
 st.set_page_config(
     page_title="Analyse et Prédiction du Churn Client",
