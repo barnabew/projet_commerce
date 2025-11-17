@@ -1,3 +1,6 @@
+from data import run_query,get_connexion,load_table
+from textes import
+
 query="""
 SELECT 
     SUM(oi.price + oi.freight_value) AS total_revenue
