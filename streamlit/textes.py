@@ -10,3 +10,12 @@ Cette page analyse les performances produits :
 - **délais de livraison**  
 - **analyse interactive par catégorie**  
 """
+
+
+texte_logistique = """
+Cette page analyse les performances logistiques :
+- **délais moyens de livraison**
+- **flux vendeurs → clients**
+- **analyse origine/destination**
+- **lien entre retard et notes clients**
+"""
