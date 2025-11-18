@@ -1,5 +1,5 @@
 from data import run_query,get_connexion,load_table
-from textes import
+from textes import intro
 
 query="""
 SELECT 
