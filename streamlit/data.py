@@ -15,7 +15,6 @@ def download_database_once():
         with st.spinner("📥 Downloading olist.db from HuggingFace…"):
             r = requests.get(DB_URL)
             open(DB_PATH, "wb").write(r.content)
-        st.success("✔ Database downloaded")
 
     return True
 
