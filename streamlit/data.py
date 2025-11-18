@@ -5,6 +5,13 @@ import streamlit as st
 DB_PATH = "olist.db"
 
 @st.cache_resource
+
+def ensure_database():
+    if not os.path.exists(DB_PATH):
+        url = "https://drive.google.com/uc?id=XXXXXXXXX"
+        gdown.download(url, DB_PATH, quiet=False)
+    return DB_PATH
+
 def get_connection():
     return sqlite3.connect(DB_PATH, check_same_thread=False)
 
