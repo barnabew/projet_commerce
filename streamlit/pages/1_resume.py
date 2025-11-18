@@ -1,4 +1,4 @@
-from data import run_query,get_connexion,load_table
+from data import run_query,get_connection,load_table
 from textes import intro
 
 query="""
