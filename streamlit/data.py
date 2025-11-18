@@ -1,20 +1,20 @@
+import os
+import requests
+import streamlit as st
 import sqlite3
 import pandas as pd
-import streamlit as st
-import gdown
-import os
 
 DB_PATH = "olist.db"
 
-
 @st.cache_resource
 def ensure_database():
-    """Télécharge olist.db si absente ou trop petite (fichier vide)."""
+    """Télécharge la DB depuis HuggingFace si absente."""
     if not os.path.exists(DB_PATH) or os.path.getsize(DB_PATH) < 5000000:
-        st.warning("📥 Downloading olist.db from Google Drive…")
+        st.warning("📥 Downloading olist.db from HuggingFace…")
 
-        url = "https://drive.google.com/uc?id=XXXXXXXXXXXX"  # <-- ton ID
-        gdown.download(url, DB_PATH, quiet=False)
+        url = "https://huggingface.co/datasets/showbave/olist-db/resolve/main/olist.db"
+        r = requests.get(url)
+        open(DB_PATH, "wb").write(r.content)
 
         st.success("✔ Database downloaded")
 
