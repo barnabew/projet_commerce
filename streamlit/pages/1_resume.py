@@ -1,6 +1,5 @@
 from data import run_query,get_connection,load_table
 from textes import intro
-import pandas as pd
 
 query="""
 SELECT 
@@ -35,4 +34,3 @@ WHERE order_status = "delivered"
 """
 
 delai_moyen = run_query(query)
-pd.read_sql(query,conn)
