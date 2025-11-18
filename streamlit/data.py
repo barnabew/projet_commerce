@@ -5,7 +5,7 @@ import requests
 import os
 
 DB_PATH = "olist.db"
-DB_URL = "https://huggingface.co/datasets/TON_PSEUDO/olist-db/resolve/main/olist.db"
+DB_URL = "https://huggingface.co/datasets/showbave/olist-db/resolve/main/olist.db"
 
 
 @st.cache_resource
