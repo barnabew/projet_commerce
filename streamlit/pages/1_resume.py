@@ -1,5 +1,6 @@
 from data import run_query,get_connection,load_table
 from textes import intro
+import pandas as pd
 
 query="""
 SELECT 
