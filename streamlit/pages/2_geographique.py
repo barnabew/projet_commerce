@@ -3,7 +3,7 @@ from data import run_query
 import plotly.express as px
 import pandas as pd
 import requests
-
+import plotly.graph_objects as go
 
 
 # Coordonnées approximatives des capitales des États du Brésil
