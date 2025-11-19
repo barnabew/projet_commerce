@@ -2,7 +2,7 @@ import streamlit as st
 import pandas as pd
 import numpy as np
 import plotly.express as px
-from utils import load_table, run_query
+from data import load_table, run_query
 
 st.title("🧍 Analyse Clients")
 
