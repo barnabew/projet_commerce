@@ -4,7 +4,7 @@ import numpy as np
 import plotly.express as px
 import plotly.graph_objects as go
 
-from utils import load_table  # ta fonction existante
+from data import load_table  # ta fonction existante
 
 st.title("📊 Segmentation Clients – FM")
 
