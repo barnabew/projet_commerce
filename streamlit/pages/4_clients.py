@@ -7,60 +7,56 @@ from data import run_query
 
 st.set_page_config(page_title="Analyse Clients", layout="wide")
 
-st.title("👥 Analyse des Clients")
+st.title("👥 Analyse Clients – One-Time Buyers & Acquisition")
 st.markdown("""
-Cette page se concentre uniquement sur les **clients Olist**, avec un focus particulier sur les  
-**one-time buyers** (97% des clients).  
-Objectif : comprendre les **leviers d’acquisition** plutôt que de la fidélisation.
+Olist est un marketplace dominé par les **one-time buyers** (≈ 97%).  
+L’objectif business n’est donc **pas la fidélisation**, mais la qualité de la **première expérience**.
+
+Cette page analyse :
+- les catégories qui **attirent** des nouveaux clients,
+- celles qui **génèrent des mauvaises premières expériences**,
+- l’impact du **délai de livraison** sur la satisfaction.
 """)
 
-# --------------------------------------------------------------------
-# 📌 1) KPI GLOBAUX
-# --------------------------------------------------------------------
+# =====================================================================
+# 1) KPI GLOBAUX
+# =====================================================================
 
-st.subheader("📊 Indicateurs clés")
+st.header("📊 Indicateurs clés des clients")
 
-# % one-time buyers
-query_one_time = """
+query_kpi = """
 SELECT
     SUM(CASE WHEN cnt = 1 THEN 1 ELSE 0 END) AS one_time,
-    COUNT(*) AS total
+    COUNT(*) AS total_clients
 FROM (
     SELECT customer_unique_id, COUNT(*) AS cnt
     FROM clean_orders o
     JOIN clean_customers c ON o.customer_id = c.customer_id
     GROUP BY customer_unique_id
-)
+);
 """
+df_kpi = run_query(query_kpi)
 
-one_time_df = run_query(query_one_time)
-one_time = one_time_df["one_time"][0]
-total = one_time_df["total"][0]
-pct_one_time = round(one_time * 100 / total, 2)
+pct_one_time = round(df_kpi["one_time"][0] * 100 / df_kpi["total_clients"][0], 2)
 
-# ticket moyen
-query_ticket = """
-SELECT
-    ROUND(AVG(price + freight_value), 2) AS avg_item_value
-FROM clean_order_items
-"""
-ticket_df = run_query(query_ticket)
+query_ticket = "SELECT ROUND(AVG(price + freight_value), 2) AS avg_item FROM clean_order_items;"
+avg_item = run_query(query_ticket)["avg_item"][0]
 
-# note moyenne
-query_review = "SELECT ROUND(AVG(review_score), 2) AS avg_score FROM clean_reviews"
-review_df = run_query(query_review)
+query_score = "SELECT ROUND(AVG(review_score), 2) AS avg_score FROM clean_reviews;"
+avg_score = run_query(query_score)["avg_score"][0]
 
 col1, col2, col3 = st.columns(3)
-
 col1.metric("🧍‍♂️ Clients one-time", f"{pct_one_time} %")
-col2.metric("🛒 Panier moyen (article)", f"{ticket_df['avg_item_value'][0]} R$")
-col3.metric("⭐ Note moyenne", review_df["avg_score"][0])
+col2.metric("🛒 Panier moyen (par article)", f"{avg_item} R$")
+col3.metric("⭐ Note moyenne", avg_score)
 
-# --------------------------------------------------------------------
-# 📌 2) Quels produits attirent le plus les nouveaux clients ?
-# --------------------------------------------------------------------
+st.divider()
 
-st.header("🎯 Produits d’acquisition (premier achat)")
+# =====================================================================
+# 2) CATÉGORIES QUI ATTIRENT LE PLUS DE NOUVEAUX CLIENTS
+# =====================================================================
+
+st.header("🎯 Catégories qui attirent le plus de nouveaux clients")
 
 query_acquisition = """
 SELECT 
@@ -69,7 +65,7 @@ SELECT
     ROUND(AVG(oi.price + oi.freight_value), 2) AS avg_basket
 FROM clean_orders o
 JOIN clean_order_items oi ON o.order_id = oi.order_id
-JOIN clean_products cp ON oi.product_id = cp.product_id
+JOIN clean_products cp ON cp.product_id = oi.product_id
 LEFT JOIN product_category_name_translation tr 
        ON cp.product_category_name = tr.product_category_name
 WHERE o.customer_id IN (
@@ -89,58 +85,77 @@ fig_acq = px.bar(
     df_acq,
     x="category",
     y="first_order_count",
-    title="Top 15 des catégories qui attirent le plus de nouveaux clients",
+    title="Top 15 catégories (premier achat)",
+    labels={"first_order_count": "Nouveaux clients"}
 )
-fig_acq.update_layout(xaxis_title="Catégorie", yaxis_title="Nombre de clients")
+fig_acq.update_layout(xaxis_title="Catégorie", yaxis_title="Nombre de nouveaux clients")
 
 st.plotly_chart(fig_acq, use_container_width=True)
 
-# --------------------------------------------------------------------
-# 📌 3) Quelles catégories génèrent les pires premières expériences ?
-# --------------------------------------------------------------------
+st.markdown("""
+💡 *Ces catégories jouent un rôle clé dans l’acquisition : ce sont les produits les plus visibles, les plus attractifs ou les moins risqués.*
+""")
 
-st.header("⚠️ Produits problématiques (mauvaises premières expériences)")
+st.divider()
 
-query_bad_first = """
+# =====================================================================
+# 3) CATÉGORIES AVEC LES PIRES PREMIÈRES EXPÉRIENCES (BAD REVIEW RATE)
+# =====================================================================
+
+st.header("⚠️ Catégories avec les pires premières expériences")
+
+query_bad_rate = """
 SELECT 
     COALESCE(tr.product_category_name_english, cp.product_category_name) AS category,
-    COUNT(*) AS bad_first_reviews
+    COUNT(*) AS first_orders,
+    SUM(CASE WHEN r.review_score <= 2 THEN 1 ELSE 0 END) AS bad_reviews,
+    ROUND(
+        SUM(CASE WHEN r.review_score <= 2 THEN 1 ELSE 0 END) * 100.0 / COUNT(*),
+        2
+    ) AS bad_review_rate
 FROM clean_orders o
-JOIN clean_reviews r ON r.order_id = o.order_id
-JOIN clean_order_items oi ON oi.order_id = o.order_id
+JOIN clean_order_items oi ON o.order_id = oi.order_id
 JOIN clean_products cp ON cp.product_id = oi.product_id
 LEFT JOIN product_category_name_translation tr 
        ON cp.product_category_name = tr.product_category_name
-WHERE r.review_score <= 2
-  AND o.customer_id IN (
-      SELECT customer_id
-      FROM clean_orders
-      GROUP BY customer_id
-      HAVING COUNT(*) = 1
-  )
+JOIN clean_reviews r ON r.order_id = o.order_id
+WHERE o.customer_id IN (
+    SELECT customer_id
+    FROM clean_orders
+    GROUP BY customer_id
+    HAVING COUNT(*) = 1
+)
 GROUP BY category
-HAVING bad_first_reviews > 20
-ORDER BY bad_first_reviews DESC
+HAVING first_orders > 50
+ORDER BY bad_review_rate DESC
 LIMIT 15;
 """
 
-df_bad = run_query(query_bad_first)
+df_bad = run_query(query_bad_rate)
 
 fig_bad = px.bar(
     df_bad,
     x="category",
-    y="bad_first_reviews",
-    color="bad_first_reviews",
-    title="Catégories causant le plus de mauvaises premières notes",
+    y="bad_review_rate",
+    color="bad_review_rate",
     color_continuous_scale="Reds",
+    title="Taux de mauvaises reviews (first-time buyers)",
+    labels={"bad_review_rate": "% Bad Reviews"}
 )
-fig_bad.update_layout(xaxis_title="Catégorie", yaxis_title="Bad Reviews (≤ 2)")
+fig_bad.update_layout(xaxis_title="Catégorie", yaxis_title="% Bad Reviews")
 
 st.plotly_chart(fig_bad, use_container_width=True)
 
-# --------------------------------------------------------------------
-# 📌 4) Impact du délai de livraison sur les one-time buyers
-# --------------------------------------------------------------------
+st.markdown("""
+💡 *Une mauvaise première expérience = client perdu.  
+Ces catégories nécessitent une action immédiate (qualité, logistique, description produit…)*  
+""")
+
+st.divider()
+
+# =====================================================================
+# 4) IMPACT DU DÉLAI SUR LES ONE-TIME BUYERS
+# =====================================================================
 
 st.header("⏱️ Impact du délai sur la satisfaction des nouveaux clients")
 
@@ -160,7 +175,7 @@ AND o.customer_id IN (
     HAVING COUNT(*) = 1
 )
 AND o.order_delivered_customer_date IS NOT NULL
-AND o.order_purchase_timestamp IS NOT NULL
+AND o.order_purchase_timestamp IS NOT NULL;
 """
 
 df_delay = run_query(query_delay)
@@ -170,6 +185,31 @@ colA.metric("📦 Délai moyen (first-time)", f"{df_delay['avg_delivery_days'][0
 colB.metric("⭐ Note moyenne (first-time)", df_delay["avg_score"][0])
 
 st.markdown("""
-💡 *Les nouveaux clients sont extrêmement sensibles au délai de livraison.
-Un délai élevé = risque majeur de non-retour.*
+💡 *Les nouveaux clients sont extrêmement sensibles au délai.  
+Allonger la livraison augmente fortement le risque de non-retour.*  
+""")
+
+st.divider()
+
+# =====================================================================
+# 5) RECOMMANDATIONS BUSINESS
+# =====================================================================
+
+st.header("💼 Recommandations Business")
+
+st.markdown("""
+### ✔️ *1. Optimiser les catégories à fort taux de mauvaises reviews*  
+Ce sont les produits qui font perdre le plus de clients dès le premier achat.
+
+### ✔️ *2. Mettre en avant les catégories d’acquisition*  
+Elles sont idéales pour publicité, SEO, campagnes d’accueil.
+
+### ✔️ *3. Réduire les délais sur les premières commandes*  
+Impact direct sur la satisfaction → augmente les chances de retour.
+
+### ✔️ *4. Améliorer la transparence produit (photo, taille, description)*  
+Souvent la vraie cause des bad reviews sur un premier achat.
+
+### ✔️ *5. Ajouter un “suivi proactif” sur la première commande*  
+Email, notifications → réduit l’anxiété → augmente la satisfaction.
 """)
