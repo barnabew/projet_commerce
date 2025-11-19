@@ -199,4 +199,32 @@ fig_m = px.histogram(
 colv1.plotly_chart(fig_m, use_container_width=True)
 
 # Percentiles
-percentiles = df_cust["monetary"].quantile([0.5, 0.75, 0.9, 0.9]()_
+percentiles = df_cust["monetary"].quantile([0.5, 0.75, 0.9, 0.95, 0.99])
+colv2.write("### Percentiles de dépense")
+colv2.dataframe(percentiles.to_frame("monetary"), use_container_width=True)
+
+
+st.markdown("""
+💡 *La valeur client est très concentrée : une petite proportion des clients représente une grande partie du chiffre d'affaires.*
+""")
+
+
+# --------------------------------------------------
+# 5. INSIGHTS BUSINESS
+# --------------------------------------------------
+
+st.header("📌 Insights Business")
+
+st.markdown("""
+### 🎯 Résumé des enseignements
+
+- **La fidélité client est extrêmement faible** → quasi tous les clients n’achètent qu’une seule fois.  
+- **La satisfaction moyenne est élevée**, mais n’est pas corrélée à une forte fidélité.  
+- **Le niveau de dépense n'influence pas beaucoup la satisfaction**, ce qui est courant dans les marketplaces.  
+- **La répartition des dépenses est très concentrée** → stratégie possible : programme VIP ou retargeting.  
+
+Cette analyse révèle que les efforts devraient se concentrer sur :  
+- l’amélioration de la rétention,  
+- la réduction du délai de livraison (vu page géographique),  
+- la création d’un parcours client plus incitatif au repeat purchase.
+""")
