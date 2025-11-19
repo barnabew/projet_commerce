@@ -107,17 +107,28 @@ st.subheader("📌 Distribution FM (Hexbin)")
 
 fm["log_monetary"] = np.log1p(fm["monetary"])
 
-fig_hex = px.density_heatmap(
-    fm, x="log_monetary", y="frequency",
-    nbinsx=40, nbinsy=20,
-    color_continuous_scale="Viridis",
+fig, ax = plt.subplots(figsize=(10, 5))
+
+hb = ax.hexbin(
+    fm["log_monetary"],
+    fm["frequency"],
+    gridsize=50,
+    cmap="viridis",
+    mincnt=1
 )
-fig_hex.update_layout(height=450)
-st.plotly_chart(fig_hex, use_container_width=True)
+
+ax.set_xlabel("log(Monetary)")
+ax.set_ylabel("Frequency")
+ax.set_title("FM Distribution – Hexbin")
+
+cb = fig.colorbar(hb, ax=ax)
+cb.set_label("Number of customers")
+
+st.pyplot(fig)
 
 st.markdown("""
 💡 *Pourquoi log(monetary) ?*  
-Les montants sont très concentrés (longue queue). Le log rend la distribution lisible.
+Les montants sont très concentrés (effet “long tail”). Le logarithme homogénéise la distribution pour rendre le visuel lisible.
 """)
 
 # -----------------------------
