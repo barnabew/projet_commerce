@@ -170,23 +170,23 @@ df = df[df["nb_orders"] >= min_orders]
 states = sorted(list(set(df["source"]) | set(df["target"])))
 index_map = {state: i for i, state in enumerate(states)}
 
-sources = df["source"].map(index_map)
-targets = df["target"].map(index_map)
-weights = df["nb_orders"]
+# Convertir en listes propres
+sources = df["seller_state"].tolist()
+targets = df["customer_state"].tolist()
+weights = df["nb_orders"].fillna(0).astype(float).tolist()
 
-# Création du graph igraph
+# Graph igraph
 g = ig.Graph()
 g.add_vertices(states)
 g.add_edges(list(zip(sources, targets)))
-g.es["weight"] = weights
+g.es["weight"] = weights  # Liste OK
 
-# Extraire matrices
+# Matrice
 matrix = [[0]*len(states) for _ in range(len(states))]
-for _, row in df.iterrows():
-    s = index_map[row["source"]]
-    t = index_map[row["target"]]
-    matrix[s][t] = row["nb_orders"]
-
+for s, t, w in zip(sources, targets, weights):
+    i, j = states.index(s), states.index(t)
+    matrix[i][j] = w
+    
 # ===============================================
 # 3. Plotly Chord (custom using Sankey logic)
 # ===============================================
