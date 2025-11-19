@@ -94,3 +94,55 @@ query_reviews = f"""
 SELECT 
     COALESCE(tr.product_category_name_english, cp.product_category_name) AS category,
     ROUND(AVG(r.review_score), 2) AS avg_review_score,
+    COUNT(r.review_id) AS nb_reviews
+FROM clean_reviews r
+JOIN clean_orders o ON r.order_id = o.order_id
+JOIN clean_order_items coi ON o.order_id = coi.order_id
+JOIN clean_products cp ON cp.product_id = coi.product_id
+LEFT JOIN product_category_name_translation tr 
+    ON cp.product_category_name = tr.product_category_name
+WHERE r.review_score BETWEEN 1 AND 5
+GROUP BY category
+HAVING nb_reviews > {min_reviews}
+ORDER BY avg_review_score;
+"""
+
+df_reviews = pd.read_sql(query_reviews, conn)
+
+fig = px.bar(
+    df_reviews,
+    x="avg_review_score",
+    y="category",
+    orientation="h",
+    color="avg_review_score",
+    color_continuous_scale="RdYlGn",
+    title="Catégories les moins bien notées",
+)
+st.plotly_chart(fig, use_container_width=True)
+
+# ==========================================
+# 4️⃣ CATÉGORIES PROBLÉMATIQUES (VENTES HAUTES + NOTE BASSE)
+# ==========================================
+st.header("⚠️ Catégories problématiques")
+
+query_bad = """
+SELECT 
+    COALESCE(tr.product_category_name_english, cp.product_category_name) AS category,
+    COUNT(coi.order_id) AS nb_sales,
+    ROUND(AVG(r.review_score), 2) AS avg_review_score
+FROM clean_order_items coi
+JOIN clean_orders o ON coi.order_id = o.order_id
+JOIN clean_products cp ON coi.product_id = cp.product_id
+JOIN clean_reviews r ON o.order_id = r.order_id
+LEFT JOIN product_category_name_translation tr 
+    ON cp.product_category_name = tr.product_category_name
+WHERE o.order_status = 'delivered'
+GROUP BY category
+HAVING nb_sales > 200
+   AND avg_review_score < 3.8
+ORDER BY nb_sales DESC;
+"""
+
+df_bad = pd.read_sql(query_bad, conn)
+
+st.dataframe(df_bad)
