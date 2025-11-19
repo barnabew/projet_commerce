@@ -130,91 +130,107 @@ state_select = st.selectbox(
 
 st.dataframe(df_state[df_state["state"] == state_select])
 
-st.set_page_config(page_title="Flux géographiques – Chord Diagram", layout="wide")
 
-st.title("🔄 Flux géographiques des ventes – Chord Diagram")
 
-st.markdown("""
-Le diagramme chord montre les relations **vendeur → client** entre les États du Brésil.  
-L'épaisseur du lien correspond au volume des commandes.  
-""")
 
-# ===============================================
-# 1. Charger les flux
-# ===============================================
 
-query = """
-    SELECT 
-        s.seller_state AS source,
-        c.customer_state AS target,
-        COUNT(*) AS nb_orders
-    FROM clean_order_items coi
-    JOIN clean_sellers s ON coi.seller_id = s.seller_id
-    JOIN clean_orders o ON coi.order_id = o.order_id
-    JOIN clean_customers c ON o.customer_id = c.customer_id
-    WHERE o.order_status = 'delivered'
-    GROUP BY s.seller_state, c.customer_state
-    HAVING nb_orders > 0;
+
+
+
+
+
+st.title("🌐 Flux Géographiques – Vendeur → Client")
+
+st.write(
+    "Analyse des flux logistiques entre les états vendeurs et les états "
+    "des clients, basée sur les commandes livrées."
+)
+
+# -------------------------------------
+# Requête SQL
+# -------------------------------------
+query_flux = """
+SELECT 
+    s.seller_state,
+    c.customer_state,
+    COUNT(*) AS nb_orders,
+    ROUND(AVG(
+        JULIANDAY(o.order_delivered_customer_date) 
+        - JULIANDAY(o.order_purchase_timestamp)
+    ), 2) AS avg_delivery_days
+FROM clean_order_items coi
+JOIN clean_sellers s 
+    ON coi.seller_id = s.seller_id
+JOIN clean_orders o 
+    ON coi.order_id = o.order_id
+JOIN clean_customers c 
+    ON o.customer_id = c.customer_id
+WHERE o.order_status = 'delivered'
+  AND o.order_delivered_customer_date IS NOT NULL
+  AND o.order_purchase_timestamp IS NOT NULL
+GROUP BY s.seller_state, c.customer_state
+HAVING nb_orders > 10
+ORDER BY nb_orders DESC;
 """
 
-df = run_query(query)
+conn = get_connection()
+df = pd.read_sql(query_flux, conn)
 
-# Filtrer les flux trop petits
-min_orders = st.slider("Filtrer les flux minimum :", 10, 500, 50)
-df = df[df["nb_orders"] >= min_orders]
+# -------------------------------------
+# Vérification & nettoyage
+# -------------------------------------
+df = df.dropna(subset=["seller_state", "customer_state"])
 
-# ===============================================
-# 2. Construire le Chord Diagram
-# ===============================================
+states = sorted(set(df["seller_state"]).union(df["customer_state"]))
 
-states = sorted(list(set(df["source"]) | set(df["target"])))
+# Mapping index → état
 index_map = {state: i for i, state in enumerate(states)}
 
-# Convertir en listes propres
-sources = df["seller_state"].tolist()
-targets = df["customer_state"].tolist()
-weights = df["nb_orders"].fillna(0).astype(float).tolist()
-
-# Graph igraph
-g = ig.Graph()
-g.add_vertices(states)
-g.add_edges(list(zip(sources, targets)))
-g.es["weight"] = weights  # Liste OK
-
-# Matrice
+# -------------------------------------
+# Construction de la matrice de flux
+# -------------------------------------
 matrix = [[0]*len(states) for _ in range(len(states))]
-for s, t, w in zip(sources, targets, weights):
-    i, j = states.index(s), states.index(t)
-    matrix[i][j] = w
-    
-# ===============================================
-# 3. Plotly Chord (custom using Sankey logic)
-# ===============================================
+
+for _, row in df.iterrows():
+    s = row["seller_state"]
+    t = row["customer_state"]
+    w = row["nb_orders"]
+    matrix[index_map[s]][index_map[t]] = w
+
+# -------------------------------------
+# Diagramme chord-like (Sankey simplifié)
+# -------------------------------------
+sources = [index_map[s] for s in df["seller_state"]]
+targets = [index_map[t] + len(states) for t in df["customer_state"]]
+weights = df["nb_orders"].astype(float).tolist()
+
+labels = states + states  # vendeurs + clients
 
 fig = go.Figure(data=[go.Sankey(
     node=dict(
         pad=15,
         thickness=20,
         line=dict(color="black", width=0.5),
-        label=states,
-        color="rgba(0, 100, 200, 0.8)"
+        label=labels,
+        color="blue"
     ),
     link=dict(
         source=sources,
         target=targets,
         value=weights,
-        color=[
-            f"rgba(0, 0, 150, {0.2 + 0.8*(w/max(weights))})"
-            for w in weights
-        ]
+        color="rgba(0, 100, 255, 0.4)"
     )
 )])
 
 fig.update_layout(
-    title="Chord Diagram – Flux Vendeur → Client (États du Brésil)",
-    font=dict(size=14),
-    height=900
+    title="Flux entre États (Sankey simplifié)",
+    font=dict(size=12)
 )
 
 st.plotly_chart(fig, use_container_width=True)
 
+# -------------------------------------
+# Tableau récapitulatif
+# -------------------------------------
+st.subheader("📋 Tableau des flux")
+st.dataframe(df)
