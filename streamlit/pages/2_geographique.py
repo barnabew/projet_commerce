@@ -52,3 +52,70 @@ df_state = run_query(query)
 analysis_type = st.selectbox(
     "Sélectionnez l’analyse affichée sur la carte :",
     [
+        "Chiffre d’affaires",
+        "Délai moyen",
+        "Nombre de commandes",
+        "Panier moyen",
+        "Note moyenne"
+    ]
+)
+
+metric_map = {
+    "Chiffre d’affaires": ("revenue", "Chiffre d’affaires (R$)"),
+    "Délai moyen": ("avg_delivery_days", "Délai moyen (jours)"),
+    "Nombre de commandes": ("nb_orders", "Nombre de commandes"),
+    "Panier moyen": ("avg_order_value", "Panier moyen (R$)"),
+    "Note moyenne": ("avg_review_score", "Note moyenne"),
+}
+
+metric_col, metric_title = metric_map[analysis_type]
+
+# ============================================================
+# 🔹 CARTE CHOROPLETH ENRICHIE
+# ============================================================
+
+fig = px.choropleth(
+    df_state,
+    geojson=geojson,
+    locations="state",
+    featureidkey="properties.sigla",
+    color=metric_col,
+    color_continuous_scale="Viridis",
+    hover_data={
+        "state": True,
+        "nb_orders": True,
+        "revenue": True,
+        "avg_order_value": True,
+        "avg_delivery_days": True,
+        "avg_review_score": True,
+        metric_col: True,
+    },
+    labels={
+        "state": "État",
+        "revenue": "CA (R$)",
+        "nb_orders": "Nbre commandes",
+        "avg_order_value": "Panier moyen",
+        "avg_delivery_days": "Délai moyen",
+        "avg_review_score": "Note moyenne"
+    },
+    title=f"{analysis_type} par État"
+)
+
+fig.update_geos(fitbounds="locations", visible=False)
+fig.update_layout(margin={"r":0,"t":40,"l":0,"b":0})
+
+st.plotly_chart(fig, use_container_width=True)
+
+# ============================================================
+# 🔹 TABLEAU DE L'ÉTAT SÉLECTIONNÉ
+# ============================================================
+
+st.markdown("---")
+st.subheader("🔎 Analyse détaillée par État")
+
+state_select = st.selectbox(
+    "Choisissez un État :",
+    sorted(df_state["state"].unique())
+)
+
+st.dataframe(df_state[df_state["state"] == state_select])
