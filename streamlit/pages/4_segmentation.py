@@ -2,49 +2,42 @@ import streamlit as st
 import pandas as pd
 import numpy as np
 import plotly.express as px
-from data import get_connection
+import plotly.graph_objects as go
 
-st.title("👥 Segmentation Clients – FM (Frequency & Monetary)")
+from utils import load_table  # ta fonction existante
 
-st.write("""
-La segmentation FM permet de classer les clients selon :
-- **F (Frequency)** : nombre de commandes passées  
-- **M (Monetary)** : montant total dépensé  
+st.title("📊 Segmentation Clients – FM")
 
-Cette approche est adaptée à Olist, car :
-- les données temporelles ont des trous (R impossible à calculer correctement),
-- les clients réalisent très rarement plusieurs commandes.
+st.markdown("""
+La segmentation FM repose sur 2 dimensions uniquement :
+- **Frequency** : nombre d'achats par client
+- **Monetary** : montant total dépensé
+
+Nous utilisons `customer_unique_id` pour regrouper les achats d’un même client réel.
 """)
 
-conn = get_connection()
+# -----------------------------
+# 📌 1. Chargement des données
+# -----------------------------
+orders = load_table("clean_orders")
+customers = load_table("clean_customers")
+items = load_table("clean_order_items")
 
-# ==========================================
-# 1️⃣ FM depuis SQL
-# ==========================================
-query_fm = """
-WITH fm AS (
-    SELECT 
-        c.customer_unique_id,
-        COUNT(DISTINCT o.order_id) AS frequency,
-        SUM(coi.price + coi.freight_value) AS monetary
-    FROM clean_orders o
-    JOIN clean_customers c ON o.customer_id = c.customer_id
-    JOIN clean_order_items coi ON o.order_id = coi.order_id
-    WHERE o.order_status IN ('delivered', 'shipped', 'invoiced')
-    GROUP BY c.customer_unique_id
+# FM computation
+df = (
+    orders.merge(customers, on="customer_id")
+          .merge(items, on="order_id")
+          .query("order_status in ['delivered','shipped','invoiced']")
 )
-SELECT * FROM fm;
-"""
 
-df = pd.read_sql(query_fm, conn)
+fm = df.groupby("customer_unique_id").agg(
+    frequency=("order_id", "nunique"),
+    monetary=("price", "sum")
+).reset_index()
 
-st.subheader("📊 Distribution des clients (FM)")
-st.write(f"{df.shape[0]} clients uniques analysés")
-
-# ==========================================
-# 2️⃣ SCORING
-# ==========================================
-
+# -----------------------------
+# 📌 2. Scores F & M
+# -----------------------------
 def freq_score(x):
     if x == 1:
         return 1
@@ -52,77 +45,104 @@ def freq_score(x):
         return 2
     elif x == 3:
         return 3
-    else:
-        return 4
+    return 4
 
-df["F_score"] = df["frequency"].apply(freq_score)
-df["M_score"] = pd.qcut(df["monetary"], 4, labels=[1,2,3,4], duplicates="drop")
+fm["F_score"] = fm["frequency"].apply(freq_score)
+fm["M_score"] = pd.qcut(
+    fm["monetary"], q=4, labels=[1,2,3,4], duplicates="drop"
+)
 
-df["FM_score"] = df["F_score"].astype(int) + df["M_score"].astype(int)
-
-# SEGMENTS
+# Segment
 def assign_segment(row):
     if row["F_score"] == 4 and row["M_score"] == 4:
         return "Best Customers"
     elif row["F_score"] >= 3 and row["M_score"] >= 3:
         return "Loyal High-Value"
-    elif row["F_score"] >= 3 and row["M_score"] <= 2:
+    elif row["F_score"] >= 3:
         return "Frequent Low-Value"
-    elif row["F_score"] <= 2 and row["M_score"] >= 3:
+    elif row["M_score"] >= 3:
         return "High-Value One-Timers"
-    else:
-        return "Low-Value Customers"
+    return "Low-Value Customers"
 
-df["segment"] = df.apply(assign_segment, axis=1)
+fm["segment"] = fm.apply(assign_segment, axis=1)
 
-# ==========================================
-# 3️⃣ VISUALISATIONS
-# ==========================================
+# Palette couleurs cohérente
+colors = {
+    "Low-Value Customers": "#A7C7E7",
+    "High-Value One-Timers": "#1F77B4",
+    "Frequent Low-Value": "#2CA02C",
+    "Loyal High-Value": "#FF5733",
+    "Best Customers": "#FFC300"
+}
 
-st.header("📈 Répartition des segments")
+# -----------------------------
+# 📌 3. Répartition des segments (bar chart)
+# -----------------------------
+st.subheader("📌 Répartition des segments FM")
 
-fig_pie = px.pie(
-    df,
-    names="segment",
-    title="Répartition des segments FM",
+seg_counts = fm["segment"].value_counts().reset_index()
+seg_counts.columns = ["segment", "count"]
+seg_counts["percent"] = seg_counts["count"] / seg_counts["count"].sum() * 100
+
+fig = px.bar(
+    seg_counts,
+    x="percent",
+    y="segment",
+    orientation="h",
     color="segment",
+    color_discrete_map=colors,
+    text="percent",
 )
-st.plotly_chart(fig_pie, use_container_width=True)
+fig.update_traces(texttemplate="%{text:.1f}%", textposition="outside")
+fig.update_layout(height=450)
 
-# ----------------------------------------------------------
-# Heatmap FM
-# ----------------------------------------------------------
-st.subheader("🎛️ Heatmap FM (log-scale)")
+st.plotly_chart(fig, use_container_width=True)
 
-df_plot = df.copy()
-df_plot["log_monetary"] = np.log1p(df_plot["monetary"])
+st.markdown("🔍 **Lecture** : la majorité des clients sont des *One-Timers*, ce qui est normal sur Olist.")
 
-fig_heat = px.density_heatmap(
-    df_plot,
-    x="log_monetary",
-    y="frequency",
-    nbinsx=30,
-    nbinsy=10,
+# -----------------------------
+# 📌 4. FM Distribution (hexbin)
+# -----------------------------
+st.subheader("📌 Distribution FM (Hexbin)")
+
+fm["log_monetary"] = np.log1p(fm["monetary"])
+
+fig_hex = px.density_heatmap(
+    fm, x="log_monetary", y="frequency",
+    nbinsx=40, nbinsy=20,
     color_continuous_scale="Viridis",
-    title="Répartition des clients selon Frequency et Monetary",
 )
-st.plotly_chart(fig_heat, use_container_width=True)
+fig_hex.update_layout(height=450)
+st.plotly_chart(fig_hex, use_container_width=True)
 
-# ----------------------------------------------------------
-# Tableau résumé
-# ----------------------------------------------------------
-st.header("📋 Tableau des segments")
+st.markdown("""
+💡 *Pourquoi log(monetary) ?*  
+Les montants sont très concentrés (longue queue). Le log rend la distribution lisible.
+""")
 
-summary = df.groupby("segment").agg(
+# -----------------------------
+# 📌 5. Statistiques clés
+# -----------------------------
+st.subheader("📌 Tableau des segments FM")
+
+seg_stats = fm.groupby("segment").agg(
     clients=("customer_unique_id", "count"),
     avg_frequency=("frequency", "mean"),
-    avg_monetary=("monetary", "mean")
-).sort_values("clients", ascending=False)
+    avg_monetary=("monetary", "mean"),
+    percent=("customer_unique_id", lambda x: len(x) / len(fm) * 100)
+).reset_index()
 
-st.dataframe(summary)
+st.dataframe(seg_stats)
 
-# ----------------------------------------------------------
-# Affichage dataset FM
-# ----------------------------------------------------------
-with st.expander("Voir les données FM complètes"):
-    st.dataframe(df)
+# -----------------------------
+# 📌 6. Interprétation automatique
+# -----------------------------
+st.subheader("📌 Interprétation automatique")
+
+st.markdown("""
+- **Low-Value Customers** : majorité des clients, achats uniques et petits paniers.  
+- **High-Value One-Timers** : gros panier mais un seul achat → segment clé pour remarketing.  
+- **Frequent Low-Value** : clients fidèles mais petits paniers → cross-sell.  
+- **Loyal High-Value** : clients rentables et réguliers → à choyer.  
+- **Best Customers** : cœur business, forte priorité.  
+""")
