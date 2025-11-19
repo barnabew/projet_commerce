@@ -1,5 +1,5 @@
 import streamlit as st
-from data import run_query
+from data import run_query,get_connection
 import plotly.express as px
 import pandas as pd
 import requests
