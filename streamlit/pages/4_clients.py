@@ -116,13 +116,15 @@ df_rm["log_m"] = np.log1p(df_rm["monetary"])
 
 fig_scatter = px.scatter(
     df_rm, x="log_m", y="avg_score",
-    trendline="ols",
     opacity=0.4,
     title="Relation entre dépense et satisfaction",
 )
 st.plotly_chart(fig_scatter, use_container_width=True)
 
-st.markdown("👉 *Aucune forte corrélation : les gros clients ne sont pas forcément plus satisfaits.*")
+st.markdown("""
+ℹ️ *La régression linéaire (trendline) n’est pas affichée ici car elle nécessite 
+`statsmodels`, non disponible sur Streamlit Cloud.*
+""")
 
 # ============================================================
 # 4️⃣ Satisfaction ↔ Fidélité
