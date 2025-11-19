@@ -4,6 +4,45 @@ import plotly.express as px
 import pandas as pd
 import requests
 
+
+
+# Coordonnées approximatives des capitales des États du Brésil
+state_coords = {
+    "AC": (-9.97499, -67.8243),
+    "AL": (-9.66599, -35.735),
+    "AM": (-3.13159, -60.02),
+    "AP": (0.034934, -51.0694),
+    "BA": (-12.9718, -38.5011),
+    "CE": (-3.71722, -38.5434),
+    "DF": (-15.7797, -47.9297),
+    "ES": (-20.3155, -40.3128),
+    "GO": (-16.6864, -49.2643),
+    "MA": (-2.53874, -44.2825),
+    "MG": (-19.9167, -43.9345),
+    "MS": (-20.4428, -54.6464),
+    "MT": (-15.5989, -56.0949),
+    "PA": (-1.45583, -48.5039),
+    "PB": (-7.1195, -34.845),
+    "PE": (-8.04666, -34.8771),
+    "PI": (-5.08921, -42.8016),
+    "PR": (-25.4284, -49.2733),
+    "RJ": (-22.9068, -43.1729),
+    "RN": (-5.79448, -35.211),
+    "RO": (-8.76077, -63.8999),
+    "RR": (2.81972, -60.6733),
+    "RS": (-30.0331, -51.23),
+    "SC": (-27.5945, -48.5477),
+    "SE": (-10.9167, -37.05),
+    "SP": (-23.5505, -46.6333),
+    "TO": (-10.1841, -48.3336),
+}
+
+
+
+
+
+
+
 st.set_page_config(page_title="Analyse Géographique", layout="wide")
 
 st.title("🌍 Analyse Géographique des Ventes Olist")
@@ -119,3 +158,74 @@ state_select = st.selectbox(
 )
 
 st.dataframe(df_state[df_state["state"] == state_select])
+
+
+
+st.markdown("---")
+st.header("🔄 Flux géographiques des ventes (Vendeur → Client)")
+
+# Sélection top flux
+top_n = st.slider("Nombre de flux à afficher :", 10, 200, 50)
+
+# Requête SQL flux
+query_flux = """
+    SELECT 
+        s.seller_state,
+        c.customer_state,
+        COUNT(*) AS nb_orders
+    FROM clean_order_items coi
+    JOIN clean_sellers s ON coi.seller_id = s.seller_id
+    JOIN clean_orders o ON coi.order_id = o.order_id
+    JOIN clean_customers c ON o.customer_id = c.customer_id
+    WHERE o.order_status = 'delivered'
+    GROUP BY s.seller_state, c.customer_state
+    HAVING nb_orders > 0
+    ORDER BY nb_orders DESC
+    LIMIT {n};
+""".format(n=top_n)
+
+df_flux = run_query(query_flux)
+
+# Construction des arcs
+lines = []
+for _, row in df_flux.iterrows():
+    s_state = row["seller_state"]
+    c_state = row["customer_state"]
+
+    if s_state not in state_coords or c_state not in state_coords:
+        continue
+
+    s_lat, s_lon = state_coords[s_state]
+    c_lat, c_lon = state_coords[c_state]
+
+    lines.append(
+        go.Scattergeo(
+            locationmode="ISO-3",
+            lon=[s_lon, c_lon],
+            lat=[s_lat, c_lat],
+            mode="lines",
+            line=dict(width=max(1, row["nb_orders"] / df_flux["nb_orders"].max() * 6)),
+            opacity=0.6,
+            hoverinfo="text",
+            text=f"{s_state} → {c_state}<br>Commandes : {row['nb_orders']}",
+        )
+    )
+
+# Ajout titre
+fig_flux = go.Figure(lines)
+
+fig_flux.update_layout(
+    title_text="Flux des commandes entre États brésiliens",
+    showlegend=False,
+    geo=dict(
+        scope="south america",
+        projection_type="mercator",
+        showland=True,
+        landcolor="rgb(240, 240, 240)",
+        countrycolor="white",
+    ),
+    margin=dict(l=0, r=0, t=40, b=0)
+)
+
+st.plotly_chart(fig_flux, use_container_width=True)
+
