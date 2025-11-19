@@ -116,25 +116,6 @@ fig.update_layout(margin={"r":0,"t":40,"l":0,"b":0})
 
 st.plotly_chart(fig, use_container_width=True)
 
-# ============================================================
-# 🔹 TABLEAU DE L'ÉTAT SÉLECTIONNÉ
-# ============================================================
-
-st.markdown("---")
-st.subheader("🔎 Analyse détaillée par État")
-
-state_select = st.selectbox(
-    "Choisissez un État :",
-    sorted(df_state["state"].unique())
-)
-
-st.dataframe(df_state[df_state["state"] == state_select])
-
-
-
-
-
-
 
 
 
