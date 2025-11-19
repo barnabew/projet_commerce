@@ -1,253 +1,202 @@
-# --------------------------------------------------
-# Page 4 — Analyse Client Avancée
-# --------------------------------------------------
-
 import streamlit as st
 import pandas as pd
 import numpy as np
 import plotly.express as px
-
 from data import get_connection, load_table
 
 st.set_page_config(page_title="Analyse Clients", layout="wide")
 
-st.title("👤 Analyse Clients Avancée")
-st.markdown("Cette page explore le comportement des clients : fidélité, satisfaction et contribution à la valeur.")
+st.title("👤 Analyse Client – Comportement & Valeur")
 
 
 # --------------------------------------------------
-# 1. CHARGEMENT DES DONNÉES
+# CHARGEMENT DES DONNÉES
 # --------------------------------------------------
 
 conn = get_connection()
 
-# clean tables
 orders = load_table("clean_orders")
 customers = load_table("clean_customers")
 items = load_table("clean_order_items")
 reviews = load_table("clean_reviews")
-products = load_table("clean_products")
-translate = load_table("product_category_name_translation")
 
 
 # --------------------------------------------------
-# Préparation : jointure client–orders–items–reviews
+# CONSTRUCTION DU DATAFRAME CLIENT FINAL
 # --------------------------------------------------
 
+# Base : orders + customers
 df = (
     orders
     .merge(customers, on="customer_id", how="left")
     .merge(items, on="order_id", how="left")
 )
 
-# monetary per customer_unique_id
-df_monetary = df.groupby("customer_unique_id", as_index=False).agg({
-    "order_id": "nunique",
-    "price": "sum",
-    "freight_value": "sum"
-})
+# Monetary par client
+df_m = df.groupby("customer_unique_id", as_index=False).agg(
+    frequency=("order_id", "nunique"),
+    price_sum=("price", "sum"),
+    freight_sum=("freight_value", "sum")
+)
+df_m["monetary"] = df_m["price_sum"] + df_m["freight_sum"]
+df_m["log_monetary"] = np.log1p(df_m["monetary"])
 
-df_monetary["monetary"] = df_monetary["price"] + df_monetary["freight_value"]
-df_monetary["frequency"] = df_monetary["order_id"]
-df_monetary["log_monetary"] = np.log1p(df_monetary["monetary"])
-
-# reviews per customer
-df_rev = (
+# Reviews par client
+df_r = (
     reviews
     .merge(orders[["order_id", "customer_id"]], on="order_id", how="left")
     .merge(customers, on="customer_id", how="left")
 )
+df_rev = df_r.groupby("customer_unique_id", as_index=False).agg(
+    avg_review_score=("review_score", "mean"),
+    review_count=("review_id", "count")
+)
 
-df_review_cust = df_rev.groupby("customer_unique_id", as_index=False).agg({
-    "review_score": "mean"
-}).rename(columns={"review_score": "avg_review_score"})
-
-
-# fusion finale
-df_cust = df_monetary.merge(df_review_cust, on="customer_unique_id", how="left")
+# Fusion finale
+df_cust = df_m.merge(df_rev, on="customer_unique_id", how="left")
 
 
 # --------------------------------------------------
-# 1. KPIs
+# 1. KPIs CLIENTS
 # --------------------------------------------------
 
 st.header("📊 Indicateurs clés")
 
-col1, col2, col3, col4 = st.columns(4)
-
 unique_customers = df_cust["customer_unique_id"].nunique()
-one_shot_rate = (df_cust["frequency"].value_counts().get(1, 0) / unique_customers) * 100
+one_shot_rate = (df_cust["frequency"].eq(1).mean() * 100)
 avg_spend = df_cust["monetary"].mean()
-top1 = df_cust["monetary"].quantile(0.99)
+median_spend = df_cust["monetary"].median()
 
+col1, col2, col3, col4 = st.columns(4)
 col1.metric("Clients uniques", f"{unique_customers:,}")
 col2.metric("One-shot buyers", f"{one_shot_rate:.1f}%")
-col3.metric("Dépense moyenne", f"{avg_spend:.1f} R$") 
-col4.metric("Panier top 1%", f"{top1:.1f} R$")
+col3.metric("Dépense moyenne", f"{avg_spend:.1f} R$")
+col4.metric("Dépense médiane", f"{median_spend:.1f} R$")
 
 
 # --------------------------------------------------
-# 2. FIDÉLITÉ
+# 2. FIDÉLITÉ CLIENT
 # --------------------------------------------------
 
-st.header("📈 Fidélité : nombre de commandes par client")
+st.header("📈 Fidélité des clients")
 
-freq_count = df_cust["frequency"].value_counts().sort_index()
+freq_counts = df_cust["frequency"].value_counts().sort_index()
 
+# Histogramme du nombre de commandes
 fig_freq = px.bar(
-    freq_count,
-    labels={"index": "Nombre de commandes", "value": "Nb de clients"},
-    title="Distribution du nombre de commandes"
+    freq_counts,
+    labels={"index": "Nombre de commandes", "value": "Nombre de clients"},
+    title="Distribution du nombre de commandes par client"
 )
 
 fig_freq.add_annotation(
     x=1,
-    y=freq_count.max(),
-    text=f"{one_shot_rate:.1f}% one-shot buyers",
+    y=freq_counts.max(),
+    text=f"{one_shot_rate:.1f}% de one-shot buyers",
     showarrow=True,
     arrowhead=2,
-    font=dict(size=14, color="red")
+    font=dict(color="red", size=14)
 )
 
 st.plotly_chart(fig_freq, use_container_width=True)
 
+# Petit résumé textuel
+st.markdown(f"""
+### 🧠 Ce que cela montre :
+- **{one_shot_rate:.1f}% des clients ne commandent qu'une seule fois.**
+- La fidélité est **extrêmement faible**, ce qui est typique d'Olist.
+""")
+
+
 
 # --------------------------------------------------
-# 3. SATISFACTION
+# 3. SATISFACTION CLIENT
 # --------------------------------------------------
 
-st.header("⭐ Satisfaction Clients")
+st.header("⭐ Satisfaction Client")
 
-# A — Histogramme global
+# A — Distribution globale des notes
+st.subheader("📌 Distribution des notes")
 fig_hist = px.histogram(
     reviews, 
-    x="review_score", 
+    x="review_score",
     nbins=5,
-    title="Distribution des notes",
-    color_discrete_sequence=["#6a8caf"]
+    color_discrete_sequence=["#6a8caf"],
+    title="Répartition des notes clients"
 )
-st.subheader("📌 Distribution des notes")
 st.plotly_chart(fig_hist, use_container_width=True)
 
 
-# B — Review moyenne par état
-st.subheader("📌 Review moyenne par État")
+# B — Satisfaction selon la fréquence d'achat
+st.subheader("📌 Satisfaction selon le type de client")
 
-df_state_rev = (
-    df_rev.groupby("customer_state", as_index=False)
-          .agg(avg_score=("review_score", "mean"))
-          .sort_values("avg_score")
+df_rev_freq = df_cust.groupby("frequency", as_index=False).agg(
+    avg_score=("avg_review_score", "mean"),
+    count=("customer_unique_id", "count")
 )
 
-fig_state = px.bar(
-    df_state_rev, 
-    x="customer_state", 
+fig_rev_freq = px.bar(
+    df_rev_freq,
+    x="frequency",
     y="avg_score",
-    title="Review moyenne par État",
+    title="Note moyenne par fréquence d'achat",
+    labels={"frequency": "Nombre de commandes", "avg_score": "Note moyenne"},
     color="avg_score",
     color_continuous_scale="Blues"
 )
-st.plotly_chart(fig_state, use_container_width=True)
+
+st.plotly_chart(fig_rev_freq, use_container_width=True)
+
+st.markdown("""
+💡 *Les clients récurrents donnent-ils de meilleures ou de moins bonnes notes ?  
+Cette analyse aide à comprendre la relation entre expérience et fidélité.*
+""")
 
 
-# C — Review moyenne par catégorie produit
-st.subheader("📌 Review moyenne par catégorie produit")
+# C — Relation dépenses ↔ satisfaction
+st.subheader("📌 Note moyenne selon le niveau de dépense (segments)")
 
-df_cat = (
-    reviews
-    .merge(items, on="order_id")
-    .merge(products, on="product_id")
-    .merge(translate, on="product_category_name", how="left")
+df_cust["spend_segment"] = pd.qcut(
+    df_cust["monetary"],
+    q=4,
+    labels=["Low spenders", "Medium", "High", "Very high"]
 )
 
-df_cat["category"] = df_cat["product_category_name_english"].fillna(df_cat["product_category_name"])
-
-df_cat_review = (
-    df_cat.groupby("category", as_index=False)
-          .agg(avg_score=("review_score", "mean"), count=("review_id", "count"))
-          .query("count > 200")
-          .sort_values("avg_score")
+df_spend_rev = (
+    df_cust.groupby("spend_segment", as_index=False)
+           .agg(avg_review=("avg_review_score", "mean"))
 )
 
-fig_cat = px.bar(
-    df_cat_review,
-    y="category",
-    x="avg_score",
-    title="Review moyenne par catégorie (min 200 reviews)",
-    orientation="h",
-    color="avg_score",
+fig_spend_rev = px.bar(
+    df_spend_rev,
+    x="spend_segment",
+    y="avg_review",
+    title="Satisfaction selon le niveau de dépense",
+    color="avg_review",
     color_continuous_scale="Blues"
 )
-st.plotly_chart(fig_cat, use_container_width=True)
+
+st.plotly_chart(fig_spend_rev, use_container_width=True)
+
 
 
 # --------------------------------------------------
-# 4. HIGH-VALUE CUSTOMERS
+# 4. VALEUR CLIENT (Customer Value)
 # --------------------------------------------------
 
-st.header("💰 High-Value Customers")
+st.header("💰 Valeur Client")
 
-# A — Top clients
-st.subheader("Top 20 clients")
+colv1, colv2 = st.columns(2)
 
-top20 = df_cust.sort_values("monetary", ascending=False).head(20)[
-    ["customer_unique_id", "monetary", "frequency", "avg_review_score"]
-]
-
-st.dataframe(top20, use_container_width=True)
-
-
-# B — histogram log monetary
-st.subheader("Distribution des dépenses (log scale)")
+# Distribution des dépenses
 fig_m = px.histogram(
     df_cust,
     x="log_monetary",
     nbins=50,
-    title="Distribution log(monetary)"
+    title="Distribution log(monetary)",
+    color_discrete_sequence=["#445c7a"]
 )
-st.plotly_chart(fig_m, use_container_width=True)
+colv1.plotly_chart(fig_m, use_container_width=True)
 
-
-# C — Catégories achetées par les top clients
-st.subheader("Catégories préférées des top clients (top 1%)")
-
-top_ids = df_cust[df_cust["monetary"] >= top1]["customer_unique_id"].unique()
-
-df_top_cat = (
-    df[df["customer_unique_id"].isin(top_ids)]
-    .merge(products, on="product_id")
-    .merge(translate, on="product_category_name", how="left")
-)
-
-df_top_cat["category"] = df_top_cat["product_category_name_english"].fillna(df_top_cat["product_category_name"])
-
-fav_cat = df_top_cat["category"].value_counts().head(10).reset_index()
-fav_cat.columns = ["category", "count"]
-
-fig_fav = px.bar(
-    fav_cat,
-    x="count",
-    y="category",
-    orientation="h",
-    title="TOP catégories des clients à forte valeur"
-)
-st.plotly_chart(fig_fav, use_container_width=True)
-
-
-# --------------------------------------------------
-# 5. INSIGHTS BUSINESS
-# --------------------------------------------------
-
-st.header("📌 Insights Business")
-
-st.markdown("""
-### 🎯 Principaux enseignements
-
-- **Olist a un taux très élevé de clients “one-shot”** → la fidélité est quasi inexistante.  
-- **Les notes clients sont globalement élevées**, mais varient fortement selon les catégories et les États.  
-- **Les délais de livraison influencent directement la satisfaction** (vu page géographique).  
-- **Le top 1% des clients explique une part significative du CA**, et se concentre sur quelques catégories spécifiques.  
-
-Ces éléments fournissent une base solide pour des recommandations marketing et logistiques.
-""")
-
+# Percentiles
+percentiles = df_cust["monetary"].quantile([0.5, 0.75, 0.9, 0.9]()_
