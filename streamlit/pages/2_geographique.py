@@ -138,33 +138,20 @@ st.dataframe(df_state[df_state["state"] == state_select])
 
 
 
-
 st.title("🌐 Flux Géographiques – Vendeur → Client")
 
-st.write(
-    "Analyse des flux logistiques entre les états vendeurs et les états "
-    "des clients, basée sur les commandes livrées."
-)
-
-# -------------------------------------
-# Requête SQL
-# -------------------------------------
+# --------------------------
+# Charger les flux
+# --------------------------
 query_flux = """
 SELECT 
     s.seller_state,
     c.customer_state,
-    COUNT(*) AS nb_orders,
-    ROUND(AVG(
-        JULIANDAY(o.order_delivered_customer_date) 
-        - JULIANDAY(o.order_purchase_timestamp)
-    ), 2) AS avg_delivery_days
+    COUNT(*) AS nb_orders
 FROM clean_order_items coi
-JOIN clean_sellers s 
-    ON coi.seller_id = s.seller_id
-JOIN clean_orders o 
-    ON coi.order_id = o.order_id
-JOIN clean_customers c 
-    ON o.customer_id = c.customer_id
+JOIN clean_sellers s ON coi.seller_id = s.seller_id
+JOIN clean_orders o ON coi.order_id = o.order_id
+JOIN clean_customers c ON o.customer_id = c.customer_id
 WHERE o.order_status = 'delivered'
   AND o.order_delivered_customer_date IS NOT NULL
   AND o.order_purchase_timestamp IS NOT NULL
@@ -172,65 +159,59 @@ GROUP BY s.seller_state, c.customer_state
 HAVING nb_orders > 10
 ORDER BY nb_orders DESC;
 """
-
 conn = get_connection()
 df = pd.read_sql(query_flux, conn)
 
-# -------------------------------------
-# Vérification & nettoyage
-# -------------------------------------
-df = df.dropna(subset=["seller_state", "customer_state"])
+# Liste des états vendeurs
+seller_list = sorted(df["seller_state"].unique())
 
-states = sorted(set(df["seller_state"]).union(df["customer_state"]))
-
-# Mapping index → état
-index_map = {state: i for i, state in enumerate(states)}
-
-# -------------------------------------
-# Construction de la matrice de flux
-# -------------------------------------
-matrix = [[0]*len(states) for _ in range(len(states))]
-
-for _, row in df.iterrows():
-    s = row["seller_state"]
-    t = row["customer_state"]
-    w = row["nb_orders"]
-    matrix[index_map[s]][index_map[t]] = w
-
-# -------------------------------------
-# Diagramme chord-like (Sankey simplifié)
-# -------------------------------------
-sources = [index_map[s] for s in df["seller_state"]]
-targets = [index_map[t] + len(states) for t in df["customer_state"]]
-weights = df["nb_orders"].astype(float).tolist()
-
-labels = states + states  # vendeurs + clients
-
-fig = go.Figure(data=[go.Sankey(
-    node=dict(
-        pad=15,
-        thickness=20,
-        line=dict(color="black", width=0.5),
-        label=labels,
-        color="blue"
-    ),
-    link=dict(
-        source=sources,
-        target=targets,
-        value=weights,
-        color="rgba(0, 100, 255, 0.4)"
-    )
-)])
-
-fig.update_layout(
-    title="Flux entre États (Sankey simplifié)",
-    font=dict(size=12)
+# ---------------------------
+# Sélecteur d’état vendeur
+# ---------------------------
+selected_state = st.selectbox(
+    "Sélectionner un État vendeur",
+    seller_list,
+    index=seller_list.index("SP") if "SP" in seller_list else 0
 )
 
-st.plotly_chart(fig, use_container_width=True)
+df_state = df[df["seller_state"] == selected_state].copy()
 
-# -------------------------------------
-# Tableau récapitulatif
-# -------------------------------------
-st.subheader("📋 Tableau des flux")
-st.dataframe(df)
+st.subheader(f"Flux depuis : **{selected_state}**")
+
+if df_state.empty:
+    st.info("Aucun flux significatif pour cet état.")
+else:
+    # ---------------------------
+    # Sankey pour un seul état
+    # ---------------------------
+    sources = [0] * len(df_state)
+    targets = list(range(1, len(df_state) + 1))
+    values = df_state["nb_orders"].tolist()
+
+    labels = [f"{selected_state} (vendeur)"] + list(df_state["customer_state"])
+
+    fig = go.Figure(
+        data=[
+            go.Sankey(
+                node=dict(
+                    pad=15,
+                    thickness=20,
+                    label=labels,
+                    color=["#1f77b4"] + ["#2ca02c"] * len(df_state),
+                ),
+                link=dict(
+                    source=sources,
+                    target=targets,
+                    value=values,
+                    color="rgba(31, 119, 180, 0.4)",
+                ),
+            )
+        ]
+    )
+
+    fig.update_layout(height=600)
+    st.plotly_chart(fig, use_container_width=True)
+
+# Tableau
+st.subheader("📋 Détails des flux")
+st.dataframe(df_state)
