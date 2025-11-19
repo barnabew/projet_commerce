@@ -103,32 +103,29 @@ st.markdown("🔍 **Lecture** : la majorité des clients sont des *One-Timers*, 
 # -----------------------------
 # 📌 4. FM Distribution (hexbin)
 # -----------------------------
-st.subheader("📌 Distribution FM (Hexbin)")
+st.subheader("📌 Distribution FM (2D Density Contour - Plotly)")
 
 fm["log_monetary"] = np.log1p(fm["monetary"])
 
-fig, ax = plt.subplots(figsize=(10, 5))
-
-hb = ax.hexbin(
-    fm["log_monetary"],
-    fm["frequency"],
-    gridsize=50,
-    cmap="viridis",
-    mincnt=1
+fig = px.density_contour(
+    fm,
+    x="log_monetary",
+    y="frequency",
+    nbinsx=40,
+    nbinsy=20,
+    color_continuous_scale="Viridis",
+    contours_coloring="fill"
 )
+fig.update_traces(contours_coloring="fill", showscale=True)
+fig.update_layout(height=500, title="FM Distribution — 2D Density (Plotly)")
 
-ax.set_xlabel("log(Monetary)")
-ax.set_ylabel("Frequency")
-ax.set_title("FM Distribution – Hexbin")
-
-cb = fig.colorbar(hb, ax=ax)
-cb.set_label("Number of customers")
-
-st.pyplot(fig)
+st.plotly_chart(fig, use_container_width=True)
 
 st.markdown("""
-💡 *Pourquoi log(monetary) ?*  
-Les montants sont très concentrés (effet “long tail”). Le logarithme homogénéise la distribution pour rendre le visuel lisible.
+💡 *Pourquoi un density contour ?*  
+Les hexbin ne sont pas supportés en natif par Plotly,  
+mais les **contours KDE 2D** donnent une visualisation bien plus lisible  
+qu’une heatmap classique pour une distribution très concentrée.
 """)
 
 # -----------------------------
