@@ -1,152 +1,137 @@
 import streamlit as st
 from data import run_query
 import plotly.express as px
-import plotly.graph_objects as go
 import pandas as pd
+import requests
+import json
 
 st.set_page_config(page_title="Analyse Géographique", layout="wide")
 
 st.title("🌍 Analyse Géographique des Ventes Olist")
 st.markdown(
     """
-    Cette section analyse la performance commerciale selon la localisation des clients et des vendeurs.
-    Nous examinons le chiffre d'affaires par État, le délai moyen de livraison, et les flux 
-    entre régions du Brésil.
+    Cette page permet d'explorer les performances commerciales selon les régions du Brésil :
+    chiffre d'affaires, délais de livraison, satisfaction client et volume de commandes.
     """
 )
 
 st.markdown("---")
 
 # ============================================================
-# 🔹 1. Chiffre d'affaires par État (clients)
+# 🔹 CHARGEMENT DU GEOJSON DES ÉTATS DU BRÉSIL
 # ============================================================
 
-st.subheader("📍 Chiffre d’affaires par État client")
+@st.cache_resource
+def load_geojson():
+    url = "https://raw.githubusercontent.com/codeforamerica/click_that_hood/master/public/data/brazil-states.geojson"
+    return requests.get(url).json()
 
-df_state = run_query("""
-SELECT 
-    c.customer_state AS state,
-    SUM(oi.price + oi.freight_value) AS revenue
-FROM clean_order_items oi
-JOIN clean_orders o ON oi.order_id = o.order_id
-JOIN clean_customers c ON o.customer_id = c.customer_id
-WHERE o.order_status IN ('delivered','shipped','invoiced')
-GROUP BY c.customer_state;
-""")
+geojson = load_geojson()
 
-fig_state = px.bar(
-    df_state.sort_values("revenue", ascending=False),
-    x="state", y="revenue",
-    color="revenue",
-    color_continuous_scale="Plasma",
-    title="Chiffre d’affaires par État (clients)"
+# ============================================================
+# 🔹 MENU DE SÉLECTION DE L’ANALYSE
+# ============================================================
+
+analysis_type = st.selectbox(
+    "Sélectionnez l’analyse à afficher :",
+    [
+        "Chiffre d’affaires",
+        "Délai moyen de livraison",
+        "Nombre de commandes",
+        "Note moyenne"
+    ]
 )
-st.plotly_chart(fig_state, use_container_width=True)
-
-st.markdown("---")
 
 # ============================================================
-# 🔹 2. Délai moyen de livraison par État
+# 🔹 REQUÊTES SQL SELON L’ANALYSE
 # ============================================================
 
-st.subheader("⏱️ Délai moyen de livraison par État")
+if analysis_type == "Chiffre d’affaires":
+    query = """
+        SELECT 
+            c.customer_state AS state,
+            SUM(oi.price + oi.freight_value) AS value
+        FROM clean_order_items oi
+        JOIN clean_orders o ON oi.order_id = o.order_id
+        JOIN clean_customers c ON o.customer_id = c.customer_id
+        WHERE o.order_status IN ('delivered','shipped','invoiced')
+        GROUP BY c.customer_state;
+    """
+    color_title = "Chiffre d’affaires (R$)"
 
-df_delay = run_query("""
-SELECT 
-    c.customer_state AS state,
-    ROUND(AVG(
-        JULIANDAY(o.order_delivered_customer_date) 
-        - JULIANDAY(order_purchase_timestamp)
-    ), 2) AS avg_delay
-FROM clean_orders o
-JOIN clean_customers c ON o.customer_id = c.customer_id
-WHERE o.order_status='delivered'
-  AND o.order_delivered_customer_date IS NOT NULL
-GROUP BY c.customer_state;
-""")
+elif analysis_type == "Délai moyen de livraison":
+    query = """
+        SELECT 
+            c.customer_state AS state,
+            ROUND(AVG(
+                JULIANDAY(o.order_delivered_customer_date) 
+                - JULIANDAY(o.order_purchase_timestamp)
+            ), 2) AS value
+        FROM clean_orders o
+        JOIN clean_customers c ON o.customer_id = c.customer_id
+        WHERE o.order_status='delivered'
+        GROUP BY c.customer_state;
+    """
+    color_title = "Délai moyen (jours)"
 
-fig_delay = px.bar(
-    df_delay.sort_values("avg_delay", ascending=False),
-    x="state", y="avg_delay",
-    color="avg_delay",
+elif analysis_type == "Nombre de commandes":
+    query = """
+        SELECT 
+            c.customer_state AS state,
+            COUNT(*) AS value
+        FROM clean_orders o
+        JOIN clean_customers c ON o.customer_id = c.customer_id
+        WHERE o.order_status IN ('delivered','shipped','invoiced')
+        GROUP BY c.customer_state;
+    """
+    color_title = "Nombre de commandes"
+
+elif analysis_type == "Note moyenne":
+    query = """
+        SELECT 
+            c.customer_state AS state,
+            ROUND(AVG(r.review_score),2) AS value
+        FROM clean_reviews r
+        JOIN clean_orders o ON r.order_id = o.order_id
+        JOIN clean_customers c ON o.customer_id = c.customer_id
+        GROUP BY c.customer_state;
+    """
+    color_title = "Note moyenne"
+
+df = run_query(query)
+
+# ============================================================
+# 🔹 CARTE CHOROPLETH DU BRÉSIL
+# ============================================================
+
+st.subheader(f"🗺 Carte : {analysis_type}")
+
+fig = px.choropleth(
+    df,
+    geojson=geojson,
+    locations="state",
+    featureidkey="properties.sigla",
+    color="value",
     color_continuous_scale="Viridis",
-    title="Délai moyen de livraison par État"
+    title=f"{analysis_type} par État du Brésil",
 )
-st.plotly_chart(fig_delay, use_container_width=True)
+
+fig.update_geos(fitbounds="locations", visible=False)
+fig.update_layout(margin={"r":0, "t":40, "l":0, "b":0})
+
+st.plotly_chart(fig, use_container_width=True)
 
 st.markdown("---")
 
 # ============================================================
-# 🔹 3. Flux vendeur → client (heatmap)
+# 🔹 TABLEAU DÉTAILLÉ + FOCUS ÉTAT
 # ============================================================
 
-st.subheader("🔄 Flux entre vendeurs et clients (Heatmap)")
+st.subheader("🔎 Analyse détaillée par État")
 
-df_flux = run_query("""
-SELECT 
-    s.seller_state AS seller_state,
-    c.customer_state AS customer_state,
-    COUNT(*) AS nb_orders
-FROM clean_order_items coi
-JOIN clean_sellers s ON coi.seller_id = s.seller_id
-JOIN clean_orders o ON o.order_id = coi.order_id
-JOIN clean_customers c ON o.customer_id = c.customer_id
-WHERE o.order_status='delivered'
-GROUP BY s.seller_state, c.customer_state;
-""")
+selected_state = st.selectbox("Choisissez un État :", sorted(df["state"].unique()))
 
-pivot = df_flux.pivot_table(
-    values="nb_orders", 
-    index="seller_state", 
-    columns="customer_state",
-    fill_value=0
+st.write(
+    df[df["state"] == selected_state]
 )
 
-fig_heatmap = px.imshow(
-    pivot,
-    labels=dict(x="État client", y="État vendeur", color="Nb commandes"),
-    title="Flux vendeur → client (nombre de commandes)"
-)
-st.plotly_chart(fig_heatmap, use_container_width=True)
-
-st.markdown("---")
-
-# ============================================================
-# 🔹 4. Focus interactif : sélection d’un État
-# ============================================================
-
-st.subheader("🎯 Analyse détaillée d’un État")
-
-all_states = sorted(set(df_state["state"]))
-
-state_choice = st.selectbox("Sélectionnez un État client :", all_states)
-
-df_focus = run_query(f"""
-SELECT 
-    s.seller_state,
-    c.customer_state,
-    COUNT(*) AS nb_orders,
-    ROUND(AVG(
-        JULIANDAY(o.order_delivered_customer_date) 
-        - JULIANDAY(o.order_purchase_timestamp)
-    ),2) AS avg_delay
-FROM clean_order_items coi
-JOIN clean_sellers s ON coi.seller_id = s.seller_id
-JOIN clean_orders o ON o.order_id = coi.order_id
-JOIN clean_customers c ON o.customer_id = c.customer_id
-WHERE o.order_status='delivered'
-  AND c.customer_state = '{state_choice}'
-GROUP BY s.seller_state;
-""")
-
-st.markdown(f"### 🔎 Flux vers l’État **{state_choice}**")
-
-fig_focus = px.bar(
-    df_focus.sort_values("nb_orders", ascending=False),
-    x="seller_state", y="nb_orders",
-    color="avg_delay",
-    color_continuous_scale="Bluered",
-    title=f"Commandes envoyées vers l’État {state_choice}"
-)
-
-st.plotly_chart(fig_focus, use_container_width=True)
