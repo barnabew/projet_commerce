@@ -103,30 +103,41 @@ st.markdown("🔍 **Lecture** : la majorité des clients sont des *One-Timers*, 
 # -----------------------------
 # 📌 4. FM Distribution (hexbin)
 # -----------------------------
-st.subheader("📌 Distribution FM (2D Density Contour - Plotly)")
+st.subheader("📌 Distribution FM (2D Density Contour)")
 
 fm["log_monetary"] = np.log1p(fm["monetary"])
 
-fig = px.density_contour(
-    fm,
-    x="log_monetary",
-    y="frequency",
-    nbinsx=40,
-    nbinsy=20,
-    color_continuous_scale="Viridis",
-    contours_coloring="fill"
+fig = go.Figure()
+
+fig.add_trace(go.Histogram2dContour(
+    x=fm["log_monetary"],
+    y=fm["frequency"],
+    colorscale="Viridis",
+    reversescale=False,
+    xbins=dict(size=0.15),
+    ybins=dict(size=1),
+    contours=dict(
+        coloring="heatmap",
+        showlines=False
+    )
+))
+
+fig.update_layout(
+    height=500,
+    title="FM Distribution — 2D Density Contour (Plotly)",
+    xaxis_title="log(Monetary)",
+    yaxis_title="Frequency"
 )
-fig.update_traces(contours_coloring="fill", showscale=True)
-fig.update_layout(height=500, title="FM Distribution — 2D Density (Plotly)")
 
 st.plotly_chart(fig, use_container_width=True)
 
 st.markdown("""
-💡 *Pourquoi un density contour ?*  
-Les hexbin ne sont pas supportés en natif par Plotly,  
-mais les **contours KDE 2D** donnent une visualisation bien plus lisible  
-qu’une heatmap classique pour une distribution très concentrée.
+💡 *Pourquoi ce graphique ?*  
+Plotly Express ne supporte pas directement les hexbin,  
+mais les **2D Contours remplis (Histogram2dContour)** offrent  
+une lecture beaucoup plus claire qu’une heatmap classique.
 """)
+
 
 # -----------------------------
 # 📌 5. Statistiques clés
