@@ -2,229 +2,174 @@ import streamlit as st
 import pandas as pd
 import numpy as np
 import plotly.express as px
-from data import get_connection, load_table
+
+from data import run_query
 
 st.set_page_config(page_title="Analyse Clients", layout="wide")
 
-st.title("👤 Analyse Client – Comportement & Valeur")
-
-
-# --------------------------------------------------
-# CHARGEMENT DES DONNÉES
-# --------------------------------------------------
-
-conn = get_connection()
-
-orders = load_table("clean_orders")
-customers = load_table("clean_customers")
-items = load_table("clean_order_items")
-reviews = load_table("clean_reviews")
-
-
-# --------------------------------------------------
-# CONSTRUCTION DU DATAFRAME CLIENT FINAL
-# --------------------------------------------------
-
-# Base : orders + customers
-df = (
-    orders
-    .merge(customers, on="customer_id", how="left")
-    .merge(items, on="order_id", how="left")
-)
-
-# Monetary par client
-df_m = df.groupby("customer_unique_id", as_index=False).agg(
-    frequency=("order_id", "nunique"),
-    price_sum=("price", "sum"),
-    freight_sum=("freight_value", "sum")
-)
-df_m["monetary"] = df_m["price_sum"] + df_m["freight_sum"]
-df_m["log_monetary"] = np.log1p(df_m["monetary"])
-
-# Reviews par client
-df_r = (
-    reviews
-    .merge(orders[["order_id", "customer_id"]], on="order_id", how="left")
-    .merge(customers, on="customer_id", how="left")
-)
-df_rev = df_r.groupby("customer_unique_id", as_index=False).agg(
-    avg_review_score=("review_score", "mean"),
-    review_count=("review_id", "count")
-)
-
-# Fusion finale
-df_cust = df_m.merge(df_rev, on="customer_unique_id", how="left")
-
-
-# --------------------------------------------------
-# 1. KPIs CLIENTS
-# --------------------------------------------------
-
-st.header("📊 Indicateurs clés")
-
-unique_customers = df_cust["customer_unique_id"].nunique()
-one_shot_rate = (df_cust["frequency"].eq(1).mean() * 100)
-avg_spend = df_cust["monetary"].mean()
-median_spend = df_cust["monetary"].median()
-
-col1, col2, col3, col4 = st.columns(4)
-col1.metric("Clients uniques", f"{unique_customers:,}")
-col2.metric("One-shot buyers", f"{one_shot_rate:.1f}%")
-col3.metric("Dépense moyenne", f"{avg_spend:.1f} R$")
-col4.metric("Dépense médiane", f"{median_spend:.1f} R$")
-
-
-# --------------------------------------------------
-# 2. FIDÉLITÉ CLIENT
-# --------------------------------------------------
-
-st.header("📈 Fidélité des clients")
-
-freq_counts = df_cust["frequency"].value_counts().sort_index()
-
-# Histogramme du nombre de commandes
-fig_freq = px.bar(
-    freq_counts,
-    labels={"index": "Nombre de commandes", "value": "Nombre de clients"},
-    title="Distribution du nombre de commandes par client"
-)
-
-fig_freq.add_annotation(
-    x=1,
-    y=freq_counts.max(),
-    text=f"{one_shot_rate:.1f}% de one-shot buyers",
-    showarrow=True,
-    arrowhead=2,
-    font=dict(color="red", size=14)
-)
-
-st.plotly_chart(fig_freq, use_container_width=True)
-
-# Petit résumé textuel
-st.markdown(f"""
-### 🧠 Ce que cela montre :
-- **{one_shot_rate:.1f}% des clients ne commandent qu'une seule fois.**
-- La fidélité est **extrêmement faible**, ce qui est typique d'Olist.
+st.title("👥 Analyse des Clients")
+st.markdown("""
+Cette page se concentre uniquement sur les **clients Olist**, avec un focus particulier sur les  
+**one-time buyers** (97% des clients).  
+Objectif : comprendre les **leviers d’acquisition** plutôt que de la fidélisation.
 """)
 
+# --------------------------------------------------------------------
+# 📌 1) KPI GLOBAUX
+# --------------------------------------------------------------------
 
+st.subheader("📊 Indicateurs clés")
 
-# --------------------------------------------------
-# 3. SATISFACTION CLIENT
-# --------------------------------------------------
-
-st.header("⭐ Satisfaction Client")
-
-# A — Distribution globale des notes
-st.subheader("📌 Distribution des notes")
-fig_hist = px.histogram(
-    reviews, 
-    x="review_score",
-    nbins=5,
-    color_discrete_sequence=["#6a8caf"],
-    title="Répartition des notes clients"
+# % one-time buyers
+query_one_time = """
+SELECT
+    SUM(CASE WHEN cnt = 1 THEN 1 ELSE 0 END) AS one_time,
+    COUNT(*) AS total
+FROM (
+    SELECT customer_unique_id, COUNT(*) AS cnt
+    FROM clean_orders o
+    JOIN clean_customers c ON o.customer_id = c.customer_id
+    GROUP BY customer_unique_id
 )
-st.plotly_chart(fig_hist, use_container_width=True)
+"""
 
+one_time_df = run_query(query_one_time)
+one_time = one_time_df["one_time"][0]
+total = one_time_df["total"][0]
+pct_one_time = round(one_time * 100 / total, 2)
 
-# B — Satisfaction selon la fréquence d'achat
-st.subheader("📌 Satisfaction selon le type de client")
+# ticket moyen
+query_ticket = """
+SELECT
+    ROUND(AVG(price + freight_value), 2) AS avg_item_value
+FROM clean_order_items
+"""
+ticket_df = run_query(query_ticket)
 
-df_rev_freq = df_cust.groupby("frequency", as_index=False).agg(
-    avg_score=("avg_review_score", "mean"),
-    count=("customer_unique_id", "count")
+# note moyenne
+query_review = "SELECT ROUND(AVG(review_score), 2) AS avg_score FROM clean_reviews"
+review_df = run_query(query_review)
+
+col1, col2, col3 = st.columns(3)
+
+col1.metric("🧍‍♂️ Clients one-time", f"{pct_one_time} %")
+col2.metric("🛒 Panier moyen (article)", f"{ticket_df['avg_item_value'][0]} R$")
+col3.metric("⭐ Note moyenne", review_df["avg_score"][0])
+
+# --------------------------------------------------------------------
+# 📌 2) Quels produits attirent le plus les nouveaux clients ?
+# --------------------------------------------------------------------
+
+st.header("🎯 Produits d’acquisition (premier achat)")
+
+query_acquisition = """
+SELECT 
+    COALESCE(tr.product_category_name_english, cp.product_category_name) AS category,
+    COUNT(*) AS first_order_count,
+    ROUND(AVG(oi.price + oi.freight_value), 2) AS avg_basket
+FROM clean_orders o
+JOIN clean_order_items oi ON o.order_id = oi.order_id
+JOIN clean_products cp ON oi.product_id = cp.product_id
+LEFT JOIN product_category_name_translation tr 
+       ON cp.product_category_name = tr.product_category_name
+WHERE o.customer_id IN (
+    SELECT customer_id
+    FROM clean_orders
+    GROUP BY customer_id
+    HAVING COUNT(*) = 1
 )
+GROUP BY category
+ORDER BY first_order_count DESC
+LIMIT 15;
+"""
 
-fig_rev_freq = px.bar(
-    df_rev_freq,
-    x="frequency",
-    y="avg_score",
-    title="Note moyenne par fréquence d'achat",
-    labels={"frequency": "Nombre de commandes", "avg_score": "Note moyenne"},
-    color="avg_score",
-    color_continuous_scale="Blues"
+df_acq = run_query(query_acquisition)
+
+fig_acq = px.bar(
+    df_acq,
+    x="category",
+    y="first_order_count",
+    title="Top 15 des catégories qui attirent le plus de nouveaux clients",
 )
+fig_acq.update_layout(xaxis_title="Catégorie", yaxis_title="Nombre de clients")
 
-st.plotly_chart(fig_rev_freq, use_container_width=True)
+st.plotly_chart(fig_acq, use_container_width=True)
+
+# --------------------------------------------------------------------
+# 📌 3) Quelles catégories génèrent les pires premières expériences ?
+# --------------------------------------------------------------------
+
+st.header("⚠️ Produits problématiques (mauvaises premières expériences)")
+
+query_bad_first = """
+SELECT 
+    COALESCE(tr.product_category_name_english, cp.product_category_name) AS category,
+    COUNT(*) AS bad_first_reviews
+FROM clean_orders o
+JOIN clean_reviews r ON r.order_id = o.order_id
+JOIN clean_order_items oi ON oi.order_id = o.order_id
+JOIN clean_products cp ON cp.product_id = oi.product_id
+LEFT JOIN product_category_name_translation tr 
+       ON cp.product_category_name = tr.product_category_name
+WHERE r.review_score <= 2
+  AND o.customer_id IN (
+      SELECT customer_id
+      FROM clean_orders
+      GROUP BY customer_id
+      HAVING COUNT(*) = 1
+  )
+GROUP BY category
+HAVING bad_first_reviews > 20
+ORDER BY bad_first_reviews DESC
+LIMIT 15;
+"""
+
+df_bad = run_query(query_bad_first)
+
+fig_bad = px.bar(
+    df_bad,
+    x="category",
+    y="bad_first_reviews",
+    color="bad_first_reviews",
+    title="Catégories causant le plus de mauvaises premières notes",
+    color_continuous_scale="Reds",
+)
+fig_bad.update_layout(xaxis_title="Catégorie", yaxis_title="Bad Reviews (≤ 2)")
+
+st.plotly_chart(fig_bad, use_container_width=True)
+
+# --------------------------------------------------------------------
+# 📌 4) Impact du délai de livraison sur les one-time buyers
+# --------------------------------------------------------------------
+
+st.header("⏱️ Impact du délai sur la satisfaction des nouveaux clients")
+
+query_delay = """
+SELECT
+    ROUND(AVG(JULIANDAY(order_delivered_customer_date) 
+        - JULIANDAY(order_purchase_timestamp)), 2) AS avg_delivery_days,
+    ROUND(AVG(review_score), 2) AS avg_score,
+    COUNT(*) AS nb_orders
+FROM clean_orders o
+JOIN clean_reviews r ON o.order_id = r.order_id
+WHERE o.order_status = 'delivered'
+AND o.customer_id IN (
+    SELECT customer_id
+    FROM clean_orders
+    GROUP BY customer_id
+    HAVING COUNT(*) = 1
+)
+AND o.order_delivered_customer_date IS NOT NULL
+AND o.order_purchase_timestamp IS NOT NULL
+"""
+
+df_delay = run_query(query_delay)
+
+colA, colB = st.columns(2)
+colA.metric("📦 Délai moyen (first-time)", f"{df_delay['avg_delivery_days'][0]} jours")
+colB.metric("⭐ Note moyenne (first-time)", df_delay["avg_score"][0])
 
 st.markdown("""
-💡 *Les clients récurrents donnent-ils de meilleures ou de moins bonnes notes ?  
-Cette analyse aide à comprendre la relation entre expérience et fidélité.*
-""")
-
-
-# C — Relation dépenses ↔ satisfaction
-st.subheader("📌 Note moyenne selon le niveau de dépense (segments)")
-
-df_cust["spend_segment"] = pd.qcut(
-    df_cust["monetary"],
-    q=4,
-    labels=["Low spenders", "Medium", "High", "Very high"]
-)
-
-df_spend_rev = (
-    df_cust.groupby("spend_segment", as_index=False)
-           .agg(avg_review=("avg_review_score", "mean"))
-)
-
-fig_spend_rev = px.bar(
-    df_spend_rev,
-    x="spend_segment",
-    y="avg_review",
-    title="Satisfaction selon le niveau de dépense",
-    color="avg_review",
-    color_continuous_scale="Blues"
-)
-
-st.plotly_chart(fig_spend_rev, use_container_width=True)
-
-
-
-# --------------------------------------------------
-# 4. VALEUR CLIENT (Customer Value)
-# --------------------------------------------------
-
-st.header("💰 Valeur Client")
-
-colv1, colv2 = st.columns(2)
-
-# Distribution des dépenses
-fig_m = px.histogram(
-    df_cust,
-    x="log_monetary",
-    nbins=50,
-    title="Distribution log(monetary)",
-    color_discrete_sequence=["#445c7a"]
-)
-colv1.plotly_chart(fig_m, use_container_width=True)
-
-# Percentiles
-percentiles = df_cust["monetary"].quantile([0.5, 0.75, 0.9, 0.95, 0.99])
-colv2.write("### Percentiles de dépense")
-colv2.dataframe(percentiles.to_frame("monetary"), use_container_width=True)
-
-
-st.markdown("""
-💡 *La valeur client est très concentrée : une petite proportion des clients représente une grande partie du chiffre d'affaires.*
-""")
-
-
-# --------------------------------------------------
-# 5. INSIGHTS BUSINESS
-# --------------------------------------------------
-
-st.header("📌 Insights Business")
-
-st.markdown("""
-### 🎯 Résumé des enseignements
-
-- **La fidélité client est extrêmement faible** → quasi tous les clients n’achètent qu’une seule fois.  
-- **La satisfaction moyenne est élevée**, mais n’est pas corrélée à une forte fidélité.  
-- **Le niveau de dépense n'influence pas beaucoup la satisfaction**, ce qui est courant dans les marketplaces.  
-- **La répartition des dépenses est très concentrée** → stratégie possible : programme VIP ou retargeting.  
-
-Cette analyse révèle que les efforts devraient se concentrer sur :  
-- l’amélioration de la rétention,  
-- la réduction du délai de livraison (vu page géographique),  
-- la création d’un parcours client plus incitatif au repeat purchase.
+💡 *Les nouveaux clients sont extrêmement sensibles au délai de livraison.
+Un délai élevé = risque majeur de non-retour.*
 """)
