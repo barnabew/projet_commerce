@@ -1,5 +1,5 @@
 import streamlit as st
-from utils import load_table
+from data import load_table
 import pandas as pd
 
 # ----------- CONFIG -----------
