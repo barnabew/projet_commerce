@@ -1,232 +1,152 @@
 import streamlit as st
-import pandas as pd
-import plotly.express as px
 from data import load_table
+import pandas as pd
+import numpy as np
 
-# -----------------------------------------
-# CONFIG
-# -----------------------------------------
-st.set_page_config(page_title="Résumé | Olist", layout="wide")
+# ------------------------------
+# PAGE CONFIG
+# ------------------------------
+st.set_page_config(page_title="Résumé", layout="wide")
 
-# -----------------------------------------
-# CSS design type Geckoboard / PowerBI
-# -----------------------------------------
-st.markdown("""
+# ------------------------------
+# NAVBAR CSS + HTML
+# ------------------------------
+nav_html = """
 <style>
+/* Hide Streamlit default */
+#MainMenu {visibility: hidden;}
+footer {visibility: hidden;}
+header {visibility: hidden;}
 
-    /* KPI cards */
-    div[data-testid="metric-container"] {
-        background-color: #FFFFFF;
-        border-radius: 12px;
-        padding: 18px;
-        margin: 8px;
-        box-shadow: 0 2px 8px rgba(0,0,0,0.08);
-        border: 1px solid #E6E6E6;
-    }
+/* Top navbar */
+.navbar {
+    background-color: #0d1b2a;
+    padding: 12px 25px;
+    display: flex;
+    gap: 30px;
+    border-radius: 8px;
+    margin-bottom: 25px;
+    margin-left: 5%;
+    margin-right: 5%;
+}
 
-    /* Titles */
-    h1, h2, h3 {
-        color: #1F77B4 !important;
-        font-weight: 600;
-    }
+.navbtn {
+    color: #e0e6ed;
+    font-size: 17px;
+    text-decoration: none;
+    font-weight: 500;
+    padding: 8px 16px;
+}
 
-    /* Remove footer */
-    footer {visibility: hidden;}
+.navbtn:hover {
+    background-color: #1b263b;
+    border-radius: 6px;
+}
 
+.nav-active {
+    background-color: #415a77;
+    border-radius: 6px;
+}
 </style>
-""", unsafe_allow_html=True)
 
+<div class="navbar">
+    <a class="navbtn nav-active" href="/Accueil">Résumé</a>
+    <a class="navbtn" href="/geographique">Géographique</a>
+    <a class="navbtn" href="/produit">Produits</a>
+    <a class="navbtn" href="/clients">Clients</a>
+    <a class="navbtn" href="/recommandations">Recommandations</a>
+</div>
+"""
+st.markdown(nav_html, unsafe_allow_html=True)
 
-# -----------------------------------------
-# TITLE
-# -----------------------------------------
-st.title("📊 Résumé Global — Olist")
-st.markdown("### Vue d’ensemble des performances commerciales")
-
-st.write("")
-
-
-# -----------------------------------------
-# LOAD DATA
-# -----------------------------------------
+# ------------------------------
+# DATA
+# ------------------------------
 orders = load_table("clean_orders")
 order_items = load_table("clean_order_items")
 reviews = load_table("clean_reviews")
-products = load_table("clean_products")
-customers = load_table("clean_customers")
 
-
-# -----------------------------------------
-# KPI CALCULATIONS
-# -----------------------------------------
-
-# Revenue total
-total_revenue = (order_items["price"] + order_items["freight_value"]).sum()
-
-# Nb commandes
-nb_orders = orders["order_id"].nunique()
-
-# Note moyenne
-avg_score = reviews["review_score"].mean()
-
-# Délai moyen
-orders_valid = orders[
-    (orders["order_status"].isin(["delivered", "shipped", "invoiced"])) &
-    orders["order_delivered_customer_date"].notna()
+# Revenue
+orders_with_price = order_items.merge(
+    orders[["order_id", "order_status"]],
+    on="order_id"
+)
+orders_valid = orders_with_price[
+    orders_with_price["order_status"].isin(["delivered", "shipped", "invoiced"])
 ]
+revenue = (orders_valid["price"] + orders_valid["freight_value"]).sum()
 
-delivery_delay = (
-    pd.to_datetime(orders_valid["order_delivered_customer_date"]) -
-    pd.to_datetime(orders_valid["order_purchase_timestamp"])
-).dt.days.mean()
+# KPIs
+total_orders = orders["order_id"].nunique()
+avg_score = reviews["review_score"].mean()
+avg_delivery = (pd.to_datetime(orders["order_delivered_customer_date"]) -
+                pd.to_datetime(orders["order_purchase_timestamp"])
+               ).dt.days.mean()
 
+# ------------------------------
+# TITLE
+# ------------------------------
+st.markdown(
+    "<h1 style='text-align:center; color:white; margin-bottom:15px;'>📊 OLIST DASHBOARD — Résumé</h1>",
+    unsafe_allow_html=True
+)
 
-# -----------------------------------------
-# KPI SECTION
-# -----------------------------------------
-st.markdown("## 🧮 Indicateurs clés")
+# ------------------------------
+# KPI CARDS
+# ------------------------------
+def metric_card(title, value):
+    st.markdown(
+        f"""
+        <div style="
+            background-color:#1b263b;
+            padding:20px;
+            border-radius:12px;
+            text-align:center;
+            color:#e0e6ed;
+            font-size:18px;
+        ">
+            <div style='font-size:14px; opacity:0.8;'>{title}</div>
+            <div style='font-size:28px; font-weight:600;'>{value}</div>
+        </div>
+        """,
+        unsafe_allow_html=True
+    )
 
 col1, col2, col3, col4 = st.columns(4)
 
-col1.metric("💰 Revenue Total", f"R$ {total_revenue:,.0f}")
-col2.metric("🛍️ Nombre de Commandes", f"{nb_orders:,}")
-col3.metric("⭐ Note Moyenne", f"{avg_score:.2f} / 5")
-col4.metric("🚚 Délai Moyen", f"{delivery_delay:.2f} jours")
-
-st.markdown("---")
-st.write("")
-
-
-# ========================================================
-# SECTION 1 — Revenue dans le temps
-# ========================================================
-
-st.markdown("## 📈 Évolution du Chiffre d’Affaires")
-
-order_items["total"] = order_items["price"] + order_items["freight_value"]
-
-df_time = orders.merge(order_items, on="order_id")
-df_time["date"] = pd.to_datetime(df_time["order_purchase_timestamp"]).dt.to_period("M").astype(str)
-
-rev_time = df_time.groupby("date")["total"].sum().reset_index()
-
-fig_rev = px.line(
-    rev_time,
-    x="date",
-    y="total",
-    title="Revenue Mensuel",
-    markers=True
-)
-
-fig_rev.update_layout(height=350)
-
-st.plotly_chart(fig_rev, use_container_width=True)
+with col1: metric_card("Revenu total", f"R$ {revenue:,.0f}")
+with col2: metric_card("Commandes", f"{total_orders:,}")
+with col3: metric_card("Note moyenne", f"{avg_score:.2f}")
+with col4: metric_card("Délai moyen", f"{avg_delivery:.2f} jours")
 
 st.write("")
-
-
-# ========================================================
-# SECTION 2 — CA par État (carte)
-# ========================================================
-
-st.markdown("## 🌍 Répartition Géographique du CA")
-
-query_geo = """
-SELECT 
-    c.customer_state AS state,
-    SUM(coi.price + coi.freight_value) AS revenue
-FROM clean_order_items coi
-JOIN clean_orders o ON coi.order_id = o.order_id
-JOIN clean_customers c ON o.customer_id = c.customer_id
-WHERE o.order_status IN ('delivered', 'shipped', 'invoiced')
-GROUP BY c.customer_state;
-"""
-
-df_geo = load_table("clean_customers")  # fallback
-df_geo = pd.read_sql(query_geo, st.session_state["connection"])
-
-fig_geo = px.choropleth(
-    df_geo,
-    locations="state",
-    locationmode="geojson-id",
-    color="revenue",
-    color_continuous_scale="Blues",
-    title="CA par État"
-)
-
-st.plotly_chart(fig_geo, use_container_width=True)
-
 st.write("")
 
+# ------------------------------
+# PLACEHOLDER FOR FUTURE GRAPHS
+# ------------------------------
+st.markdown("<h3 style='color:white;'>Graphiques (à remplir après validation)</h3>", unsafe_allow_html=True)
 
-# ========================================================
-# SECTION 3 — Top 10 catégories
-# ========================================================
+g1, g2 = st.columns(2)
+g3, g4 = st.columns(2)
 
-st.markdown("## 🥇 Top 10 Catégories (CA)")
-
-query_ctg = """
-SELECT 
-    COALESCE(tr.product_category_name_english, cp.product_category_name) AS category,
-    SUM(coi.price + coi.freight_value) AS revenue
-FROM clean_order_items coi
-JOIN clean_products cp ON cp.product_id = coi.product_id
-LEFT JOIN product_category_name_translation tr
-    ON cp.product_category_name = tr.product_category_name
-JOIN clean_orders o ON o.order_id = coi.order_id
-WHERE o.order_status IN ('delivered','shipped','invoiced')
-GROUP BY category
-ORDER BY revenue DESC
-LIMIT 10;
-"""
-
-df_ctg = pd.read_sql(query_ctg, st.session_state["connection"])
-
-fig_ctg = px.bar(
-    df_ctg,
-    x="revenue",
-    y="category",
-    orientation="h",
-    title="Top 10 Catégories par CA",
-    color="revenue",
-    color_continuous_scale="Blues"
-)
-
-st.plotly_chart(fig_ctg, use_container_width=True)
-
-st.write("")
-
-
-# ========================================================
-# SECTION 4 — Distribution des notes
-# ========================================================
-
-st.markdown("## ⭐ Distribution des Notes Clients")
-
-fig_score = px.histogram(
-    reviews,
-    x="review_score",
-    nbins=5,
-    title="Répartition des Notes",
-    color_discrete_sequence=["#1F77B4"]
-)
-
-st.plotly_chart(fig_score, use_container_width=True)
-
-st.markdown("---")
-
-# ========================================================
-# INSIGHTS
-# ========================================================
-
-st.markdown("## 🔍 Insights clés")
-
-st.markdown("""
-- **SP** représente plus de **36 %** du CA total  
-- Les retards (>20 jours) génèrent **35 % de mauvaises notes**  
-- 97 % des clients sont des **one-time buyers**  
-- Les catégories **beauty / gifts** dominent les ventes  
-- Les délais de livraison varient fortement selon l’état  
-""")
-
-st.info("📌 Pour les actions business : consulte la page **Recommandations**.")
+for g in [g1, g2, g3, g4]:
+    with g:
+        st.markdown(
+            """
+            <div style="
+                background-color:#1b263b;
+                height:180px;
+                border-radius:12px;
+                color:white;
+                display:flex;
+                align-items:center;
+                justify-content:center;
+                font-size:22px;
+                opacity:0.6;
+            ">
+                Graphique
+            </div>
+            """,
+            unsafe_allow_html=True
+        )
