@@ -101,7 +101,7 @@ div[data-testid="collapsedControl"] { display: none !important; }
 # ============================================================
 # NAVBAR (Highlight active link)
 # ============================================================
-st.markdown(f"""
+st.markdown("""
 <div class="navbar">
 
     <a class="navbtn {'nav-active' if st.session_state['page']=='resume' else ''}"
