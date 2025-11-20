@@ -1,63 +1,132 @@
 import streamlit as st
-
-st.set_page_config(layout="wide")
+import pandas as pd
+import numpy as np
+from data import load_table, get_connection
 
 # -------------------------------
-# DASHBOARD DARK GECKOBOARD
+# PAGE CONFIG
+# -------------------------------
+st.set_page_config(page_title="Olist Dashboard", layout="wide")
+
+# -------------------------------
+# REMOVE SIDEBAR + FULL DARK THEME
 # -------------------------------
 st.markdown("""
 <style>
 
-    /* Remove Streamlit padding */
-    .block-container {
-        padding: 0 !important;
-        margin: 0 !important;
-        max-width: 100% !important;
-    }
+/* Hide sidebar completely */
+section[data-testid="stSidebar"] {
+    display: none !important;
+}
+div[data-testid="collapsedControl"] {
+    display: none !important;
+}
 
-    /* Background color full screen */
-    body {
-        background-color: #0E1A2B;
-    }
+/* Remove padding */
+.block-container {
+    padding: 0 !important;
+    margin: 0 !important;
+    max-width: 100% !important;
+}
 
-    .stApp {
-        background-color: #0E1A2B;
-    }
+html, body, .stApp {
+    background-color: #0E1A2B !important;
+}
 
-    /* Title */
-    h1, h2, h3, h4, h5 {
-        color: white !important;
-        font-weight: 600;
-    }
+/* NAVBAR */
+.navbar {
+    background-color: #152B44;
+    padding: 15px 40px;
+    display: flex;
+    gap: 40px;
+    align-items: center;
+    border-bottom: 1px solid rgba(255,255,255,0.08);
+}
 
-    /* KPI cards like Geckoboard */
-    .card {
-        background-color: #152B44;
-        padding: 25px;
-        border-radius: 12px;
-        margin: 10px;
-        text-align: left;
-        border: 1px solid rgba(255,255,255,0.05);
-    }
+.navitem {
+    color: #BFD7FF;
+    font-size: 18px;
+    text-decoration: none;
+    font-weight: 500;
+}
 
-    .card h2 {
-        font-size: 28px;
-        color: white;
-        margin: 0;
-        padding: 0;
-    }
+.navitem:hover {
+    color: white;
+}
 
-    .card p {
-        color: #8CA3C1;
-        margin: 0;
-        font-size: 14px;
-    }
+/* KPI CARDS */
+.card {
+    background-color: #152B44;
+    padding: 25px;
+    border-radius: 12px;
+    margin-top: 20px;
+    text-align: left;
+    border: 1px solid rgba(255,255,255,0.05);
+}
+
+.card p {
+    color: #8CA3C1;
+    margin-bottom: 5px;
+    font-size: 15px;
+}
+
+.card h2 {
+    color: white;
+    font-size: 30px;
+    margin: 0;
+}
 
 </style>
 """, unsafe_allow_html=True)
 
-# Titel
-st.markdown("<h1 style='text-align:center;'>📊 OLIST DASHBOARD — Résumé</h1>", unsafe_allow_html=True)
+
+# --------------------------------------
+# NAVBAR
+# --------------------------------------
+st.markdown("""
+<div class="navbar">
+    <a class="navitem" href="/">Résumé</a>
+    <a class="navitem" href="/geographique">Géographique</a>
+    <a class="navitem" href="/produit">Produits</a>
+    <a class="navitem" href="/clients">Clients</a>
+    <a class="navitem" href="/recommandations">Recommandations</a>
+</div>
+""", unsafe_allow_html=True)
+
+
+# -------------------------------
+# DATA
+# -------------------------------
+conn = get_connection()
+
+# KPI QUERIES
+total_rev = pd.read_sql("""
+SELECT SUM(price + freight_value) AS rev FROM clean_order_items
+""", conn)["rev"][0]
+
+nb_orders = pd.read_sql("""
+SELECT COUNT(DISTINCT order_id) AS c FROM clean_orders
+""", conn)["c"][0]
+
+avg_score = pd.read_sql("""
+SELECT ROUND(AVG(review_score),2) AS avg FROM clean_reviews
+""", conn)["avg"][0]
+
+avg_delay = pd.read_sql("""
+SELECT ROUND(AVG(
+    JULIANDAY(order_delivered_customer_date) - JULIANDAY(order_purchase_timestamp)
+),2) AS delay
+FROM clean_orders WHERE order_status='delivered'
+""", conn)["delay"][0]
+
+
+# -------------------------------
+# TITLE
+# -------------------------------
+st.markdown(
+    "<h1 style='text-align:center; color:white; margin-top:20px;'>📊 OLIST DASHBOARD — Résumé</h1>",
+    unsafe_allow_html=True
+)
 
 # -------------------------------
 # KPI ROW
@@ -65,31 +134,32 @@ st.markdown("<h1 style='text-align:center;'>📊 OLIST DASHBOARD — Résumé</h
 col1, col2, col3, col4 = st.columns(4)
 
 with col1:
-    st.markdown("<div class='card'><p>Revenue</p><h2>R$ 15.6M</h2></div>", unsafe_allow_html=True)
+    st.markdown(f"<div class='card'><p>Revenue total</p><h2>R$ {total_rev:,.0f}</h2></div>", unsafe_allow_html=True)
 
 with col2:
-    st.markdown("<div class='card'><p>Commandes</p><h2>99 441</h2></div>", unsafe_allow_html=True)
+    st.markdown(f"<div class='card'><p>Commandes</p><h2>{nb_orders:,}</h2></div>", unsafe_allow_html=True)
 
 with col3:
-    st.markdown("<div class='card'><p>Note moyenne</p><h2>4.19 / 5</h2></div>", unsafe_allow_html=True)
+    st.markdown(f"<div class='card'><p>Note moyenne</p><h2>{avg_score}</h2></div>", unsafe_allow_html=True)
 
 with col4:
-    st.markdown("<div class='card'><p>Délai moyen</p><h2>12.5 jours</h2></div>", unsafe_allow_html=True)
+    st.markdown(f"<div class='card'><p>Délai moyen</p><h2>{avg_delay} jours</h2></div>", unsafe_allow_html=True)
+
 
 # -------------------------------
-# GRID 2×2 FOR GRAPHS
+# GRID FOR GRAPHS (PLACEHOLDERS)
 # -------------------------------
-c1, c2 = st.columns(2)
-c3, c4 = st.columns(2)
+g1, g2 = st.columns(2)
+g3, g4 = st.columns(2)
 
-with c1:
-    st.markdown("<div class='card'><h3>Graphique 1</h3></div>", unsafe_allow_html=True)
+with g1:
+    st.markdown("<div class='card'><h3 style='color:white'>Graphique 1</h3></div>", unsafe_allow_html=True)
 
-with c2:
-    st.markdown("<div class='card'><h3>Graphique 2</h3></div>", unsafe_allow_html=True)
+with g2:
+    st.markdown("<div class='card'><h3 style='color:white'>Graphique 2</h3></div>", unsafe_allow_html=True)
 
-with c3:
-    st.markdown("<div class='card'><h3>Graphique 3</h3></div>", unsafe_allow_html=True)
+with g3:
+    st.markdown("<div class='card'><h3 style='color:white'>Graphique 3</h3></div>", unsafe_allow_html=True)
 
-with c4:
-    st.markdown("<div class='card'><h3>Graphique 4</h3></div>", unsafe_allow_html=True)
+with g4:
+    st.markdown("<div class='card'><h3 style='color:white'>Graphique 4</h3></div>", unsafe_allow_html=True)
