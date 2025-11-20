@@ -17,20 +17,23 @@ st.session_state["page"] = "resume"
 # ============================================================
 # CSS : DARK THEME + NAVBAR HIGHLIGHT + LAYOUT
 # ============================================================
-# ---- NAVBAR HTML ----
 nav_html = """
 <style>
+/* Hide Streamlit default */
 #MainMenu {visibility: hidden;}
 footer {visibility: hidden;}
 header {visibility: hidden;}
 
+/* Top navbar */
 .navbar {
     background-color: #0d1b2a;
     padding: 12px 25px;
     display: flex;
-    gap: 25px;
+    gap: 30px;
     border-radius: 8px;
     margin-bottom: 25px;
+    margin-left: 5%;
+    margin-right: 5%;
 }
 
 .navbtn {
@@ -38,7 +41,7 @@ header {visibility: hidden;}
     font-size: 17px;
     text-decoration: none;
     font-weight: 500;
-    padding: 8px 14px;
+    padding: 8px 16px;
 }
 
 .navbtn:hover {
@@ -60,34 +63,7 @@ header {visibility: hidden;}
     <a class="navbtn" href="/recommandations">Recommandations</a>
 </div>
 """
-
-# 🔥 IMPORTANT : activer le rendu HTML
 st.markdown(nav_html, unsafe_allow_html=True)
-
-
-
-# ============================================================
-# NAVBAR (Highlight active link)
-# ============================================================
-html_2 = """
-<div class="navbar">
-
-    <a class="navbtn {'nav-active' if st.session_state['page']=='resume' else ''}"
-       href="/Accueil">Résumé</a>
-
-    <a class="navbtn" href="/geographique">Géographique</a>
-
-    <a class="navbtn" href="/produit">Produits</a>
-
-    <a class="navbtn" href="/clients">Clients</a>
-
-    <a class="navbtn" href="/recommandations">Recommandations</a>
-
-</div>
-"""
-
-st.markdown(html_2, unsafe_allow_html=True)
-
 
 
 # ============================================================
