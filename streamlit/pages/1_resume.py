@@ -17,7 +17,7 @@ st.session_state["page"] = "resume"
 # ============================================================
 # CSS : DARK THEME + NAVBAR HIGHLIGHT + LAYOUT
 # ============================================================
-st.markdown("""
+nav_html = """
 <style>
 
 /* FULL DARK BACKGROUND */
@@ -93,7 +93,9 @@ div[data-testid="collapsedControl"] { display: none !important; }
 }
 
 </style>
-""", unsafe_allow_html=True)
+"""
+
+st.markdown(nav_html, unsafe_allow_html=True)
 
 
 
