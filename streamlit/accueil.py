@@ -101,25 +101,33 @@ div[data-testid="collapsedControl"] { display: none !important; }
 # ============================================================
 # NAVBAR (Highlight active link)
 # ============================================================
-test = """
+# -------------------------------------------------------
+# Définir la page active
+# -------------------------------------------------------
+if "page" not in st.session_state:
+    st.session_state["page"] = "resume"  # par défaut
+
+# Exemple : si tu veux changer manuellement
+# st.session_state["page"] = "clients"
+
+# -------------------------------------------------------
+# Construire la navbar dynamiquement
+# -------------------------------------------------------
+def nav_item(label, link, page_id):
+    active = "nav-active" if st.session_state["page"] == page_id else ""
+    return f'<a class="navbtn {active}" href="{link}">{label}</a>'
+
+navbar = f"""
 <div class="navbar">
-
-    <a class="navbtn {'nav-active' if st.session_state['page']=='resume' else ''}"
-       href="/Accueil">Résumé</a>
-
-    <a class="navbtn" href="/geographique">Géographique</a>
-
-    <a class="navbtn" href="/produit">Produits</a>
-
-    <a class="navbtn" href="/clients">Clients</a>
-
-    <a class="navbtn" href="/recommandations">Recommandations</a>
-
+    {nav_item('Résumé', '/Accueil', 'resume')}
+    {nav_item('Géographique', '/geographique', 'geographique')}
+    {nav_item('Produits', '/produit', 'produit')}
+    {nav_item('Clients', '/clients', 'clients')}
+    {nav_item('Recommandations', '/recommandations', 'recommandations')}
 </div>
 """
 
-st.markdown(test, unsafe_allow_html=True)
-
+st.markdown(navbar, unsafe_allow_html=True)
 
 
 # ============================================================
