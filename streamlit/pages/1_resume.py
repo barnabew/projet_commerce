@@ -69,7 +69,7 @@ st.markdown(nav_html, unsafe_allow_html=True)
 # ============================================================
 # NAVBAR (Highlight active link)
 # ============================================================
-st.markdown(f"""
+st.markdown("""
 <div class="navbar">
 
     <a class="navbtn {'nav-active' if st.session_state['page']=='resume' else ''}"
