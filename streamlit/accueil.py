@@ -14,20 +14,16 @@ st.set_page_config(page_title="Olist Dashboard", layout="wide")
 st.markdown("""
 <style>
 
-/* Full dark background */
+/* FULL DARK BACKGROUND */
 html, body, .stApp {
     background-color: #0E1A2B !important;
 }
 
-/* Remove sidebar */
-section[data-testid="stSidebar"] {
-    display: none !important;
-}
-div[data-testid="collapsedControl"] {
-    display: none !important;
-}
+/* REMOVE SIDEBAR */
+section[data-testid="stSidebar"] { display: none !important; }
+div[data-testid="collapsedControl"] { display: none !important; }
 
-/* PAGE CONTAINER (adds nice side margins) */
+/* PAGE WRAPPER */
 .main-container {
     max-width: 1600px;
     margin: auto;
@@ -35,25 +31,37 @@ div[data-testid="collapsedControl"] {
     padding-right: 40px;
 }
 
-/* NAVBAR */
+/* NAVBAR -------------------------------------- */
 .navbar {
     background-color: #152B44;
     padding: 12px 40px;
     display: flex;
-    gap: 35px;
+    gap: 20px;
     align-items: center;
     border-bottom: 1px solid rgba(255,255,255,0.07);
 }
 
-.navitem {
+/* default nav buttons */
+.navbtn {
+    padding: 8px 18px;
+    border-radius: 6px;
     color: #BFD7FF;
-    font-size: 18px;
+    font-size: 17px;
     text-decoration: none;
     font-weight: 500;
+    transition: 0.2s ease-in-out;
 }
 
-.navitem:hover {
+/* hover */
+.navbtn:hover {
+    background-color: rgba(255,255,255,0.08);
     color: white;
+}
+
+/* ACTIVE TAB (highlight) */
+.nav-active {
+    background-color: #4DA8FF;
+    color: #0E1A2B !important;
 }
 
 /* KPI CARDS */
@@ -62,38 +70,42 @@ div[data-testid="collapsedControl"] {
     padding: 25px;
     border-radius: 12px;
     margin-top: 20px;
-    text-align: left;
     border: 1px solid rgba(255,255,255,0.05);
 }
 
-.card p {
-    color: #8CA3C1;
-    margin-bottom: 5px;
-    font-size: 15px;
-}
-
-.card h2 {
-    color: white;
-    font-size: 30px;
-    margin: 0;
-}
+.card p { color: #8CA3C1; margin-bottom: 5px; font-size: 15px; }
+.card h2 { color: white; font-size: 30px; margin: 0; }
 
 </style>
 """, unsafe_allow_html=True)
 
 
-# -----------------------------------
-# NAVBAR (fonctionnelle avec PageLink)
-# -----------------------------------
-st.markdown("""
+path = st.experimental_get_query_params()
+current = st.context.pages.get("current_page", "Résumé")
+
+
+# NAVBAR WITH ACTIVE HIGHLIGHT
+st.markdown(f"""
 <div class="navbar">
-    <a class="navitem" href="/Accueil">Résumé</a>
-    <a class="navitem" href="/geographique">Géographique</a>
-    <a class="navitem" href="/produit">Produits</a>
-    <a class="navitem" href="/clients">Clients</a>
-    <a class="navitem" href="/recommandations">Recommandations</a>
+
+    <a class="navbtn {'nav-active' if st.session_state.get('page')=='resume' else ''}"
+       href="/Accueil">Résumé</a>
+
+    <a class="navbtn {'nav-active' if st.session_state.get('page')=='geo' else ''}"
+       href="/geographique">Géographique</a>
+
+    <a class="navbtn {'nav-active' if st.session_state.get('page')=='produit' else ''}"
+       href="/produit">Produits</a>
+
+    <a class="navbtn {'nav-active' if st.session_state.get('page')=='clients' else ''}"
+       href="/clients">Clients</a>
+
+    <a class="navbtn {'nav-active' if st.session_state.get('page')=='recos' else ''}"
+       href="/recommandations">Recommandations</a>
+
 </div>
 """, unsafe_allow_html=True)
+
 
 
 # -----------------------------------
@@ -126,14 +138,6 @@ SELECT ROUND(AVG(
 FROM clean_orders WHERE order_status='delivered'
 """, conn)["delay"][0]
 
-
-# -------------------------------
-# TITLE
-# -------------------------------
-st.markdown(
-    "<h1 style='text-align:center; color:white; margin-top:25px;'>📊 OLIST DASHBOARD — Résumé</h1>",
-    unsafe_allow_html=True
-)
 
 
 # -------------------------------
