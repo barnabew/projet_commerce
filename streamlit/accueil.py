@@ -3,18 +3,23 @@ import pandas as pd
 import numpy as np
 from data import load_table, get_connection
 
-# -------------------------------
-# PAGE CONFIG
-# -------------------------------
+# -----------------------------------
+# CONFIG
+# -----------------------------------
 st.set_page_config(page_title="Olist Dashboard", layout="wide")
 
-# -------------------------------
-# REMOVE SIDEBAR + FULL DARK THEME
-# -------------------------------
+# -----------------------------------
+# CSS DARK + MARGES + NAVBAR
+# -----------------------------------
 st.markdown("""
 <style>
 
-/* Hide sidebar completely */
+/* Full dark background */
+html, body, .stApp {
+    background-color: #0E1A2B !important;
+}
+
+/* Remove sidebar */
 section[data-testid="stSidebar"] {
     display: none !important;
 }
@@ -22,25 +27,22 @@ div[data-testid="collapsedControl"] {
     display: none !important;
 }
 
-/* Remove padding */
-.block-container {
-    padding: 0 !important;
-    margin: 0 !important;
-    max-width: 100% !important;
-}
-
-html, body, .stApp {
-    background-color: #0E1A2B !important;
+/* PAGE CONTAINER (adds nice side margins) */
+.main-container {
+    max-width: 1600px;
+    margin: auto;
+    padding-left: 40px;
+    padding-right: 40px;
 }
 
 /* NAVBAR */
 .navbar {
     background-color: #152B44;
-    padding: 15px 40px;
+    padding: 12px 40px;
     display: flex;
-    gap: 40px;
+    gap: 35px;
     align-items: center;
-    border-bottom: 1px solid rgba(255,255,255,0.08);
+    border-bottom: 1px solid rgba(255,255,255,0.07);
 }
 
 .navitem {
@@ -80,12 +82,12 @@ html, body, .stApp {
 """, unsafe_allow_html=True)
 
 
-# --------------------------------------
-# NAVBAR
-# --------------------------------------
+# -----------------------------------
+# NAVBAR (fonctionnelle avec PageLink)
+# -----------------------------------
 st.markdown("""
 <div class="navbar">
-    <a class="navitem" href="/">Résumé</a>
+    <a class="navitem" href="/Accueil">Résumé</a>
     <a class="navitem" href="/geographique">Géographique</a>
     <a class="navitem" href="/produit">Produits</a>
     <a class="navitem" href="/clients">Clients</a>
@@ -94,12 +96,17 @@ st.markdown("""
 """, unsafe_allow_html=True)
 
 
+# -----------------------------------
+# MAIN CONTAINER (marges latérales)
+# -----------------------------------
+st.markdown("<div class='main-container'>", unsafe_allow_html=True)
+
+
 # -------------------------------
-# DATA
+# KPI DATA
 # -------------------------------
 conn = get_connection()
 
-# KPI QUERIES
 total_rev = pd.read_sql("""
 SELECT SUM(price + freight_value) AS rev FROM clean_order_items
 """, conn)["rev"][0]
@@ -124,12 +131,13 @@ FROM clean_orders WHERE order_status='delivered'
 # TITLE
 # -------------------------------
 st.markdown(
-    "<h1 style='text-align:center; color:white; margin-top:20px;'>📊 OLIST DASHBOARD — Résumé</h1>",
+    "<h1 style='text-align:center; color:white; margin-top:25px;'>📊 OLIST DASHBOARD — Résumé</h1>",
     unsafe_allow_html=True
 )
 
+
 # -------------------------------
-# KPI ROW
+# KPIs
 # -------------------------------
 col1, col2, col3, col4 = st.columns(4)
 
@@ -146,8 +154,9 @@ with col4:
     st.markdown(f"<div class='card'><p>Délai moyen</p><h2>{avg_delay} jours</h2></div>", unsafe_allow_html=True)
 
 
+
 # -------------------------------
-# GRID FOR GRAPHS (PLACEHOLDERS)
+# GRAPH PLACEHOLDERS
 # -------------------------------
 g1, g2 = st.columns(2)
 g3, g4 = st.columns(2)
@@ -163,3 +172,7 @@ with g3:
 
 with g4:
     st.markdown("<div class='card'><h3 style='color:white'>Graphique 4</h3></div>", unsafe_allow_html=True)
+
+
+# Close container
+st.markdown("</div>", unsafe_allow_html=True)
