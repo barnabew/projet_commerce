@@ -17,86 +17,52 @@ st.session_state["page"] = "resume"
 # ============================================================
 # CSS : DARK THEME + NAVBAR HIGHLIGHT + LAYOUT
 # ============================================================
+# ---- NAVBAR HTML ----
 nav_html = """
 <style>
+#MainMenu {visibility: hidden;}
+footer {visibility: hidden;}
+header {visibility: hidden;}
 
-/* FULL DARK BACKGROUND */
-html, body, .stApp {
-    background-color: #0E1A2B !important;
-}
-
-/* REMOVE SIDEBAR */
-section[data-testid="stSidebar"] { display: none !important; }
-div[data-testid="collapsedControl"] { display: none !important; }
-
-/* PAGE WRAPPER : nice left/right margins */
-.main-container {
-    max-width: 1600px;
-    margin: auto;
-    padding-left: 40px;
-    padding-right: 40px;
-}
-
-/* NAVBAR -------------------------------------- */
 .navbar {
-    background-color: #152B44;
-    padding: 12px 40px;
+    background-color: #0d1b2a;
+    padding: 12px 25px;
     display: flex;
-    gap: 20px;
-    align-items: center;
-    border-bottom: 1px solid rgba(255,255,255,0.07);
+    gap: 25px;
+    border-radius: 8px;
+    margin-bottom: 25px;
 }
 
-/* Basic nav buttons */
 .navbtn {
-    padding: 8px 18px;
-    border-radius: 6px;
-    color: #BFD7FF;
+    color: #e0e6ed;
     font-size: 17px;
     text-decoration: none;
     font-weight: 500;
-    transition: 0.2s ease-in-out;
+    padding: 8px 14px;
 }
 
-/* Hover effect */
 .navbtn:hover {
-    background-color: rgba(255,255,255,0.08);
-    color: white;
+    background-color: #1b263b;
+    border-radius: 6px;
 }
 
-/* ACTIVE TAB (highlight) */
 .nav-active {
-    background-color: #4DA8FF;
-    color: #0E1A2B !important;
+    background-color: #415a77;
+    border-radius: 6px;
 }
-
-/* KPI CARDS */
-.card {
-    background-color: #152B44;
-    padding: 25px;
-    border-radius: 12px;
-    margin-top: 20px;
-    text-align: left;
-    border: 1px solid rgba(255,255,255,0.05);
-}
-
-.card p {
-    color: #8CA3C1;
-    margin-bottom: 5px;
-    font-size: 15px;
-}
-
-.card h2 {
-    color: white;
-    font-size: 30px;
-    margin: 0;
-}
-
 </style>
+
+<div class="navbar">
+    <a class="navbtn nav-active" href="/Accueil">Résumé</a>
+    <a class="navbtn" href="/geographique">Géographique</a>
+    <a class="navbtn" href="/produit">Produits</a>
+    <a class="navbtn" href="/clients">Clients</a>
+    <a class="navbtn" href="/recommandations">Recommandations</a>
+</div>
 """
 
+# 🔥 IMPORTANT : activer le rendu HTML
 st.markdown(nav_html, unsafe_allow_html=True)
-
 
 
 
