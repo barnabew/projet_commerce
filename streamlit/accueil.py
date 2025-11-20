@@ -3,14 +3,20 @@ import pandas as pd
 import numpy as np
 from data import load_table, get_connection
 
-# -----------------------------------
-# CONFIG
-# -----------------------------------
+# ============================================================
+# PAGE CONFIG
+# ============================================================
 st.set_page_config(page_title="Olist Dashboard", layout="wide")
 
-# -----------------------------------
-# CSS DARK + MARGES + NAVBAR
-# -----------------------------------
+# ============================================================
+# ACTIVE PAGE IDENTIFICATION
+# ============================================================
+st.session_state["page"] = "resume"
+
+
+# ============================================================
+# CSS : DARK THEME + NAVBAR HIGHLIGHT + LAYOUT
+# ============================================================
 st.markdown("""
 <style>
 
@@ -23,7 +29,7 @@ html, body, .stApp {
 section[data-testid="stSidebar"] { display: none !important; }
 div[data-testid="collapsedControl"] { display: none !important; }
 
-/* PAGE WRAPPER */
+/* PAGE WRAPPER : nice left/right margins */
 .main-container {
     max-width: 1600px;
     margin: auto;
@@ -41,7 +47,7 @@ div[data-testid="collapsedControl"] { display: none !important; }
     border-bottom: 1px solid rgba(255,255,255,0.07);
 }
 
-/* default nav buttons */
+/* Basic nav buttons */
 .navbtn {
     padding: 8px 18px;
     border-radius: 6px;
@@ -52,7 +58,7 @@ div[data-testid="collapsedControl"] { display: none !important; }
     transition: 0.2s ease-in-out;
 }
 
-/* hover */
+/* Hover effect */
 .navbtn:hover {
     background-color: rgba(255,255,255,0.08);
     color: white;
@@ -70,48 +76,55 @@ div[data-testid="collapsedControl"] { display: none !important; }
     padding: 25px;
     border-radius: 12px;
     margin-top: 20px;
+    text-align: left;
     border: 1px solid rgba(255,255,255,0.05);
 }
 
-.card p { color: #8CA3C1; margin-bottom: 5px; font-size: 15px; }
-.card h2 { color: white; font-size: 30px; margin: 0; }
+.card p {
+    color: #8CA3C1;
+    margin-bottom: 5px;
+    font-size: 15px;
+}
+
+.card h2 {
+    color: white;
+    font-size: 30px;
+    margin: 0;
+}
 
 </style>
 """, unsafe_allow_html=True)
 
 
-path = st.experimental_get_query_params()
-current = st.context.pages.get("current_page", "Résumé")
 
 
-# NAVBAR WITH ACTIVE HIGHLIGHT
+# ============================================================
+# NAVBAR (Highlight active link)
+# ============================================================
 st.markdown(f"""
 <div class="navbar">
 
-    <a class="navbtn {'nav-active' if st.session_state.get('page')=='resume' else ''}"
+    <a class="navbtn {'nav-active' if st.session_state['page']=='resume' else ''}"
        href="/Accueil">Résumé</a>
 
-    <a class="navbtn {'nav-active' if st.session_state.get('page')=='geo' else ''}"
-       href="/geographique">Géographique</a>
+    <a class="navbtn" href="/geographique">Géographique</a>
 
-    <a class="navbtn {'nav-active' if st.session_state.get('page')=='produit' else ''}"
-       href="/produit">Produits</a>
+    <a class="navbtn" href="/produit">Produits</a>
 
-    <a class="navbtn {'nav-active' if st.session_state.get('page')=='clients' else ''}"
-       href="/clients">Clients</a>
+    <a class="navbtn" href="/clients">Clients</a>
 
-    <a class="navbtn {'nav-active' if st.session_state.get('page')=='recos' else ''}"
-       href="/recommandations">Recommandations</a>
+    <a class="navbtn" href="/recommandations">Recommandations</a>
 
 </div>
 """, unsafe_allow_html=True)
 
 
 
-# -----------------------------------
-# MAIN CONTAINER (marges latérales)
-# -----------------------------------
+# ============================================================
+# MAIN PAGE CONTENT
+# ============================================================
 st.markdown("<div class='main-container'>", unsafe_allow_html=True)
+
 
 
 # -------------------------------
@@ -139,23 +152,30 @@ FROM clean_orders WHERE order_status='delivered'
 """, conn)["delay"][0]
 
 
-
 # -------------------------------
-# KPIs
+# KPIs ROW
 # -------------------------------
 col1, col2, col3, col4 = st.columns(4)
 
 with col1:
-    st.markdown(f"<div class='card'><p>Revenue total</p><h2>R$ {total_rev:,.0f}</h2></div>", unsafe_allow_html=True)
+    st.markdown(
+        f"<div class='card'><p>Revenue total</p><h2>R$ {total_rev:,.0f}</h2></div>",
+        unsafe_allow_html=True)
 
 with col2:
-    st.markdown(f"<div class='card'><p>Commandes</p><h2>{nb_orders:,}</h2></div>", unsafe_allow_html=True)
+    st.markdown(
+        f"<div class='card'><p>Commandes</p><h2>{nb_orders:,}</h2></div>",
+        unsafe_allow_html=True)
 
 with col3:
-    st.markdown(f"<div class='card'><p>Note moyenne</p><h2>{avg_score}</h2></div>", unsafe_allow_html=True)
+    st.markdown(
+        f"<div class='card'><p>Note moyenne</p><h2>{avg_score}</h2></div>",
+        unsafe_allow_html=True)
 
 with col4:
-    st.markdown(f"<div class='card'><p>Délai moyen</p><h2>{avg_delay} jours</h2></div>", unsafe_allow_html=True)
+    st.markdown(
+        f"<div class='card'><p>Délai moyen</p><h2>{avg_delay} jours</h2></div>",
+        unsafe_allow_html=True)
 
 
 
@@ -166,17 +186,22 @@ g1, g2 = st.columns(2)
 g3, g4 = st.columns(2)
 
 with g1:
-    st.markdown("<div class='card'><h3 style='color:white'>Graphique 1</h3></div>", unsafe_allow_html=True)
+    st.markdown("<div class='card'><h3 style='color:white'>Graphique 1</h3></div>",
+                unsafe_allow_html=True)
 
 with g2:
-    st.markdown("<div class='card'><h3 style='color:white'>Graphique 2</h3></div>", unsafe_allow_html=True)
+    st.markdown("<div class='card'><h3 style='color:white'>Graphique 2</h3></div>",
+                unsafe_allow_html=True)
 
 with g3:
-    st.markdown("<div class='card'><h3 style='color:white'>Graphique 3</h3></div>", unsafe_allow_html=True)
+    st.markdown("<div class='card'><h3 style='color:white'>Graphique 3</h3></div>",
+                unsafe_allow_html=True)
 
 with g4:
-    st.markdown("<div class='card'><h3 style='color:white'>Graphique 4</h3></div>", unsafe_allow_html=True)
+    st.markdown("<div class='card'><h3 style='color:white'>Graphique 4</h3></div>",
+                unsafe_allow_html=True)
 
 
-# Close container
+
+# CLOSE MAIN WRAPPER
 st.markdown("</div>", unsafe_allow_html=True)
