@@ -10,7 +10,7 @@ import plotly.graph_objects as go
 
 
 
-
+st.session_state["page"] = "geographique"
 
 
 
