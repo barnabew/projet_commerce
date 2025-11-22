@@ -54,16 +54,6 @@ div[data-testid="collapsedControl"] { display: none !important; }
     backdrop-filter: blur(10px);
 }
 
-/* Logo/Brand area (optional) */
-.navbar-brand {
-    color: #4DA8FF;
-    font-size: 20px;
-    font-weight: 700;
-    margin-right: 20px;
-    letter-spacing: -0.5px;
-    display: flex;
-    align-items: center;
-}
 
 /* Nav buttons container */
 .nav-buttons {
