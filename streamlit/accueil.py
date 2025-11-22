@@ -111,6 +111,17 @@ div[data-testid="collapsedControl"] { display: none !important; }
     font-weight: 600;
 }
 
+.nav-active::after {
+    content: "";
+    position: absolute;
+    bottom: 0px;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: #fff;
+    border-radius: 10px;
+}
+
 .nav-active:hover {
     transform: translateY(-2px);
     box-shadow: 0 6px 20px rgba(77, 168, 255, 0.5);
