@@ -259,7 +259,7 @@ def nav_item(label, link, page_id):
 
 navbar = f"""
 <div class="navbar">
-    {nav_item('Résumé', '/Accueil', 'resume')}
+    {nav_item('Résumé', '/', 'resume')}
     {nav_item('Géographique', '/geographique', 'geographique')}
     {nav_item('Produits', '/produit', 'produit')}
     {nav_item('Clients', '/clients', 'clients')}
