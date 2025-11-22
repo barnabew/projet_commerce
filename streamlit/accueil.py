@@ -31,47 +31,50 @@ div[data-testid="collapsedControl"] { display: none !important; }
 
 /* ========== NAVBAR ========== */
 
+/* === NAVBAR WRAPPER === */
 .nav-wrapper {
     background: linear-gradient(135deg, #1a2f4a 0%, #162841 100%);
-    padding: 12px 40px;
+    padding: 14px 30px;
     border-bottom: 1px solid rgba(77,168,255,0.2);
+    box-shadow: 0 4px 20px rgba(0,0,0,0.3);
     margin: -20px -40px 30px -40px;
-    box-shadow: 0 4px 20px rgba(0,0,0,0.35);
-    backdrop-filter: blur(10px);
+    display: flex;
+    gap: 0px;
 }
 
-.nav-grid {
-    display: grid;
-    grid-template-columns: repeat(5, 1fr);
-    gap: 6px;
-}
-
-/* style des liens streamlit */
-a[data-testid="stPageLink-label"] {
-    display: block !important;
-    width: 100%;
-    padding: 14px 0;
-    background: transparent;
-    color: #a8c5e0 !important;
+/* === REMOVE STREAMLIT DEFAULT LINK STYLE === */
+div[data-testid="stPageLink"] a {
     text-decoration: none !important;
+}
+
+/* === NAV BUTTON STYLE (like your old ones) === */
+div[data-testid="stPageLink"] a span[data-testid="stPageLink-label"] {
+    display: block;
+    background: transparent;
+    color: #a8c5e0;
+    padding: 12px 16px;
     text-align: center;
     border-radius: 8px;
-    transition: 0.15s ease-in-out;
     font-size: 15px;
     font-weight: 500;
+    transition: all .25s ease;
+    border: 1px solid transparent;
 }
 
-a[data-testid="stPageLink-label"]:hover {
+/* === HOVER === */
+div[data-testid="stPageLink"] a:hover span[data-testid="stPageLink-label"] {
     background: rgba(77,168,255,0.15);
-    color: #fff !important;
+    border-color: rgba(77,168,255,0.3);
+    color: #fff;
+    transform: translateY(-2px);
 }
 
-/* active page */
-a[data-testid="stPageLink-link"][aria-current="page"] {
+/* === ACTIVE PAGE (Streamlit sets aria-current="page") === */
+div[data-testid="stPageLink"] a[aria-current="page"] span[data-testid="stPageLink-label"] {
     background: linear-gradient(135deg, #4DA8FF, #3d8fe0);
     color: white !important;
-    border-radius: 8px;
-    font-weight: 600;
+    border-color: rgba(255,255,255,0.3);
+    box-shadow: 0 4px 12px rgba(77,168,255,0.4);
 }
 
 /* ========== CARD STYLES ========== */
