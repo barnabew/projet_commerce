@@ -263,25 +263,21 @@ div[data-testid="column"] button {
 # ============================================================
 # NAVBAR (Enhanced with brand)
 # ============================================================
-if "page" not in st.session_state:
-    st.session_state["page"] = "resume"
+nav_col1, nav_col2, nav_col3, nav_col4, nav_col5 = st.columns(5)
 
-def nav_item(label, link, page_id):
-    active = "nav-active" if st.session_state["page"] == page_id else ""
-    return f'<a class="navbtn {active}" href="{link}">{label}</a>'
+nav_links = [
+    ("Résumé", "Accueil.py"),
+    ("Géographique", "pages/2_geographique.py"),
+    ("Produits", "pages/3_produit.py"),
+    ("Clients", "pages/4_clients.py"),
+    ("Recommandations", "pages/5_recommandations.py")
+]
 
-navbar = f"""
-<div class="navbar">
-    {nav_item('Résumé', '/', 'resume')}
-    {nav_item('Géographique', '/geographique', 'geographique')}
-    {nav_item('Produits', '/produit', 'produit')}
-    {nav_item('Clients', '/clients', 'clients')}
-    {nav_item('Recommandations', '/recommandations', 'recommandations')}
-</div>
-"""
+cols = [nav_col1, nav_col2, nav_col3, nav_col4, nav_col5]
 
-st.markdown(navbar, unsafe_allow_html=True)
-
+for (label, page), col in zip(nav_links, cols):
+    with col:
+        st.page_link(page, label=label, icon=None)
 
 # ============================================================
 # MAIN PAGE CONTENT
