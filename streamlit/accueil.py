@@ -46,8 +46,8 @@ div[data-testid="collapsedControl"] { display: none !important; }
     background: linear-gradient(135deg, #1a2f4a 0%, #162841 100%);
     padding: 16px 40px;
     display: flex;
-    gap: 8px;
-    align-items: center;
+    gap: 0px;
+    align-items: stretch;
     border-bottom: 1px solid rgba(77, 168, 255, 0.2);
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
     margin: -20px -40px 30px -40px;
@@ -59,13 +59,23 @@ div[data-testid="collapsedControl"] { display: none !important; }
     color: #4DA8FF;
     font-size: 20px;
     font-weight: 700;
-    margin-right: 30px;
+    margin-right: 20px;
     letter-spacing: -0.5px;
+    display: flex;
+    align-items: center;
 }
 
-/* Nav buttons */
+/* Nav buttons container */
+.nav-buttons {
+    display: flex;
+    flex: 1;
+    gap: 4px;
+}
+
+/* Nav buttons - prennent toute la largeur */
 .navbtn {
-    padding: 10px 24px;
+    flex: 1;
+    padding: 12px 16px;
     border-radius: 8px;
     color: #a8c5e0;
     font-size: 15px;
@@ -75,6 +85,12 @@ div[data-testid="collapsedControl"] { display: none !important; }
     position: relative;
     overflow: hidden;
     border: 1px solid transparent;
+    text-align: center;
+    cursor: pointer;
+    background: transparent;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 /* Hover effect with subtle glow */
@@ -97,6 +113,16 @@ div[data-testid="collapsedControl"] { display: none !important; }
 .nav-active:hover {
     transform: translateY(-2px);
     box-shadow: 0 6px 20px rgba(77, 168, 255, 0.5);
+}
+
+/* Streamlit button override */
+div[data-testid="column"] button {
+    width: 100%;
+    background: transparent;
+    border: none;
+    color: inherit;
+    padding: 0;
+    font: inherit;
 }
 
 /* ========================================
