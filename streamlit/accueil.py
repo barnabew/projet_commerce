@@ -124,15 +124,15 @@ st.markdown("<div class='nav-wrapper'>", unsafe_allow_html=True)
 col1, col2, col3, col4, col5 = st.columns(5)
 
 with col1:
-    st.page_link("Accueil.py", label="Résumé")
+    st.page_link("./accueil.py", label="Résumé")
 with col2:
-    st.page_link("pages/2_geographique.py", label="Géographique")
+    st.page_link("./pages/2_geographique.py", label="Géographique")
 with col3:
-    st.page_link("pages/3_produit.py", label="Produits")
+    st.page_link("./pages/3_produit.py", label="Produits")
 with col4:
-    st.page_link("pages/4_clients.py", label="Clients")
+    st.page_link("./pages/4_clients.py", label="Clients")
 with col5:
-    st.page_link("pages/5_recommandations.py", label="Recommandations")
+    st.page_link("./pages/5_recommandations.py", label="Recommandations")
 
 st.markdown("</div>", unsafe_allow_html=True)
 
