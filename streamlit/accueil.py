@@ -11,12 +11,11 @@ st.set_page_config(page_title="Olist Dashboard", layout="wide")
 # ============================================================
 # ACTIVE PAGE IDENTIFICATION
 # ============================================================
-if "current_page" not in st.session_state:
-    st.session_state["current_page"] = "resume"
+st.session_state["page"] = "resume"
 
 
 # ============================================================
-# CSS : PROFESSIONAL DARK THEME
+# CSS : MODERN DARK THEME + BEAUTIFUL NAVBAR + ENHANCED LAYOUT
 # ============================================================
 st.markdown("""
 <style>
@@ -25,20 +24,13 @@ st.markdown("""
    BASE STYLES
    ======================================== */
 html, body, .stApp {
-    background: linear-gradient(135deg, #0a1628 0%, #111d30 100%) !important;
-    font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, sans-serif;
+    background: linear-gradient(135deg, #0a1628 0%, #0e1f38 100%) !important;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
 }
 
 /* REMOVE SIDEBAR */
 section[data-testid="stSidebar"] { display: none !important; }
 div[data-testid="collapsedControl"] { display: none !important; }
-
-/* Remove default Streamlit padding */
-.block-container {
-    padding-top: 1rem !important;
-    padding-bottom: 2rem !important;
-    max-width: 100% !important;
-}
 
 /* PAGE WRAPPER */
 .main-container {
@@ -48,174 +40,189 @@ div[data-testid="collapsedControl"] { display: none !important; }
 }
 
 /* ========================================
-   NAVBAR - PROFESSIONAL & CLEAN
+   NAVBAR - MODERN & ELEGANT
    ======================================== */
-.top-navbar {
-    background: linear-gradient(135deg, #162841 0%, #1a2f4a 100%);
-    padding: 0;
-    border-bottom: 2px solid rgba(77, 168, 255, 0.2);
-    box-shadow: 0 4px 24px rgba(0, 0, 0, 0.4);
-    margin: -1rem 0 30px 0;
-    width: 100vw;
-    position: relative;
-    left: 50%;
-    right: 50%;
-    margin-left: -50vw;
-    margin-right: -50vw;
-}
-
-.navbar-content {
-    max-width: 1600px;
-    margin: 0 auto;
-    padding: 0 40px;
+.navbar {
+    background: linear-gradient(135deg, #1a2f4a 0%, #162841 100%);
+    padding: 16px 40px;
     display: flex;
-    align-items: center;
-    gap: 0;
+    gap: 0px;
+    align-items: stretch;
+    border-bottom: 1px solid rgba(77, 168, 255, 0.2);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+    margin: -20px -40px 30px -40px;
+    backdrop-filter: blur(10px);
 }
 
+/* Logo/Brand area (optional) */
 .navbar-brand {
     color: #4DA8FF;
-    font-size: 22px;
+    font-size: 20px;
     font-weight: 700;
-    padding: 20px 30px 20px 0;
+    margin-right: 20px;
     letter-spacing: -0.5px;
-    border-right: 1px solid rgba(255, 255, 255, 0.08);
-    margin-right: 0;
+    display: flex;
+    align-items: center;
 }
 
-/* Hide Streamlit button styling */
-.stButton button {
-    background: transparent !important;
-    border: none !important;
-    padding: 0 !important;
-    color: inherit !important;
-    box-shadow: none !important;
-    width: 100% !important;
-    height: 100% !important;
-}
-
-.stButton button:hover {
-    background: transparent !important;
-    border: none !important;
-    color: inherit !important;
-}
-
-.stButton button:active,
-.stButton button:focus {
-    background: transparent !important;
-    border: none !important;
-    box-shadow: none !important;
-}
-
-/* Navigation tabs */
-.nav-tab {
+/* Nav buttons container */
+.nav-buttons {
+    display: flex;
     flex: 1;
-    padding: 20px 24px;
-    color: #95adc7;
+    gap: 4px;
+}
+
+/* Nav buttons - prennent toute la largeur */
+.navbtn {
+    flex: 1;
+    padding: 12px 16px;
+    border-radius: 8px;
+    color: #a8c5e0;
     font-size: 15px;
+    text-decoration: none;
     font-weight: 500;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+    overflow: hidden;
+    border: 1px solid transparent;
     text-align: center;
     cursor: pointer;
-    transition: all 0.3s ease;
-    border-bottom: 3px solid transparent;
     background: transparent;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
-.nav-tab:hover {
-    background: rgba(77, 168, 255, 0.08);
-    color: #d4e3f5;
+/* Hover effect with subtle glow */
+.navbtn:hover {
+    background: rgba(77, 168, 255, 0.1);
+    color: #fff;
+    border-color: rgba(77, 168, 255, 0.3);
+    transform: translateY(-1px);
 }
 
-.nav-tab-active {
+/* ACTIVE TAB - Beautiful highlight */
+.nav-active {
+    background: linear-gradient(135deg, #4DA8FF 0%, #3d8fe0 100%);
     color: #ffffff !important;
-    background: rgba(77, 168, 255, 0.12) !important;
-    border-bottom-color: #4DA8FF !important;
+    box-shadow: 0 4px 15px rgba(77, 168, 255, 0.4);
+    border-color: rgba(255, 255, 255, 0.2);
     font-weight: 600;
+}
+
+.nav-active:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(77, 168, 255, 0.5);
+}
+
+/* Streamlit button override */
+div[data-testid="column"] button {
+    width: 100%;
+    background: transparent;
+    border: none;
+    color: inherit;
+    padding: 0;
+    font: inherit;
 }
 
 /* ========================================
-   KPI CARDS - PROFESSIONAL DESIGN
+   KPI CARDS - ENHANCED DESIGN
    ======================================== */
-.kpi-card {
-    background: linear-gradient(135deg, #162841 0%, #1a2f4a 100%);
-    padding: 30px;
-    border-radius: 12px;
+.card {
+    background: linear-gradient(135deg, #1a2f4a 0%, #162841 100%);
+    padding: 28px;
+    border-radius: 16px;
+    margin-top: 20px;
+    text-align: left;
     border: 1px solid rgba(77, 168, 255, 0.15);
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.25);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
     transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
 }
 
-.kpi-card:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 8px 30px rgba(77, 168, 255, 0.15);
-    border-color: rgba(77, 168, 255, 0.25);
+/* Subtle gradient overlay */
+.card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, #4DA8FF, #7B61FF);
+    opacity: 0;
+    transition: opacity 0.3s ease;
 }
 
-.kpi-label {
-    color: #95adc7;
-    font-size: 13px;
+.card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 12px 40px rgba(77, 168, 255, 0.2);
+    border-color: rgba(77, 168, 255, 0.3);
+}
+
+.card:hover::before {
+    opacity: 1;
+}
+
+.card p {
+    color: #8ca3c1;
+    margin-bottom: 8px;
+    font-size: 14px;
     text-transform: uppercase;
-    letter-spacing: 1.2px;
-    font-weight: 600;
-    margin-bottom: 10px;
+    letter-spacing: 1px;
+    font-weight: 500;
 }
 
-.kpi-value {
+.card h2 {
     color: #ffffff;
-    font-size: 34px;
+    font-size: 32px;
+    margin: 0;
     font-weight: 700;
-    line-height: 1.2;
-    letter-spacing: -0.5px;
+    background: linear-gradient(135deg, #ffffff 0%, #a8c5e0 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
 }
 
 /* ========================================
    CHART CONTAINERS
    ======================================== */
-.chart-container {
-    background: linear-gradient(135deg, #162841 0%, #1a2f4a 100%);
-    padding: 30px;
-    border-radius: 12px;
+.chart-card {
+    background: linear-gradient(135deg, #1a2f4a 0%, #162841 100%);
+    padding: 32px;
+    border-radius: 16px;
     margin-top: 20px;
     border: 1px solid rgba(77, 168, 255, 0.15);
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.25);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
     transition: all 0.3s ease;
 }
 
-.chart-container:hover {
-    box-shadow: 0 8px 30px rgba(77, 168, 255, 0.12);
-    border-color: rgba(77, 168, 255, 0.22);
+.chart-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 12px 40px rgba(77, 168, 255, 0.15);
+    border-color: rgba(77, 168, 255, 0.25);
 }
 
-.chart-title {
+.chart-card h3 {
     color: #ffffff;
+    margin: 0 0 20px 0;
     font-size: 18px;
     font-weight: 600;
-    margin-bottom: 8px;
     letter-spacing: -0.3px;
 }
 
-.chart-subtitle {
-    color: #95adc7;
-    font-size: 14px;
-    margin-bottom: 20px;
-}
-
 /* ========================================
-   SECTION TITLE
+   UTILITY CLASSES
    ======================================== */
-.section-header {
+.section-title {
     color: #ffffff;
-    font-size: 26px;
+    font-size: 28px;
     font-weight: 700;
-    margin: 50px 0 25px 0;
+    margin: 40px 0 20px 0;
     letter-spacing: -0.5px;
-    padding-left: 15px;
-    border-left: 4px solid #4DA8FF;
 }
 
-/* ========================================
-   SCROLLBAR
-   ======================================== */
+/* Scrollbar styling */
 ::-webkit-scrollbar {
     width: 10px;
     height: 10px;
@@ -238,54 +245,37 @@ div[data-testid="collapsedControl"] { display: none !important; }
 """, unsafe_allow_html=True)
 
 
-# ============================================================
-# NAVIGATION HANDLER
-# ============================================================
-def navigate_to(page_name):
-    st.session_state["current_page"] = page_name
-    st.rerun()
 
 
 # ============================================================
-# NAVBAR
+# NAVBAR (Enhanced with brand)
 # ============================================================
-# Petit espacement pour la barre Streamlit Cloud
-st.markdown("<br>", unsafe_allow_html=True)
+if "page" not in st.session_state:
+    st.session_state["page"] = "resume"
 
-st.markdown("""
-<div class="top-navbar">
-    <div class="navbar-content">
-        <div class="navbar-brand">📊 Olist Analytics</div>
-    </div>
+def nav_item(label, link, page_id):
+    active = "nav-active" if st.session_state["page"] == page_id else ""
+    return f'<a class="navbtn {active}" href="{link}">{label}</a>'
+
+navbar = f"""
+<div class="navbar">
+    <div class="navbar-brand">📊 Olist</div>
+    {nav_item('Résumé', '/Accueil', 'resume')}
+    {nav_item('Géographique', '/geographique', 'geographique')}
+    {nav_item('Produits', '/produit', 'produit')}
+    {nav_item('Clients', '/clients', 'clients')}
+    {nav_item('Recommandations', '/recommandations', 'recommandations')}
 </div>
-""", unsafe_allow_html=True)
+"""
 
-# Navigation buttons
-nav_cols = st.columns(5)
-pages = [
-    ("resume", "Résumé"),
-    ("geographique", "Géographique"),
-    ("produit", "Produits"),
-    ("clients", "Clients"),
-    ("recommandations", "Recommandations")
-]
-
-# Conteneur pour les boutons de navigation
-st.markdown('<div style="margin-top: -30px;">', unsafe_allow_html=True)
-for idx, (page_id, label) in enumerate(pages):
-    with nav_cols[idx]:
-        active_class = "nav-tab-active" if st.session_state["current_page"] == page_id else ""
-        st.markdown(f'<div class="nav-tab {active_class}">', unsafe_allow_html=True)
-        if st.button(label, key=f"nav_{page_id}", use_container_width=True):
-            navigate_to(page_id)
-        st.markdown('</div>', unsafe_allow_html=True)
-st.markdown('</div>', unsafe_allow_html=True)
+st.markdown(navbar, unsafe_allow_html=True)
 
 
 # ============================================================
 # MAIN PAGE CONTENT
 # ============================================================
 st.markdown("<div class='main-container'>", unsafe_allow_html=True)
+
 
 
 # -------------------------------
@@ -316,84 +306,57 @@ FROM clean_orders WHERE order_status='delivered'
 # -------------------------------
 # KPIs ROW
 # -------------------------------
-kpi_cols = st.columns(4)
+col1, col2, col3, col4 = st.columns(4)
 
-with kpi_cols[0]:
-    st.markdown(f"""
-    <div class='kpi-card'>
-        <div class='kpi-label'>Revenue Total</div>
-        <div class='kpi-value'>R$ {total_rev:,.0f}</div>
-    </div>
-    """, unsafe_allow_html=True)
+with col1:
+    st.markdown(
+        f"<div class='card'><p>Revenue Total</p><h2>R$ {total_rev:,.0f}</h2></div>",
+        unsafe_allow_html=True)
 
-with kpi_cols[1]:
-    st.markdown(f"""
-    <div class='kpi-card'>
-        <div class='kpi-label'>Commandes</div>
-        <div class='kpi-value'>{nb_orders:,}</div>
-    </div>
-    """, unsafe_allow_html=True)
+with col2:
+    st.markdown(
+        f"<div class='card'><p>Commandes</p><h2>{nb_orders:,}</h2></div>",
+        unsafe_allow_html=True)
 
-with kpi_cols[2]:
-    st.markdown(f"""
-    <div class='kpi-card'>
-        <div class='kpi-label'>Note Moyenne</div>
-        <div class='kpi-value'>{avg_score} ⭐</div>
-    </div>
-    """, unsafe_allow_html=True)
+with col3:
+    st.markdown(
+        f"<div class='card'><p>Note Moyenne</p><h2>{avg_score} ⭐</h2></div>",
+        unsafe_allow_html=True)
 
-with kpi_cols[3]:
-    st.markdown(f"""
-    <div class='kpi-card'>
-        <div class='kpi-label'>Délai Moyen</div>
-        <div class='kpi-value'>{avg_delay} j</div>
-    </div>
-    """, unsafe_allow_html=True)
+with col4:
+    st.markdown(
+        f"<div class='card'><p>Délai Moyen</p><h2>{avg_delay} jours</h2></div>",
+        unsafe_allow_html=True)
+
 
 
 # -------------------------------
 # SECTION TITLE
 # -------------------------------
-st.markdown("<div class='section-header'>Analyses Détaillées</div>", unsafe_allow_html=True)
-
+st.markdown("<h2 class='section-title'>Analyses Détaillées</h2>", unsafe_allow_html=True)
 
 # -------------------------------
-# CHARTS
+# GRAPH PLACEHOLDERS
 # -------------------------------
-chart_row1 = st.columns(2)
-chart_row2 = st.columns(2)
+g1, g2 = st.columns(2)
+g3, g4 = st.columns(2)
 
-with chart_row1[0]:
-    st.markdown("""
-    <div class='chart-container'>
-        <div class='chart-title'>📈 Évolution des Ventes</div>
-        <div class='chart-subtitle'>Tendance mensuelle du chiffre d'affaires</div>
-    </div>
-    """, unsafe_allow_html=True)
+with g1:
+    st.markdown("<div class='chart-card'><h3>📈 Évolution des Ventes</h3><p style='color: #8ca3c1;'>Tendance mensuelle du chiffre d'affaires</p></div>",
+                unsafe_allow_html=True)
 
-with chart_row1[1]:
-    st.markdown("""
-    <div class='chart-container'>
-        <div class='chart-title'>🌍 Répartition Géographique</div>
-        <div class='chart-subtitle'>Top des régions par volume</div>
-    </div>
-    """, unsafe_allow_html=True)
+with g2:
+    st.markdown("<div class='chart-card'><h3>🌍 Répartition Géographique</h3><p style='color: #8ca3c1;'>Top des régions par volume</p></div>",
+                unsafe_allow_html=True)
 
-with chart_row2[0]:
-    st.markdown("""
-    <div class='chart-container'>
-        <div class='chart-title'>🛍️ Catégories Populaires</div>
-        <div class='chart-subtitle'>Produits les plus vendus</div>
-    </div>
-    """, unsafe_allow_html=True)
+with g3:
+    st.markdown("<div class='chart-card'><h3>🛍️ Catégories Populaires</h3><p style='color: #8ca3c1;'>Produits les plus vendus</p></div>",
+                unsafe_allow_html=True)
 
-with chart_row2[1]:
-    st.markdown("""
-    <div class='chart-container'>
-        <div class='chart-title'>⭐ Satisfaction Client</div>
-        <div class='chart-subtitle'>Distribution des notes</div>
-    </div>
-    """, unsafe_allow_html=True)
+with g4:
+    st.markdown("<div class='chart-card'><h3>⭐ Satisfaction Client</h3><p style='color: #8ca3c1;'>Distribution des notes</p></div>",
+                unsafe_allow_html=True)
+
 
 
 # CLOSE MAIN WRAPPER
