@@ -167,6 +167,7 @@ div[data-testid="column"] button {
 }
 
 .card:hover {
+    background: linear-gradient(135deg, #1a2f4a 0%, #1b3352 100%);
     transform: translateY(-4px);
     box-shadow: 0 12px 40px rgba(77, 168, 255, 0.2);
     border-color: rgba(77, 168, 255, 0.3);
