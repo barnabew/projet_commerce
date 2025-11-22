@@ -249,8 +249,8 @@ def nav_item(label, link, page_id):
 
 navbar = f"""
 <div class="navbar">
-    <div class="navbar-brand">📊 Olist</div>
-    {nav_item('Résumé', '/Accueil', 'resume')}
+    <div class="navbar-brand"></div>
+    {nav_item('Résumé', '/', 'resume')}
     {nav_item('Géographique', '/geographique', 'geographique')}
     {nav_item('Produits', '/produit', 'produit')}
     {nav_item('Clients', '/clients', 'clients')}
