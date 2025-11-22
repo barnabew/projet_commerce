@@ -215,7 +215,7 @@ div[data-testid="column"] button {
    UTILITY CLASSES
    ======================================== */
 .section-title {
-    color: #ffffff;
+    color: #dbd7d7;
     font-size: 28px;
     font-weight: 700;
     margin: 40px 0 20px 0;
