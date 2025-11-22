@@ -46,6 +46,7 @@ div[data-testid="collapsedControl"] { display: none !important; }
     background: linear-gradient(135deg, #1a2f4a 0%, #162841 100%);
     padding: 16px 40px;
     display: flex;
+    margin-top: 15px;
     gap: 0px;
     align-items: stretch;
     border-bottom: 1px solid rgba(77, 168, 255, 0.2);
