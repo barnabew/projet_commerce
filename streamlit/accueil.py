@@ -35,8 +35,9 @@ div[data-testid="collapsedControl"] { display: none !important; }
 
 /* Remove default Streamlit padding */
 .block-container {
-    padding-top: 2rem !important;
+    padding-top: 1rem !important;
     padding-bottom: 2rem !important;
+    max-width: 100% !important;
 }
 
 /* PAGE WRAPPER */
@@ -54,7 +55,13 @@ div[data-testid="collapsedControl"] { display: none !important; }
     padding: 0;
     border-bottom: 2px solid rgba(77, 168, 255, 0.2);
     box-shadow: 0 4px 24px rgba(0, 0, 0, 0.4);
-    margin: -2rem -40px 40px -40px;
+    margin: -1rem 0 30px 0;
+    width: 100vw;
+    position: relative;
+    left: 50%;
+    right: 50%;
+    margin-left: -50vw;
+    margin-right: -50vw;
 }
 
 .navbar-content {
@@ -242,6 +249,9 @@ def navigate_to(page_name):
 # ============================================================
 # NAVBAR
 # ============================================================
+# Petit espacement pour la barre Streamlit Cloud
+st.markdown("<br>", unsafe_allow_html=True)
+
 st.markdown("""
 <div class="top-navbar">
     <div class="navbar-content">
@@ -260,6 +270,8 @@ pages = [
     ("recommandations", "Recommandations")
 ]
 
+# Conteneur pour les boutons de navigation
+st.markdown('<div style="margin-top: -30px;">', unsafe_allow_html=True)
 for idx, (page_id, label) in enumerate(pages):
     with nav_cols[idx]:
         active_class = "nav-tab-active" if st.session_state["current_page"] == page_id else ""
@@ -267,6 +279,7 @@ for idx, (page_id, label) in enumerate(pages):
         if st.button(label, key=f"nav_{page_id}", use_container_width=True):
             navigate_to(page_id)
         st.markdown('</div>', unsafe_allow_html=True)
+st.markdown('</div>', unsafe_allow_html=True)
 
 
 # ============================================================
