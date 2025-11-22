@@ -331,11 +331,6 @@ with col4:
 
 
 # -------------------------------
-# SECTION TITLE
-# -------------------------------
-st.markdown("<h2 class='section-title'>Analyses Détaillées</h2>", unsafe_allow_html=True)
-
-# -------------------------------
 # GRAPH PLACEHOLDERS
 # -------------------------------
 g1, g2 = st.columns(2)
