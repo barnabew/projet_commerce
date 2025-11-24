@@ -45,7 +45,7 @@ div[data-testid="collapsedControl"] { display: none !important; }
     background: linear-gradient(135deg, #162841 0%, #1a2f4a 100%);
     border-bottom: 2px solid rgba(77, 168, 255, 0.2);
     box-shadow: 0 4px 24px rgba(0, 0, 0, 0.4);
-    margin: -1rem -2rem 2rem -2rem;
+    margin: -1rem -2rem 2.5rem -2rem;
     padding: 0;
 }
 
@@ -237,7 +237,7 @@ st.markdown("""
 <div class="navbar-container">
     <div class="navbar-content">
         <div class="navbar-brand">📊 Olist Analytics</div>
-        <div class="navbar-buttons">
+        <div class="navbar-buttons" id="navbar-buttons-container">
 """, unsafe_allow_html=True)
 
 # Créer les colonnes pour les boutons de navigation
