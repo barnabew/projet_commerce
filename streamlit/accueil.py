@@ -31,26 +31,46 @@ div[data-testid="collapsedControl"] { display: none !important; }
 
 /* ========== NAVBAR ========== */
 
-/* === NAVBAR WRAPPER === */
-.nav-wrapper {
-    background: linear-gradient(135deg, #1a2f4a 0%, #162841 100%);
-    padding: 14px 30px;
-    border-bottom: 1px solid rgba(77,168,255,0.2);
-    box-shadow: 0 4px 20px rgba(0,0,0,0.3);
-    margin: -20px -40px 30px -40px;
-    display: flex;
-    gap: 0px;
+/* Fix pour cibler le vrai conteneur des st.page_link */
+.nav-wrapper > div {
+    display: flex !important;
+    gap: 20px;
+    align-items: center;
 }
 
-.nav-wrapper [data-testid="column"] {
-    display: flex;
-    justify-content: center;
-}
-
-/* === REMOVE STREAMLIT DEFAULT LINK STYLE === */
-div[data-testid="stPageLink"] a {
+/* Retire les comportements bizarres */
+.nav-wrapper a {
     text-decoration: none !important;
 }
+
+/* Style des boutons */
+.nav-wrapper a span[data-testid="stPageLink-label"] {
+    background: transparent;
+    color: #a8c5e0;
+    padding: 10px 16px;
+    border-radius: 8px;
+    font-size: 15px;
+    font-weight: 500;
+    transition: all .25s ease;
+    border: 1px solid transparent;
+}
+
+/* Hover */
+.nav-wrapper a:hover span[data-testid="stPageLink-label"] {
+    background: rgba(77,168,255,0.15);
+    border-color: rgba(77,168,255,0.3);
+    color: #fff;
+    transform: translateY(-2px);
+}
+
+/* Page active */
+.nav-wrapper a[aria-current="page"] span[data-testid="stPageLink-label"] {
+    background: linear-gradient(135deg, #4DA8FF, #3d8fe0);
+    color: white !important;
+    border-color: rgba(255,255,255,0.3);
+    box-shadow: 0 4px 12px rgba(77,168,255,0.4);
+}
+
 
 /* === NAV BUTTON STYLE (like your old ones) === */
 div[data-testid="stPageLink"] a span[data-testid="stPageLink-label"] {
@@ -130,24 +150,12 @@ div[data-testid="stPageLink"] a[aria-current="page"] span[data-testid="stPageLin
 # ============================================================
 st.markdown("<div class='nav-wrapper'>", unsafe_allow_html=True)
 
-nav = st.container()
-with nav:
-    c1, c2, c3, c4, c5 = st.columns([1,1,1,1,1])
-
-    with c1:
-        st.page_link("accueil.py", label="Résumé")
-
-    with c2:
-        st.page_link("pages/2_geographique.py", label="Géographique")
-
-    with c3:
-        st.page_link("pages/3_produit.py", label="Produits")
-
-    with c4:
-        st.page_link("pages/4_clients.py", label="Clients")
-
-    with c5:
-        st.page_link("pages/5_recommandations.py", label="Recommandations")
+with st.container():
+    st.page_link("./accueil.py", label="Résumé")
+    st.page_link("./pages/2_geographique.py", label="Géographique")
+    st.page_link("./pages/3_produit.py", label="Produits")
+    st.page_link("./pages/4_clients.py", label="Clients")
+    st.page_link("./pages/5_recommandations.py", label="Recommandations")
 
 st.markdown("</div>", unsafe_allow_html=True)
 
