@@ -12,150 +12,71 @@ st.set_page_config(page_title="Olist Dashboard", layout="wide")
 # ============================================================
 # CSS : NAVBAR + THEME
 # ============================================================
+# ============================================================
+# NAVBAR CLEAN + PRO
+# ============================================================
+
 st.markdown("""
 <style>
 
-html, body, .stApp {
-    background: linear-gradient(135deg, #0a1628 0%, #0e1f38 100%) !important;
-    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+.navbar {
+    display: flex;
+    justify-content: center;
+    gap: 40px;
+    background: linear-gradient(135deg, #1a2f4a 0%, #162841 100%);
+    padding: 20px 0;
+    border-bottom: 1px solid rgba(77,168,255,0.25);
+    margin: -30px 0 30px 0;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.3);
 }
 
-section[data-testid="stSidebar"] { display: none !important; }
-div[data-testid="collapsedControl"] { display: none !important; }
-
-.main-container {
-    max-width: 1600px;
-    margin: 0 auto;
-    padding: 0 40px 40px 40px;
-}
-
-/* ========== NAVBAR ========== */
-
-/* Fix pour cibler le vrai conteneur des st.page_link */
-.nav-wrapper > div {
-    display: flex !important;
-    gap: 20px;
-    align-items: center;
-}
-
-/* Retire les comportements bizarres */
-.nav-wrapper a {
+/* Supprime style par défaut */
+.navbar a {
     text-decoration: none !important;
 }
 
 /* Style des boutons */
-.nav-wrapper a span[data-testid="stPageLink-label"] {
+.navbar a span[data-testid="stPageLink-label"] {
     background: transparent;
     color: #a8c5e0;
-    padding: 10px 16px;
-    border-radius: 8px;
-    font-size: 15px;
+    padding: 10px 22px;
+    border-radius: 10px;
+    font-size: 16px;
     font-weight: 500;
+    border: 1px solid rgba(255,255,255,0.05);
     transition: all .25s ease;
-    border: 1px solid transparent;
 }
 
 /* Hover */
-.nav-wrapper a:hover span[data-testid="stPageLink-label"] {
-    background: rgba(77,168,255,0.15);
-    border-color: rgba(77,168,255,0.3);
-    color: #fff;
-    transform: translateY(-2px);
-}
-
-/* Page active */
-.nav-wrapper a[aria-current="page"] span[data-testid="stPageLink-label"] {
-    background: linear-gradient(135deg, #4DA8FF, #3d8fe0);
-    color: white !important;
-    border-color: rgba(255,255,255,0.3);
-    box-shadow: 0 4px 12px rgba(77,168,255,0.4);
-}
-
-
-/* === NAV BUTTON STYLE (like your old ones) === */
-div[data-testid="stPageLink"] a span[data-testid="stPageLink-label"] {
-    display: block;
-    background: transparent;
-    color: #a8c5e0;
-    padding: 12px 16px;
-    text-align: center;
-    border-radius: 8px;
-    font-size: 15px;
-    font-weight: 500;
-    transition: all .25s ease;
-    border: 1px solid transparent;
-}
-
-/* === HOVER === */
-div[data-testid="stPageLink"] a:hover span[data-testid="stPageLink-label"] {
-    background: rgba(77,168,255,0.15);
-    border-color: rgba(77,168,255,0.3);
-    color: #fff;
-    transform: translateY(-2px);
-}
-
-/* === ACTIVE PAGE (Streamlit sets aria-current="page") === */
-div[data-testid="stPageLink"] a[aria-current="page"] span[data-testid="stPageLink-label"] {
-    background: linear-gradient(135deg, #4DA8FF, #3d8fe0);
-    color: white !important;
-    border-color: rgba(255,255,255,0.3);
-    box-shadow: 0 4px 12px rgba(77,168,255,0.4);
-}
-
-/* ========== CARD STYLES ========== */
-
-.card {
-    background: linear-gradient(135deg, #1a2f4a 0%, #162841 100%);
-    padding: 28px;
-    border-radius: 16px;
-    margin-top: 20px;
-    border: 1px solid rgba(77, 168, 255, 0.15);
-    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
-}
-
-.card p {
-    color: #8ca3c1;
-    margin-bottom: 8px;
-    font-size: 14px;
-    text-transform: uppercase;
-}
-
-.card h2 {
-    color: #fff;
-    font-size: 32px;
-    margin: 0;
-    font-weight: 700;
-}
-
-.chart-card {
-    background: linear-gradient(135deg, #1a2f4a 0%, #162841 100%);
-    padding: 32px;
-    border-radius: 16px;
-    margin-top: 20px;
-    border: 1px solid rgba(77,168,255,0.15);
-}
-
-.chart-card h3 {
+.navbar a:hover span[data-testid="stPageLink-label"] {
+    background: rgba(77,168,255,0.18);
     color: white;
-    margin-bottom: 8px;
+    border-color: rgba(77,168,255,0.5);
+    transform: translateY(-2px);
+}
+
+/* Active page */
+.navbar a[aria-current="page"] span[data-testid="stPageLink-label"] {
+    background: linear-gradient(135deg, #4DA8FF, #3d8fe0);
+    color: white !important;
+    box-shadow: 0 4px 14px rgba(77,168,255,0.4);
+    border-color: rgba(255,255,255,0.3);
 }
 
 </style>
 """, unsafe_allow_html=True)
 
 
-
 # ============================================================
 # NAVBAR (Streamlit-native but styled)
 # ============================================================
-st.markdown("<div class='nav-wrapper'>", unsafe_allow_html=True)
+st.markdown("<div class='navbar'>", unsafe_allow_html=True)
 
-with st.container():
-    st.page_link("./accueil.py", label="Résumé")
-    st.page_link("./pages/2_geographique.py", label="Géographique")
-    st.page_link("./pages/3_produit.py", label="Produits")
-    st.page_link("./pages/4_clients.py", label="Clients")
-    st.page_link("./pages/5_recommandations.py", label="Recommandations")
+st.page_link("accueil.py", label="Résumé")
+st.page_link("pages/2_geographique.py", label="Géographique")
+st.page_link("pages/3_produit.py", label="Produits")
+st.page_link("pages/4_clients.py", label="Clients")
+st.page_link("pages/5_recommandations.py", label="Recommandations")
 
 st.markdown("</div>", unsafe_allow_html=True)
 
