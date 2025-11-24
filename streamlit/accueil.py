@@ -248,39 +248,27 @@ div[data-testid="column"] button {
 
 
 # ============================================================
-# NAVBAR (Enhanced with brand and navigation)
+# NAVBAR (Enhanced with brand)
 # ============================================================
 if "page" not in st.session_state:
     st.session_state["page"] = "resume"
 
-# Header avec logo
-st.markdown("""
+def nav_item(label, link, page_id):
+    active = "nav-active" if st.session_state["page"] == page_id else ""
+    return f'<a class="navbtn {active}" href="{link}">{label}</a>'
+
+navbar = f"""
 <div class="navbar">
     <div class="navbar-brand">📊 Olist</div>
-    <div class="nav-buttons" id="nav-container"></div>
+    {nav_item('Résumé', '/Accueil', 'resume')}
+    {nav_item('Géographique', '/geographique', 'geographique')}
+    {nav_item('Produits', '/produit', 'produit')}
+    {nav_item('Clients', '/clients', 'clients')}
+    {nav_item('Recommandations', '/recommandations', 'recommandations')}
 </div>
-""", unsafe_allow_html=True)
+"""
 
-# Navigation avec boutons Streamlit
-nav_col1, nav_col2, nav_col3, nav_col4, nav_col5 = st.columns(5)
-
-pages = [
-    ("resume", "Résumé", "Accueil"),
-    ("geographique", "Géographique", "geographique"),
-    ("produit", "Produits", "produit"),
-    ("clients", "Clients", "clients"),
-    ("recommandations", "Recommandations", "recommandations")
-]
-
-for idx, (page_id, label, page_file) in enumerate(pages):
-    col = [nav_col1, nav_col2, nav_col3, nav_col4, nav_col5][idx]
-    with col:
-        active_class = "nav-active" if st.session_state["page"] == page_id else ""
-        st.markdown(f'<div class="navbtn {active_class}">', unsafe_allow_html=True)
-        if st.button(label, key=f"nav_{page_id}", use_container_width=True):
-            st.session_state["page"] = page_id
-            st.switch_page(f"pages/{page_file}.py")
-        st.markdown('</div>', unsafe_allow_html=True)
+st.markdown(navbar, unsafe_allow_html=True)
 
 
 # ============================================================
