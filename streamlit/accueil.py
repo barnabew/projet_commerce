@@ -33,67 +33,58 @@ html, body, .stApp {
 section[data-testid="stSidebar"] { display: none !important; }
 div[data-testid="collapsedControl"] { display: none !important; }
 
-/* Remove default Streamlit padding */
 .block-container {
-    padding-top: 0rem !important;
-    padding-bottom: 2rem !important;
+    padding-top: 1rem !important;
     max-width: 100% !important;
 }
 
-.main .block-container {
-    padding-left: 2rem !important;
-    padding-right: 2rem !important;
-}
-
 /* ========================================
-   NAVBAR CONTAINER
+   NAVBAR - HORIZONTAL LAYOUT
    ======================================== */
-.navbar-wrapper {
+.navbar-container {
     background: linear-gradient(135deg, #162841 0%, #1a2f4a 100%);
     border-bottom: 2px solid rgba(77, 168, 255, 0.2);
     box-shadow: 0 4px 24px rgba(0, 0, 0, 0.4);
-    margin: 0 -2rem 2rem -2rem;
-    padding: 0 2rem;
+    margin: -1rem -2rem 2rem -2rem;
+    padding: 0;
 }
 
-.navbar-grid {
-    display: grid;
-    grid-template-columns: 200px repeat(5, 1fr);
-    gap: 0;
-    align-items: stretch;
+.navbar-content {
     max-width: 1600px;
     margin: 0 auto;
+    padding: 0 2rem;
+    display: flex;
+    align-items: center;
+    gap: 0;
 }
 
 .navbar-brand {
     color: #4DA8FF;
     font-size: 20px;
     font-weight: 700;
-    padding: 18px 24px;
+    padding: 18px 24px 18px 0;
     letter-spacing: -0.5px;
     border-right: 1px solid rgba(255, 255, 255, 0.08);
+    margin-right: 0;
+    flex-shrink: 0;
+}
+
+.navbar-buttons {
     display: flex;
-    align-items: center;
-    white-space: nowrap;
+    flex: 1;
+    gap: 0;
 }
 
-/* ========================================
-   NAVIGATION BUTTONS
-   ======================================== */
-   
-/* Cache complètement les boutons Streamlit */
-.nav-button-wrapper {
-    position: relative;
-    height: 100%;
+/* Style pour les colonnes Streamlit dans la navbar */
+.navbar-buttons [data-testid="column"] {
+    flex: 1;
 }
 
-.nav-button-wrapper .stButton {
-    height: 100%;
-}
-
-.nav-button-wrapper button {
+/* Masquer le style par défaut des boutons Streamlit */
+.navbar-buttons button {
     width: 100% !important;
     height: 100% !important;
+    min-height: 54px !important;
     padding: 18px 16px !important;
     background: transparent !important;
     border: none !important;
@@ -101,33 +92,29 @@ div[data-testid="collapsedControl"] { display: none !important; }
     color: #95adc7 !important;
     font-size: 15px !important;
     font-weight: 500 !important;
-    text-align: center !important;
     border-bottom: 3px solid transparent !important;
     transition: all 0.3s ease !important;
     box-shadow: none !important;
 }
 
-.nav-button-wrapper button:hover {
+.navbar-buttons button:hover {
     background: rgba(77, 168, 255, 0.08) !important;
     color: #d4e3f5 !important;
     border-bottom-color: rgba(77, 168, 255, 0.3) !important;
 }
 
-.nav-button-wrapper button:focus {
+.navbar-buttons button:focus,
+.navbar-buttons button:active {
     box-shadow: none !important;
     outline: none !important;
 }
 
-/* Active button state */
-.nav-button-active button {
+/* Bouton actif */
+.nav-active button {
     color: #ffffff !important;
     background: rgba(77, 168, 255, 0.12) !important;
     border-bottom-color: #4DA8FF !important;
     font-weight: 600 !important;
-}
-
-.nav-button-active button:hover {
-    background: rgba(77, 168, 255, 0.15) !important;
 }
 
 /* ========================================
@@ -140,7 +127,6 @@ div[data-testid="collapsedControl"] { display: none !important; }
     border: 1px solid rgba(77, 168, 255, 0.15);
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.25);
     transition: all 0.3s ease;
-    height: 100%;
 }
 
 .kpi-card:hover {
@@ -176,7 +162,6 @@ div[data-testid="collapsedControl"] { display: none !important; }
     border: 1px solid rgba(77, 168, 255, 0.15);
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.25);
     transition: all 0.3s ease;
-    height: 100%;
     min-height: 300px;
 }
 
@@ -245,31 +230,39 @@ def navigate_to(page_name):
 
 
 # ============================================================
-# NAVBAR
+# NAVBAR - STRUCTURE SIMPLE
 # ============================================================
+st.markdown("""
+<div class="navbar-container">
+    <div class="navbar-content">
+        <div class="navbar-brand">📊 Olist Analytics</div>
+        <div class="navbar-buttons">
+""", unsafe_allow_html=True)
+
+# Créer les colonnes pour les boutons de navigation
+col1, col2, col3, col4, col5 = st.columns(5)
+
 pages = [
-    ("resume", "Résumé"),
-    ("geographique", "Géographique"),
-    ("produit", "Produits"),
-    ("clients", "Clients"),
-    ("recommandations", "Recommandations")
+    ("resume", "Résumé", col1),
+    ("geographique", "Géographique", col2),
+    ("produit", "Produits", col3),
+    ("clients", "Clients", col4),
+    ("recommandations", "Recommandations", col5)
 ]
 
-# Créer la navbar avec grid CSS
-st.markdown('<div class="navbar-wrapper"><div class="navbar-grid">', unsafe_allow_html=True)
+for page_id, label, col in pages:
+    with col:
+        active_class = "nav-active" if st.session_state["current_page"] == page_id else ""
+        st.markdown(f'<div class="{active_class}">', unsafe_allow_html=True)
+        if st.button(label, key=f"nav_{page_id}", use_container_width=True):
+            navigate_to(page_id)
+        st.markdown('</div>', unsafe_allow_html=True)
 
-# Brand
-st.markdown('<div class="navbar-brand">📊 Olist Analytics</div>', unsafe_allow_html=True)
-
-# Boutons de navigation
-for page_id, label in pages:
-    active_class = "nav-button-active" if st.session_state["current_page"] == page_id else ""
-    st.markdown(f'<div class="nav-button-wrapper {active_class}">', unsafe_allow_html=True)
-    if st.button(label, key=f"nav_{page_id}"):
-        navigate_to(page_id)
-    st.markdown('</div>', unsafe_allow_html=True)
-
-st.markdown('</div></div>', unsafe_allow_html=True)
+st.markdown("""
+        </div>
+    </div>
+</div>
+""", unsafe_allow_html=True)
 
 
 # ============================================================
