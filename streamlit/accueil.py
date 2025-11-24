@@ -42,6 +42,11 @@ div[data-testid="collapsedControl"] { display: none !important; }
     gap: 0px;
 }
 
+.nav-wrapper [data-testid="column"] {
+    display: flex;
+    justify-content: center;
+}
+
 /* === REMOVE STREAMLIT DEFAULT LINK STYLE === */
 div[data-testid="stPageLink"] a {
     text-decoration: none !important;
@@ -121,23 +126,31 @@ div[data-testid="stPageLink"] a[aria-current="page"] span[data-testid="stPageLin
 
 
 # ============================================================
-# NAVBAR (Streamlit-native)
+# NAVBAR (Streamlit-native but styled)
 # ============================================================
 st.markdown("<div class='nav-wrapper'>", unsafe_allow_html=True)
-col1, col2, col3, col4, col5 = st.columns(5)
 
-with col1:
-    st.page_link("./accueil.py", label="Résumé")
-with col2:
-    st.page_link("./pages/2_geographique.py", label="Géographique")
-with col3:
-    st.page_link("./pages/3_produit.py", label="Produits")
-with col4:
-    st.page_link("./pages/4_clients.py", label="Clients")
-with col5:
-    st.page_link("./pages/5_recommandations.py", label="Recommandations")
+nav = st.container()
+with nav:
+    c1, c2, c3, c4, c5 = st.columns([1,1,1,1,1])
+
+    with c1:
+        st.page_link("accueil.py", label="Résumé")
+
+    with c2:
+        st.page_link("pages/2_geographique.py", label="Géographique")
+
+    with c3:
+        st.page_link("pages/3_produit.py", label="Produits")
+
+    with c4:
+        st.page_link("pages/4_clients.py", label="Clients")
+
+    with c5:
+        st.page_link("pages/5_recommandations.py", label="Recommandations")
 
 st.markdown("</div>", unsafe_allow_html=True)
+
 
 
 # ============================================================
