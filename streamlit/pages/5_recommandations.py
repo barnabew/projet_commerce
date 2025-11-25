@@ -1,8 +1,16 @@
 import streamlit as st
+import styles
 
-st.set_page_config(page_title="Recommandations Stratégiques", layout="wide")
+# Configuration de la page
+st.set_page_config(**styles.get_page_config())
 
-st.title("🧭 Recommandations Stratégiques")
+# Application du CSS personnalisé
+st.markdown(styles.get_custom_css(), unsafe_allow_html=True)
+
+# Navbar
+styles.render_navbar(st, current_page="recommandations")
+
+st.markdown("<div class='section-header'>🧭 Recommandations Stratégiques</div>", unsafe_allow_html=True)
 st.markdown("""
 Cette page regroupe les recommandations concrètes issues des analyses :
 - Ventes & performance globale  

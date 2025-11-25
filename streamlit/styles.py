@@ -250,3 +250,42 @@ def get_navbar_html():
     """
     
     return start, end
+
+
+def render_navbar(st, current_page="resume"):
+    """
+    Affiche la navbar complète avec les boutons de navigation
+    
+    Args:
+        st: module streamlit
+        current_page: nom de la page active (resume, geographique, produit, clients, recommandations)
+    """
+    import streamlit as st
+    
+    # HTML de début
+    start_html, end_html = get_navbar_html()
+    st.markdown(start_html, unsafe_allow_html=True)
+    
+    # Créer les colonnes pour les boutons
+    col1, col2, col3, col4, col5 = st.columns(5)
+    
+    # Configuration des pages
+    pages = [
+        ("resume", "Résumé", col1, "/"),
+        ("geographique", "Géographique", col2, "/2_geographique"),
+        ("produit", "Produits", col3, "/3_produit"),
+        ("clients", "Clients", col4, "/4_clients"),
+        ("recommandations", "Recommandations", col5, "/5_recommandations")
+    ]
+    
+    # Afficher les boutons
+    for page_id, label, col, url in pages:
+        with col:
+            active_class = "nav-active" if current_page == page_id else ""
+            st.markdown(f'<div class="{active_class}">', unsafe_allow_html=True)
+            if st.button(label, key=f"nav_{page_id}", use_container_width=True):
+                st.switch_page(url)
+            st.markdown('</div>', unsafe_allow_html=True)
+    
+    # HTML de fin
+    st.markdown(end_html, unsafe_allow_html=True)

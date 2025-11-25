@@ -5,18 +5,20 @@ import pandas as pd
 import requests
 import igraph as ig
 import plotly.graph_objects as go
-
-
-
-
+import styles
 
 st.session_state["page"] = "geographique"
 
+# Configuration de la page
+st.set_page_config(**styles.get_page_config())
 
+# Application du CSS personnalisé
+st.markdown(styles.get_custom_css(), unsafe_allow_html=True)
 
-st.set_page_config(page_title="Analyse Géographique", layout="wide")
+# Navbar
+styles.render_navbar(st, current_page="geographique")
 
-st.title("🌍 Analyse Géographique des Ventes Olist")
+st.markdown("<div class='section-header'>🌍 Analyse Géographique des Ventes</div>", unsafe_allow_html=True)
 
 # ============================================================
 # 🔹 GEOJSON

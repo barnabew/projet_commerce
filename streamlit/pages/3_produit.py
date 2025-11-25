@@ -2,8 +2,18 @@ import streamlit as st
 import pandas as pd
 import plotly.express as px
 from data import get_connection
+import styles
 
-st.title("📦 Analyse Produits – Olist")
+# Configuration de la page
+st.set_page_config(**styles.get_page_config())
+
+# Application du CSS personnalisé
+st.markdown(styles.get_custom_css(), unsafe_allow_html=True)
+
+# Navbar
+styles.render_navbar(st, current_page="produit")
+
+st.markdown("<div class='section-header'>📦 Analyse Produits</div>", unsafe_allow_html=True)
 
 st.write(
     "Cette page présente une analyse complète par catégorie de produits : "

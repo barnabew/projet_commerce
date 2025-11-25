@@ -2,12 +2,19 @@ import streamlit as st
 import pandas as pd
 import numpy as np
 import plotly.express as px
-
 from data import run_query
+import styles
 
-st.set_page_config(page_title="Analyse Clients", layout="wide")
+# Configuration de la page
+st.set_page_config(**styles.get_page_config())
 
-st.title("👥 Analyse Clients – One-Time Buyers & Acquisition")
+# Application du CSS personnalisé
+st.markdown(styles.get_custom_css(), unsafe_allow_html=True)
+
+# Navbar
+styles.render_navbar(st, current_page="clients")
+
+st.markdown("<div class='section-header'>👥 Analyse Clients</div>", unsafe_allow_html=True)
 st.markdown("""
 Olist est un marketplace dominé par les **one-time buyers** (≈ 97%).  
 L’objectif business n’est donc **pas la fidélisation**, mais la qualité de la **première expérience**.
