@@ -27,37 +27,35 @@ Cette page analyse :
 
 # Section 1: Indicateurs clés
 with st.expander("📊 Indicateurs clés des clients", expanded=True):
+    query_kpi = """
+    SELECT
+        SUM(CASE WHEN cnt = 1 THEN 1 ELSE 0 END) AS one_time,
+        COUNT(*) AS total_clients
+    FROM (
+        SELECT customer_unique_id, COUNT(*) AS cnt
+        FROM clean_orders o
+        JOIN clean_customers c ON o.customer_id = c.customer_id
+        GROUP BY customer_unique_id
+    );
+    """
+    df_kpi = run_query(query_kpi)
 
-query_kpi = """
-SELECT
-    SUM(CASE WHEN cnt = 1 THEN 1 ELSE 0 END) AS one_time,
-    COUNT(*) AS total_clients
-FROM (
-    SELECT customer_unique_id, COUNT(*) AS cnt
-    FROM clean_orders o
-    JOIN clean_customers c ON o.customer_id = c.customer_id
-    GROUP BY customer_unique_id
-);
-"""
-df_kpi = run_query(query_kpi)
+    pct_one_time = round(df_kpi["one_time"][0] * 100 / df_kpi["total_clients"][0], 2)
 
-pct_one_time = round(df_kpi["one_time"][0] * 100 / df_kpi["total_clients"][0], 2)
+    query_ticket = "SELECT ROUND(AVG(price + freight_value), 2) AS avg_item FROM clean_order_items;"
+    avg_item = run_query(query_ticket)["avg_item"][0]
 
-query_ticket = "SELECT ROUND(AVG(price + freight_value), 2) AS avg_item FROM clean_order_items;"
-avg_item = run_query(query_ticket)["avg_item"][0]
+    query_score = "SELECT ROUND(AVG(review_score), 2) AS avg_score FROM clean_reviews;"
+    avg_score = run_query(query_score)["avg_score"][0]
 
-query_score = "SELECT ROUND(AVG(review_score), 2) AS avg_score FROM clean_reviews;"
-avg_score = run_query(query_score)["avg_score"][0]
-
-col1, col2, col3 = st.columns(3)
+    col1, col2, col3 = st.columns(3)
     col1.metric("Clients one-time", f"{pct_one_time} %")
     col2.metric("Panier moyen (par article)", f"{avg_item} R$")
     col3.metric("Note moyenne", avg_score)
 
 # Section 2: Catégories d'acquisition
 with st.expander("🎯 Catégories qui attirent le plus de nouveaux clients", expanded=False):
-
-query_acquisition = """
+    query_acquisition = """
 SELECT 
     COALESCE(tr.product_category_name_english, cp.product_category_name) AS category,
     COUNT(*) AS first_order_count,
@@ -75,28 +73,28 @@ WHERE o.customer_id IN (
 )
 GROUP BY category
 ORDER BY first_order_count DESC
-LIMIT 15;
-"""
+    LIMIT 15;
+    """
 
-df_acq = run_query(query_acquisition)
+    df_acq = run_query(query_acquisition)
 
-fig_acq = px.bar(
-    df_acq,
-    x="category",
-    y="first_order_count",
-    title="Top 15 catégories (premier achat)",
-    labels={"first_order_count": "Nouveaux clients"}
-)
-fig_acq.update_layout(
-    xaxis_title="Catégorie",
-    yaxis_title="Nombre de nouveaux clients",
-    paper_bgcolor="#252936",
-    plot_bgcolor="#252936",
-    font=dict(color="#ffffff"),
-    title=dict(font=dict(color="#ffffff")),
-    xaxis=dict(gridcolor="#2d3142"),
-    yaxis=dict(gridcolor="#2d3142")
-)
+    fig_acq = px.bar(
+        df_acq,
+        x="category",
+        y="first_order_count",
+        title="Top 15 catégories (premier achat)",
+        labels={"first_order_count": "Nouveaux clients"}
+    )
+    fig_acq.update_layout(
+        xaxis_title="Catégorie",
+        yaxis_title="Nombre de nouveaux clients",
+        paper_bgcolor="#252936",
+        plot_bgcolor="#252936",
+        font=dict(color="#ffffff"),
+        title=dict(font=dict(color="#ffffff")),
+        xaxis=dict(gridcolor="#2d3142"),
+        yaxis=dict(gridcolor="#2d3142")
+    )
 
     st.plotly_chart(fig_acq, use_container_width=True)
 
@@ -106,8 +104,7 @@ fig_acq.update_layout(
 
 # Section 3: Mauvaises premières expériences
 with st.expander("❌ Catégories avec les pires premières expériences", expanded=False):
-
-query_bad_rate = """
+    query_bad_rate = """
 SELECT 
     COALESCE(tr.product_category_name_english, cp.product_category_name) AS category,
     COUNT(*) AS first_orders,
@@ -131,30 +128,30 @@ WHERE o.customer_id IN (
 GROUP BY category
 HAVING first_orders > 50
 ORDER BY bad_review_rate DESC
-LIMIT 15;
-"""
+    LIMIT 15;
+    """
 
-df_bad = run_query(query_bad_rate)
+    df_bad = run_query(query_bad_rate)
 
-fig_bad = px.bar(
-    df_bad,
-    x="category",
-    y="bad_review_rate",
-    color="bad_review_rate",
-    color_continuous_scale="Reds",
-    title="Taux de mauvaises reviews (first-time buyers)",
-    labels={"bad_review_rate": "% Bad Reviews"}
-)
-fig_bad.update_layout(
-    xaxis_title="Catégorie",
-    yaxis_title="% Bad Reviews",
-    paper_bgcolor="#252936",
-    plot_bgcolor="#252936",
-    font=dict(color="#ffffff"),
-    title=dict(font=dict(color="#ffffff")),
-    xaxis=dict(gridcolor="#2d3142"),
-    yaxis=dict(gridcolor="#2d3142")
-)
+    fig_bad = px.bar(
+        df_bad,
+        x="category",
+        y="bad_review_rate",
+        color="bad_review_rate",
+        color_continuous_scale="Reds",
+        title="Taux de mauvaises reviews (first-time buyers)",
+        labels={"bad_review_rate": "% Bad Reviews"}
+    )
+    fig_bad.update_layout(
+        xaxis_title="Catégorie",
+        yaxis_title="% Bad Reviews",
+        paper_bgcolor="#252936",
+        plot_bgcolor="#252936",
+        font=dict(color="#ffffff"),
+        title=dict(font=dict(color="#ffffff")),
+        xaxis=dict(gridcolor="#2d3142"),
+        yaxis=dict(gridcolor="#2d3142")
+    )
 
     st.plotly_chart(fig_bad, use_container_width=True)
 
@@ -165,8 +162,7 @@ fig_bad.update_layout(
 
 # Section 4: Impact du délai
 with st.expander("⏱️ Impact du délai sur la satisfaction des nouveaux clients", expanded=False):
-
-query_delay = """
+    query_delay = """
 SELECT
     ROUND(AVG(JULIANDAY(order_delivered_customer_date) 
         - JULIANDAY(order_purchase_timestamp)), 2) AS avg_delivery_days,
@@ -182,12 +178,12 @@ AND o.customer_id IN (
     HAVING COUNT(*) = 1
 )
 AND o.order_delivered_customer_date IS NOT NULL
-AND o.order_purchase_timestamp IS NOT NULL;
-"""
+    AND o.order_purchase_timestamp IS NOT NULL;
+    """
 
-df_delay = run_query(query_delay)
+    df_delay = run_query(query_delay)
 
-colA, colB = st.columns(2)
+    colA, colB = st.columns(2)
     colA.metric("Délai moyen (first-time)", f"{df_delay['avg_delivery_days'][0]} jours")
     colB.metric("Note moyenne (first-time)", df_delay['avg_score'][0])
 
