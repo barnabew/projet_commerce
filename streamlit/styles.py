@@ -79,14 +79,15 @@ def get_custom_css():
 
     /* Boutons de navigation - Style Geckoboard */
     .navbar-buttons button,
-    .navbar-buttons button[kind="secondary"] {
+    .navbar-buttons button[kind="secondary"],
+    .nav-inactive button {
         width: 100% !important;
         height: 50px !important;
         min-height: 50px !important;
         padding: 0 24px !important;
         margin: 0 !important;
-        background: #1a1d29 !important;
-        background-color: #1a1d29 !important;
+        background: #252936 !important;
+        background-color: #252936 !important;
         border: 1px solid #2d3142 !important;
         border-bottom: 3px solid transparent !important;
         border-radius: 6px 6px 0 0 !important;
@@ -100,10 +101,11 @@ def get_custom_css():
     }
 
     .navbar-buttons button:hover,
-    .navbar-buttons button[kind="secondary"]:hover {
-        background: #20232e !important;
-        background-color: #20232e !important;
-        color: #ffffff !important;
+    .navbar-buttons button[kind="secondary"]:hover,
+    .nav-inactive button:hover {
+        background: #ffffff !important;
+        background-color: #ffffff !important;
+        color: #1a1d29 !important;
         border-bottom-color: rgba(94, 129, 244, 0.4) !important;
     }
 
@@ -113,20 +115,18 @@ def get_custom_css():
         outline: none !important;
     }
 
-    /* Bouton actif - Blanc (primary ou avec classe nav-active) */
+    /* Bouton actif - Rouge (primary) */
     .navbar-buttons button[kind="primary"],
     .navbar-buttons button[kind="primary"]:hover,
     .nav-active button,
     .nav-active button:hover,
     div.nav-active button,
-    div.nav-active button:hover,
-    div[data-active="true"] button,
-    div[data-active="true"] button:hover {
-        color: #1a1d29 !important;
-        background: #ffffff !important;
-        background-color: #ffffff !important;
-        border-bottom-color: #5e81f4 !important;
-        border-color: #5e81f4 !important;
+    div.nav-active button:hover {
+        /* On garde le style par défaut de Streamlit pour primary (rouge) */
+        border-radius: 6px 6px 0 0 !important;
+        height: 50px !important;
+        min-height: 50px !important;
+        border-bottom: 3px solid #ff4b4b !important;
         font-weight: 600 !important;
     }
 
@@ -316,13 +316,14 @@ def render_navbar(st, current_page="resume"):
     for page_id, label, col, url in pages:
         with col:
             is_active = current_page == page_id
-            # Utiliser markdown pour wrapper avec classe ET attribut data
+            # Utiliser markdown pour wrapper avec classe
             if is_active:
-                st.markdown(f'<div class="nav-active" data-active="true">', unsafe_allow_html=True)
+                st.markdown(f'<div class="nav-active">', unsafe_allow_html=True)
             else:
                 st.markdown('<div class="nav-inactive">', unsafe_allow_html=True)
             
-            if st.button(label, key=f"nav_{page_id}", use_container_width=True, type="secondary" if not is_active else "primary"):
+            # Tous les boutons en type="secondary" pour éviter le rouge
+            if st.button(label, key=f"nav_{page_id}", use_container_width=True, type="secondary"):
                 st.switch_page(url)
             st.markdown('</div>', unsafe_allow_html=True)
     
