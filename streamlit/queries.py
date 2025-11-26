@@ -237,3 +237,57 @@ GROUP BY s.seller_state, c.customer_state
 HAVING nb_orders > 10
 ORDER BY nb_orders DESC;
 """
+
+# ===========================
+# ACCUEIL - GRAPHIQUES
+# ===========================
+
+QUERY_MONTHLY_SALES = """
+SELECT 
+    strftime('%Y-%m', o.order_purchase_timestamp) AS month,
+    COUNT(DISTINCT o.order_id) AS nb_orders,
+    SUM(oi.price + oi.freight_value) AS revenue
+FROM clean_orders o
+JOIN clean_order_items oi ON o.order_id = oi.order_id
+WHERE o.order_status IN ('delivered', 'shipped', 'invoiced')
+  AND o.order_purchase_timestamp IS NOT NULL
+GROUP BY month
+ORDER BY month;
+"""
+
+QUERY_TOP_STATES_ORDERS = """
+SELECT 
+    c.customer_state AS state,
+    COUNT(DISTINCT o.order_id) AS nb_orders
+FROM clean_orders o
+JOIN clean_customers c ON o.customer_id = c.customer_id
+WHERE o.order_status IN ('delivered', 'shipped', 'invoiced')
+GROUP BY c.customer_state
+ORDER BY nb_orders DESC
+LIMIT 10;
+"""
+
+QUERY_TOP_CATEGORIES_SALES = """
+SELECT 
+    COALESCE(tr.product_category_name_english, cp.product_category_name) AS category,
+    COUNT(DISTINCT coi.order_id) AS nb_sales
+FROM clean_order_items coi
+JOIN clean_products cp ON coi.product_id = cp.product_id
+JOIN clean_orders co ON coi.order_id = co.order_id
+LEFT JOIN product_category_name_translation tr 
+    ON cp.product_category_name = tr.product_category_name
+WHERE co.order_status IN ('delivered', 'shipped', 'invoiced')
+GROUP BY category
+ORDER BY nb_sales DESC
+LIMIT 10;
+"""
+
+QUERY_REVIEW_DISTRIBUTION = """
+SELECT 
+    review_score,
+    COUNT(*) AS nb_reviews
+FROM clean_reviews
+WHERE review_score BETWEEN 1 AND 5
+GROUP BY review_score
+ORDER BY review_score;
+"""
