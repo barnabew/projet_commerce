@@ -77,12 +77,9 @@ def get_custom_css():
         padding: 0 !important;
     }
 
-    /* Boutons de navigation inactifs - Style Geckoboard */
+    /* Boutons de navigation - TOUS gris par défaut */
     .navbar-buttons button,
-    .navbar-buttons .stButton button,
-    .navbar-buttons [data-testid="baseButton-secondary"],
-    .nav-inactive button,
-    div.nav-inactive button {
+    .navbar-buttons button[kind="secondary"] {
         width: 100% !important;
         height: 50px !important;
         min-height: 50px !important;
@@ -102,40 +99,29 @@ def get_custom_css():
         text-transform: none !important;
     }
 
-    /* Hover sur boutons inactifs */
-    .nav-inactive button:hover,
-    div.nav-inactive button:hover {
+    /* Hover sur boutons - deviennent blancs */
+    .navbar-buttons button:hover,
+    .navbar-buttons button[kind="secondary"]:hover {
         background: #ffffff !important;
         background-color: #ffffff !important;
         color: #1a1d29 !important;
         border-bottom-color: rgba(94, 129, 244, 0.4) !important;
-        border-color: #2d3142 !important;
     }
 
-    /* Bouton actif - Rouge */
-    .nav-active button,
-    div.nav-active button,
-    .nav-active .stButton button,
-    .nav-active [data-testid="baseButton-secondary"],
-    div.nav-active [data-testid="baseButton-secondary"] {
+    /* Bouton actif (primary) - ROUGE */
+    .navbar-buttons button[kind="primary"] {
         background: #ff4b4b !important;
         background-color: #ff4b4b !important;
         color: #ffffff !important;
-        border-bottom-color: #ff1a1a !important;
-        border-color: #ff1a1a !important;
+        border: 1px solid #ff1a1a !important;
+        border-bottom: 3px solid #ff1a1a !important;
         font-weight: 600 !important;
-        width: 100% !important;
-        height: 50px !important;
-        min-height: 50px !important;
-        border-radius: 6px 6px 0 0 !important;
     }
 
-    .nav-active button:hover,
-    div.nav-active button:hover {
+    .navbar-buttons button[kind="primary"]:hover {
         background: #ff6b6b !important;
         background-color: #ff6b6b !important;
         color: #ffffff !important;
-        border-color: #ff4b4b !important;
     }
         background-color: #ff6b6b !important;
         color: #ffffff !important;
@@ -423,6 +409,10 @@ def render_navbar(st, current_page="resume"):
         current_page: nom de la page active (resume, geographique, produit, clients, recommandations)
     """
     
+    # Initialiser session state
+    if "current_page" not in st.session_state:
+        st.session_state["current_page"] = current_page
+    
     # Wrapper avec classe navbar-buttons
     st.markdown('<div class="navbar-buttons">', unsafe_allow_html=True)
     
@@ -443,10 +433,13 @@ def render_navbar(st, current_page="resume"):
         with col:
             is_active = current_page == page_id
             # Wrapper avec classe pour styling CSS
-            wrapper_class = "nav-active" if is_active else "nav-inactive"
-            st.markdown(f'<div class="{wrapper_class}">', unsafe_allow_html=True)
+            active_class = "nav-active" if is_active else "nav-inactive"
+            st.markdown(f'<div class="{active_class}">', unsafe_allow_html=True)
             
-            if st.button(label, key=f"nav_{page_id}", use_container_width=True):
+            # Utiliser type primary pour le bouton actif
+            button_type = "primary" if is_active else "secondary"
+            if st.button(label, key=f"nav_{page_id}", use_container_width=True, type=button_type):
+                st.session_state["current_page"] = page_id
                 st.switch_page(url)
             st.markdown('</div>', unsafe_allow_html=True)
     
