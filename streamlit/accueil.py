@@ -40,33 +40,33 @@ kpi_cols = st.columns(4, gap="large")
 
 with kpi_cols[0]:
     st.markdown(f"""
-    <div class='kpi-card'>
-        <div class='kpi-label'>Revenue Total</div>
-        <div class='kpi-value'>R$ {total_rev:,.0f}</div>
+    <div class="kpi-card">
+        <div class="kpi-label">Revenue Total</div>
+        <div class="kpi-value">R$ {total_rev:,.0f}</div>
     </div>
     """, unsafe_allow_html=True)
 
 with kpi_cols[1]:
     st.markdown(f"""
-    <div class='kpi-card'>
-        <div class='kpi-label'>Commandes</div>
-        <div class='kpi-value'>{nb_orders:,}</div>
+    <div class="kpi-card">
+        <div class="kpi-label">Commandes</div>
+        <div class="kpi-value">{nb_orders:,}</div>
     </div>
     """, unsafe_allow_html=True)
 
 with kpi_cols[2]:
     st.markdown(f"""
-    <div class='kpi-card'>
-        <div class='kpi-label'>Note Moyenne</div>
-        <div class='kpi-value'>{avg_score} ⭐</div>
+    <div class="kpi-card">
+        <div class="kpi-label">Note Moyenne</div>
+        <div class="kpi-value">{avg_score} ⭐</div>
     </div>
     """, unsafe_allow_html=True)
 
 with kpi_cols[3]:
     st.markdown(f"""
-    <div class='kpi-card'>
-        <div class='kpi-label'>Délai Moyen</div>
-        <div class='kpi-value'>{avg_delay} j</div>
+    <div class="kpi-card">
+        <div class="kpi-label">Délai Moyen</div>
+        <div class="kpi-value">{avg_delay} j</div>
     </div>
     """, unsafe_allow_html=True)
 
