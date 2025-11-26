@@ -21,6 +21,99 @@ def apply_theme(fig):
     return fig
 
 # ===========================
+# CARTES GÉOGRAPHIQUES
+# ===========================
+
+def plot_choropleth_map(df_state, geojson, metric_col, metric_title):
+    """
+    Crée une carte choroplèthe du Brésil par état
+    
+    Args:
+        df_state: DataFrame avec colonnes state, metric_col
+        geojson: Données GeoJSON des états du Brésil
+        metric_col: Nom de la colonne à afficher
+        metric_title: Titre de la métrique
+    """
+    import plotly.express as px
+    
+    fig = px.choropleth(
+        df_state,
+        geojson=geojson,
+        locations="state",
+        featureidkey="properties.sigla",
+        color=metric_col,
+        color_continuous_scale="Viridis",
+        hover_data={
+            "state": True,
+            "nb_orders": True,
+            "revenue": True,
+            "avg_order_value": True,
+            "avg_delivery_days": True,
+            "avg_review_score": True,
+            metric_col: True,
+        },
+        labels={
+            "state": "État",
+            "revenue": "CA (R$)",
+            "nb_orders": "Nbre commandes",
+            "avg_order_value": "Panier moyen",
+            "avg_delivery_days": "Délai moyen",
+            "avg_review_score": "Note moyenne"
+        },
+        title=metric_title
+    )
+    
+    fig.update_geos(fitbounds="locations", visible=False, bgcolor="#252936")
+    fig.update_layout(
+        margin={"r":0,"t":40,"l":0,"b":0},
+        geo=dict(bgcolor="#252936", lakecolor="#252936")
+    )
+    apply_theme(fig)
+    
+    return fig
+
+
+def plot_sankey_flow(df_state, selected_state):
+    """
+    Crée un diagramme Sankey pour les flux vendeur → client
+    
+    Args:
+        df_state: DataFrame filtré pour un état vendeur
+        selected_state: Code de l'état vendeur sélectionné
+    """
+    import plotly.graph_objects as go
+    
+    sources = [0] * len(df_state)
+    targets = list(range(1, len(df_state) + 1))
+    values = df_state["nb_orders"].tolist()
+    
+    labels = [f"{selected_state} (vendeur)"] + list(df_state["customer_state"])
+    
+    fig = go.Figure(
+        data=[
+            go.Sankey(
+                node=dict(
+                    pad=15,
+                    thickness=20,
+                    label=labels,
+                    color=["#1f77b4"] + ["#2ca02c"] * len(df_state),
+                ),
+                link=dict(
+                    source=sources,
+                    target=targets,
+                    value=values,
+                    color="rgba(31, 119, 180, 0.4)",
+                ),
+            )
+        ]
+    )
+    
+    fig.update_layout(height=600)
+    apply_theme(fig)
+    
+    return fig
+
+# ===========================
 # Delivery Time by State
 # ===========================
 
