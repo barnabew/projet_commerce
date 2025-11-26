@@ -2,8 +2,16 @@ import streamlit as st
 import pandas as pd
 import numpy as np
 import plotly.express as px
+import plotly.io as pio
 from data import run_query
 import styles
+
+# Configuration du template Plotly par défaut
+pio.templates["custom_dark"] = pio.templates["plotly"]
+pio.templates["custom_dark"].layout.paper_bgcolor = "#1a1d29"
+pio.templates["custom_dark"].layout.plot_bgcolor = "#1a1d29"
+pio.templates["custom_dark"].layout.font.color = "#ffffff"
+pio.templates.default = "custom_dark"
 
 # Configuration de la page
 st.set_page_config(**styles.get_page_config())

@@ -5,7 +5,15 @@ import pandas as pd
 import requests
 import igraph as ig
 import plotly.graph_objects as go
+import plotly.io as pio
 import styles
+
+# Configuration du template Plotly par défaut
+pio.templates["custom_dark"] = pio.templates["plotly"]
+pio.templates["custom_dark"].layout.paper_bgcolor = "#1a1d29"
+pio.templates["custom_dark"].layout.plot_bgcolor = "#1a1d29"
+pio.templates["custom_dark"].layout.font.color = "#ffffff"
+pio.templates.default = "custom_dark"
 
 st.session_state["page"] = "geographique"
 
