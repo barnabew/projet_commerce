@@ -71,7 +71,6 @@ def get_custom_css():
         min-height: 50px !important;
         padding: 0 24px !important;
         margin: 0 !important;
-        background: #252936 !important;
         background-color: #252936 !important;
         border: 1px solid #2d3142 !important;
         border-bottom: 3px solid transparent !important;
@@ -89,16 +88,15 @@ def get_custom_css():
     .navbar-buttons div.stButton > button:first-child:hover,
     .navbar-buttons button:hover,
     .navbar-buttons button[kind="secondary"]:hover {
-        background: #ffffff !important;
         background-color: #ffffff !important;
         color: #1a1d29 !important;
+        border-color: #2d3142 !important;
         border-bottom-color: rgba(94, 129, 244, 0.4) !important;
     }
 
     /* Style du bouton actif : fond rouge */
     .navbar-buttons div.stButton > button:first-child[kind="primary"],
     .navbar-buttons button[kind="primary"] {
-        background: #ff4b4b !important;
         background-color: #ff4b4b !important;
         color: #ffffff !important;
         border: 1px solid #ff1a1a !important;
