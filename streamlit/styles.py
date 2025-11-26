@@ -47,12 +47,25 @@ def get_custom_css():
     /* ========================================
        NAVBAR - HORIZONTAL LAYOUT
        ======================================== */
+    
+    /* Conteneur principal des boutons de navigation */
+    div[data-testid="column"]:has(button[key^="nav_"]) {
+        background: linear-gradient(135deg, #162841 0%, #1a2f4a 100%) !important;
+    }
+    
+    /* Ligne contenant tous les boutons de nav */
+    div[data-testid="column"]:has(button[key^="nav_"]):first-child {
+        margin: -1rem -2rem 2.5rem -2rem !important;
+        padding: 0 2rem !important;
+    }
+    
     .navbar-container {
         background: linear-gradient(135deg, #162841 0%, #1a2f4a 100%);
         border-bottom: 2px solid rgba(77, 168, 255, 0.2);
         box-shadow: 0 4px 24px rgba(0, 0, 0, 0.4);
-        margin: -1rem -2rem 2.5rem -2rem;
+        margin: -1rem -2rem 0rem -2rem;
         padding: 0;
+        display: none;
     }
 
     .navbar-content {
@@ -79,20 +92,39 @@ def get_custom_css():
         display: flex;
         flex: 1;
         gap: 0;
+        background: linear-gradient(135deg, #162841 0%, #1a2f4a 100%);
+        border-bottom: 2px solid rgba(77, 168, 255, 0.2);
+        box-shadow: 0 4px 24px rgba(0, 0, 0, 0.4);
+        margin: -1rem -2rem 2.5rem -2rem;
+        padding: 0 2rem;
     }
 
     /* Style pour les colonnes Streamlit dans la navbar */
     .navbar-buttons [data-testid="column"] {
         flex: 1;
+        background: transparent !important;
     }
 
-    /* Masquer le style par défaut des boutons Streamlit */
-    .navbar-buttons button {
+    /* Container des boutons Streamlit */
+    .navbar-buttons [data-testid="column"] > div {
+        background: transparent !important;
+    }
+
+    .navbar-buttons [data-testid="stVerticalBlock"] {
+        background: transparent !important;
+        gap: 0 !important;
+    }
+
+    /* Masquer complètement le style par défaut des boutons Streamlit */
+    .navbar-buttons button,
+    .navbar-buttons button[kind="primary"],
+    .navbar-buttons button[kind="secondary"] {
         width: 100% !important;
         height: 100% !important;
         min-height: 54px !important;
         padding: 18px 16px !important;
         background: transparent !important;
+        background-color: transparent !important;
         border: none !important;
         border-radius: 0 !important;
         color: #95adc7 !important;
@@ -103,22 +135,32 @@ def get_custom_css():
         box-shadow: none !important;
     }
 
-    .navbar-buttons button:hover {
+    .navbar-buttons button:hover,
+    .navbar-buttons button[kind="primary"]:hover,
+    .navbar-buttons button[kind="secondary"]:hover {
         background: rgba(77, 168, 255, 0.08) !important;
+        background-color: rgba(77, 168, 255, 0.08) !important;
         color: #d4e3f5 !important;
         border-bottom-color: rgba(77, 168, 255, 0.3) !important;
     }
 
     .navbar-buttons button:focus,
-    .navbar-buttons button:active {
+    .navbar-buttons button:active,
+    .navbar-buttons button[kind="primary"]:focus,
+    .navbar-buttons button[kind="primary"]:active {
         box-shadow: none !important;
         outline: none !important;
+        background: transparent !important;
+        background-color: transparent !important;
     }
 
     /* Bouton actif */
-    .nav-active button {
+    .nav-active button,
+    .nav-active button[kind="primary"],
+    .nav-active button[kind="secondary"] {
         color: #ffffff !important;
         background: rgba(77, 168, 255, 0.12) !important;
+        background-color: rgba(77, 168, 255, 0.12) !important;
         border-bottom-color: #4DA8FF !important;
         font-weight: 600 !important;
     }
@@ -262,9 +304,8 @@ def render_navbar(st, current_page="resume"):
     """
     import streamlit as st
     
-    # HTML de début
-    start_html, end_html = get_navbar_html()
-    st.markdown(start_html, unsafe_allow_html=True)
+    # Wrapper avec classe navbar-buttons
+    st.markdown('<div class="navbar-buttons">', unsafe_allow_html=True)
     
     # Créer les colonnes pour les boutons
     col1, col2, col3, col4, col5 = st.columns(5)
@@ -287,5 +328,5 @@ def render_navbar(st, current_page="resume"):
                 st.switch_page(url)
             st.markdown('</div>', unsafe_allow_html=True)
     
-    # HTML de fin
-    st.markdown(end_html, unsafe_allow_html=True)
+    # Fermer le wrapper
+    st.markdown('</div>', unsafe_allow_html=True)
