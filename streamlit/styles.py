@@ -78,7 +78,8 @@ def get_custom_css():
     }
 
     /* Boutons de navigation - Style Geckoboard */
-    .navbar-buttons button {
+    .navbar-buttons button,
+    .navbar-buttons button[kind="secondary"] {
         width: 100% !important;
         height: 50px !important;
         min-height: 50px !important;
@@ -98,7 +99,8 @@ def get_custom_css():
         text-transform: none !important;
     }
 
-    .navbar-buttons button:hover {
+    .navbar-buttons button:hover,
+    .navbar-buttons button[kind="secondary"]:hover {
         background: #20232e !important;
         background-color: #20232e !important;
         color: #ffffff !important;
@@ -111,13 +113,20 @@ def get_custom_css():
         outline: none !important;
     }
 
-    /* Bouton actif - Blanc */
+    /* Bouton actif - Blanc (primary ou avec classe nav-active) */
+    .navbar-buttons button[kind="primary"],
+    .navbar-buttons button[kind="primary"]:hover,
     .nav-active button,
-    .nav-active button:hover {
+    .nav-active button:hover,
+    div.nav-active button,
+    div.nav-active button:hover,
+    div[data-active="true"] button,
+    div[data-active="true"] button:hover {
         color: #1a1d29 !important;
         background: #ffffff !important;
         background-color: #ffffff !important;
         border-bottom-color: #5e81f4 !important;
+        border-color: #5e81f4 !important;
         font-weight: 600 !important;
     }
 
@@ -306,9 +315,14 @@ def render_navbar(st, current_page="resume"):
     # Afficher les boutons
     for page_id, label, col, url in pages:
         with col:
-            active_class = "nav-active" if current_page == page_id else ""
-            st.markdown(f'<div class="{active_class}">', unsafe_allow_html=True)
-            if st.button(label, key=f"nav_{page_id}", use_container_width=True):
+            is_active = current_page == page_id
+            # Utiliser markdown pour wrapper avec classe ET attribut data
+            if is_active:
+                st.markdown(f'<div class="nav-active" data-active="true">', unsafe_allow_html=True)
+            else:
+                st.markdown('<div class="nav-inactive">', unsafe_allow_html=True)
+            
+            if st.button(label, key=f"nav_{page_id}", use_container_width=True, type="secondary" if not is_active else "primary"):
                 st.switch_page(url)
             st.markdown('</div>', unsafe_allow_html=True)
     
