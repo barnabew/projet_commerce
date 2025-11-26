@@ -78,7 +78,11 @@ def get_custom_css():
     }
 
     /* Boutons de navigation inactifs - Style Geckoboard */
-    .navbar-buttons button {
+    .navbar-buttons button,
+    .navbar-buttons .stButton button,
+    .navbar-buttons [data-testid="baseButton-secondary"],
+    .nav-inactive button,
+    div.nav-inactive button {
         width: 100% !important;
         height: 50px !important;
         min-height: 50px !important;
@@ -99,25 +103,40 @@ def get_custom_css():
     }
 
     /* Hover sur boutons inactifs */
-    .nav-inactive button:hover {
+    .nav-inactive button:hover,
+    div.nav-inactive button:hover {
         background: #ffffff !important;
         background-color: #ffffff !important;
         color: #1a1d29 !important;
         border-bottom-color: rgba(94, 129, 244, 0.4) !important;
+        border-color: #2d3142 !important;
     }
 
     /* Bouton actif - Rouge */
-    .nav-active button {
+    .nav-active button,
+    div.nav-active button,
+    .nav-active .stButton button,
+    .nav-active [data-testid="baseButton-secondary"],
+    div.nav-active [data-testid="baseButton-secondary"] {
         background: #ff4b4b !important;
         background-color: #ff4b4b !important;
         color: #ffffff !important;
-        border-bottom-color: #ff4b4b !important;
+        border-bottom-color: #ff1a1a !important;
         border-color: #ff1a1a !important;
         font-weight: 600 !important;
+        width: 100% !important;
+        height: 50px !important;
+        min-height: 50px !important;
+        border-radius: 6px 6px 0 0 !important;
     }
 
-    .nav-active button:hover {
+    .nav-active button:hover,
+    div.nav-active button:hover {
         background: #ff6b6b !important;
+        background-color: #ff6b6b !important;
+        color: #ffffff !important;
+        border-color: #ff4b4b !important;
+    }
         background-color: #ff6b6b !important;
         color: #ffffff !important;
     }
