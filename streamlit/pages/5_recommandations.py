@@ -75,34 +75,31 @@ with st.expander("🌎 3. Géographie & Expansion", expanded=False):
 
 # Section 4: Clients
 with st.expander("👥 4. Clients & Comportement d'Achat", expanded=False):
+    st.subheader("Observations clés")
+    st.markdown("""
+    - **97% des clients sont "one-time buyers"** → problème majeur.  
+    - La récence n'est pas exploitable (données incomplètes).  
+    - Les clients qui dépensent le plus ne laissent pas forcément de meilleures notes.  
+    - Une hausse du montant (monetary) augmente la probabilité de mauvaise note.
+    """)
 
-st.subheader("Observations clés")
-st.markdown("""
-- **97% des clients sont “one-time buyers”** → problème majeur.  
-- La récence n’est pas exploitable (données incomplètes).  
-- Les clients qui dépensent le plus ne laissent pas forcément de meilleures notes.  
-- Une hausse du montant (monetary) augmente la probabilité de mauvaise note.
-""")
+    st.subheader("Recommandations")
+    st.markdown("""
+    - **Améliorer l'expérience du premier achat (critical !)**  
+      - Page produit plus claire  
+      - Photos + descriptions enrichies  
+      - Garantie / retours simplifiés  
 
-st.subheader("Recommandations")
-st.markdown("""
-- **Améliorer l’expérience du premier achat (critical !)**  
-  - Page produit plus claire  
-  - Photos + descriptions enrichies  
-  - Garantie / retours simplifiés  
+    - **Réduire le nombre de mauvaises premières expériences** :  
+      - Alertes logistiques  
+      - Vérification fournisseur avant expédition  
 
-- **Réduire le nombre de mauvaises premières expériences** :  
-  - Alertes logistiques  
-  - Vérification fournisseur avant expédition  
-
-- **Campagnes de retargeting uniquement pour les clients satisfaits**.
+    - **Campagnes de retargeting uniquement pour les clients satisfaits**.
 
     - **STRATÉGIE D'ACQUISITION plutôt que fidélisation** :  
       - Puisque presque tous les clients achètent une fois.  
       - Focus sur SEO, réseaux sociaux, ads produit.
-    """)
-
-# Section 5: Priorités stratégiques
+    """)# Section 5: Priorités stratégiques
 with st.expander("🎯 5. Priorités Stratégiques (Top 5)", expanded=True):
     st.markdown("""
     ### 1. Accélérer la livraison (levier n°1 pour améliorer la note client)
