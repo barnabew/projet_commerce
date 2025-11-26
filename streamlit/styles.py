@@ -63,6 +63,7 @@ def get_custom_css():
     }
 
     /* Style des boutons inactifs : fond gris */
+    .navbar-buttons div.stButton > button:first-child,
     .navbar-buttons button,
     .navbar-buttons button[kind="secondary"] {
         width: 100% !important;
@@ -85,15 +86,17 @@ def get_custom_css():
     }
 
     /* Effet au survol : boutons deviennent blancs */
+    .navbar-buttons div.stButton > button:first-child:hover,
     .navbar-buttons button:hover,
     .navbar-buttons button[kind="secondary"]:hover {
-        background: #252936 !important;
-        background-color: #252936 !important;
+        background: #ffffff !important;
+        background-color: #ffffff !important;
         color: #1a1d29 !important;
         border-bottom-color: rgba(94, 129, 244, 0.4) !important;
     }
 
     /* Style du bouton actif : fond rouge */
+    .navbar-buttons div.stButton > button:first-child[kind="primary"],
     .navbar-buttons button[kind="primary"] {
         background: #ff4b4b !important;
         background-color: #ff4b4b !important;
