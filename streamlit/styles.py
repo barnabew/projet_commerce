@@ -74,7 +74,7 @@ def get_custom_css():
         background-color: #252936 !important;
         border: 1px solid #2d3142 !important;
         border-bottom: 3px solid transparent !important;
-        border-radius: 3px 3px 0 0 !important;
+        border-radius: 1.5px 1.5px 0 0 !important;
         color: #8b92a7 !important;
         font-size: 14px !important;
         font-weight: 500 !important;
