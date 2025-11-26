@@ -86,18 +86,16 @@ def get_custom_css():
         text-transform: none !important;
     }
 
-    /* Effet au survol : cadre blanc autour du bouton */
+    /* Effet au survol : boutons deviennent blancs */
     .navbar-buttons div.stButton > button:first-child:hover:not([kind="primary"]),
     .navbar-buttons button:hover:not([kind="primary"]),
     .navbar-buttons button[kind="secondary"]:hover,
     .navbar-buttons [data-testid="baseButton-secondary"]:hover {
-        background-color: #252936 !important;
+        background-color: #ffffff !important;
         background-image: none !important;
-        color: #ffffff !important;
-        border: 2px solid #ffffff !important;
-        border-bottom: 3px solid rgba(94, 129, 244, 0.8) !important;
-        transform: translateY(-1px) !important;
-        box-shadow: 0 2px 8px rgba(255, 255, 255, 0.1) !important;
+        color: #1a1d29 !important;
+        border-color: #2d3142 !important;
+        border-bottom-color: rgba(94, 129, 244, 0.4) !important;
     }
 
     /* Style du bouton actif : fond rouge */
