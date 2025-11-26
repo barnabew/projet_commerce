@@ -412,11 +412,11 @@ def render_navbar(st, current_page="resume"):
     
     # Configuration des pages
     pages = [
-        ("resume", "Résumé", col1, "/"),
-        ("geographique", "Géographique", col2, "/2_geographique"),
-        ("produit", "Produits", col3, "/3_produit"),
-        ("clients", "Clients", col4, "/4_clients"),
-        ("recommandations", "Recommandations", col5, "/5_recommandations")
+        ("resume", "Résumé", col1, "accueil.py"),
+        ("geographique", "Géographique", col2, "pages/2_geographique.py"),
+        ("produit", "Produits", col3, "pages/3_produit.py"),
+        ("clients", "Clients", col4, "pages/4_clients.py"),
+        ("recommandations", "Recommandations", col5, "pages/5_recommandations.py")
     ]
     
     # Afficher les boutons
