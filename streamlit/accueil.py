@@ -33,7 +33,7 @@ SELECT ROUND(AVG(
     JULIANDAY(order_delivered_customer_date) - JULIANDAY(order_purchase_timestamp)
 ),2) AS delay
 FROM clean_orders WHERE order_status='delivered'
-conn)['delay'][0]
+""", conn)["delay"][0]
 
 # Affichage des KPI
 kpi_cols = st.columns(4, gap="large")
