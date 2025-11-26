@@ -119,7 +119,7 @@ def get_custom_css():
 
     /* Cartes KPI : petites boîtes pour afficher les indicateurs clés */
     .kpi-card {
-        background: #1a1d29 !important;
+        background: #252936 !important;
         padding: 24px !important;
         border-radius: 8px !important;
         border: 1px solid #2d3142 !important;
@@ -155,7 +155,7 @@ def get_custom_css():
 
     /* Conteneurs pour les graphiques */
     .chart-container {
-        background: #1a1d29 !important;
+        background: #252936 !important;
         padding: 24px !important;
         border-radius: 8px !important;
         border: 1px solid #2d3142 !important;
