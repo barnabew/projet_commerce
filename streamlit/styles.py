@@ -77,10 +77,8 @@ def get_custom_css():
         padding: 0 !important;
     }
 
-    /* Boutons de navigation - Style Geckoboard */
-    .navbar-buttons button,
-    .navbar-buttons button[kind="secondary"],
-    .nav-inactive button {
+    /* Boutons de navigation inactifs - Style Geckoboard */
+    .navbar-buttons button {
         width: 100% !important;
         height: 50px !important;
         min-height: 50px !important;
@@ -100,8 +98,7 @@ def get_custom_css():
         text-transform: none !important;
     }
 
-    .navbar-buttons button:hover,
-    .navbar-buttons button[kind="secondary"]:hover,
+    /* Hover sur boutons inactifs */
     .nav-inactive button:hover {
         background: #ffffff !important;
         background-color: #ffffff !important;
@@ -109,25 +106,26 @@ def get_custom_css():
         border-bottom-color: rgba(94, 129, 244, 0.4) !important;
     }
 
+    /* Bouton actif - Rouge */
+    .nav-active button {
+        background: #ff4b4b !important;
+        background-color: #ff4b4b !important;
+        color: #ffffff !important;
+        border-bottom-color: #ff4b4b !important;
+        border-color: #ff1a1a !important;
+        font-weight: 600 !important;
+    }
+
+    .nav-active button:hover {
+        background: #ff6b6b !important;
+        background-color: #ff6b6b !important;
+        color: #ffffff !important;
+    }
+
     .navbar-buttons button:focus,
     .navbar-buttons button:active {
         box-shadow: none !important;
         outline: none !important;
-    }
-
-    /* Bouton actif - Rouge (primary) */
-    .navbar-buttons button[kind="primary"],
-    .navbar-buttons button[kind="primary"]:hover,
-    .nav-active button,
-    .nav-active button:hover,
-    div.nav-active button,
-    div.nav-active button:hover {
-        /* On garde le style par défaut de Streamlit pour primary (rouge) */
-        border-radius: 6px 6px 0 0 !important;
-        height: 50px !important;
-        min-height: 50px !important;
-        border-bottom: 3px solid #ff4b4b !important;
-        font-weight: 600 !important;
     }
 
     /* ========================================
@@ -316,14 +314,11 @@ def render_navbar(st, current_page="resume"):
     for page_id, label, col, url in pages:
         with col:
             is_active = current_page == page_id
-            # Utiliser markdown pour wrapper avec classe
-            if is_active:
-                st.markdown(f'<div class="nav-active">', unsafe_allow_html=True)
-            else:
-                st.markdown('<div class="nav-inactive">', unsafe_allow_html=True)
+            # Wrapper avec classe pour styling CSS
+            wrapper_class = "nav-active" if is_active else "nav-inactive"
+            st.markdown(f'<div class="{wrapper_class}">', unsafe_allow_html=True)
             
-            # Tous les boutons en type="secondary" pour éviter le rouge
-            if st.button(label, key=f"nav_{page_id}", use_container_width=True, type="secondary"):
+            if st.button(label, key=f"nav_{page_id}", use_container_width=True):
                 st.switch_page(url)
             st.markdown('</div>', unsafe_allow_html=True)
     
