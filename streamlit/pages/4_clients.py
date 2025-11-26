@@ -92,8 +92,8 @@ fig_acq = px.bar(
 fig_acq.update_layout(
     xaxis_title="Catégorie",
     yaxis_title="Nombre de nouveaux clients",
-    paper_bgcolor="#1a1d29",
-    plot_bgcolor="#1a1d29",
+    paper_bgcolor="#252936",
+    plot_bgcolor="#252936",
     font=dict(color="#ffffff"),
     title=dict(font=dict(color="#ffffff")),
     xaxis=dict(gridcolor="#2d3142"),
@@ -152,8 +152,8 @@ fig_bad = px.bar(
 fig_bad.update_layout(
     xaxis_title="Catégorie",
     yaxis_title="% Bad Reviews",
-    paper_bgcolor="#1a1d29",
-    plot_bgcolor="#1a1d29",
+    paper_bgcolor="#252936",
+    plot_bgcolor="#252936",
     font=dict(color="#ffffff"),
     title=dict(font=dict(color="#ffffff")),
     xaxis=dict(gridcolor="#2d3142"),

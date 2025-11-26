@@ -51,8 +51,8 @@ fig = px.bar(
     labels={"revenue": "Revenue", "category": "Category"},
 )
 fig.update_layout(
-    paper_bgcolor="#1a1d29",
-    plot_bgcolor="#1a1d29",
+    paper_bgcolor="#252936",
+    plot_bgcolor="#252936",
     font=dict(color="#ffffff"),
     title=dict(font=dict(color="#ffffff")),
     xaxis=dict(gridcolor="#2d3142"),
@@ -96,8 +96,8 @@ fig = px.bar(
     title="Catégories les plus lentes (top 15)",
 )
 fig.update_layout(
-    paper_bgcolor="#1a1d29",
-    plot_bgcolor="#1a1d29",
+    paper_bgcolor="#252936",
+    plot_bgcolor="#252936",
     font=dict(color="#ffffff"),
     title=dict(font=dict(color="#ffffff")),
     xaxis=dict(gridcolor="#2d3142"),
@@ -139,8 +139,8 @@ fig = px.bar(
     title="Catégories les moins bien notées",
 )
 fig.update_layout(
-    paper_bgcolor="#1a1d29",
-    plot_bgcolor="#1a1d29",
+    paper_bgcolor="#252936",
+    plot_bgcolor="#252936",
     font=dict(color="#ffffff"),
     title=dict(font=dict(color="#ffffff")),
     xaxis=dict(gridcolor="#2d3142"),

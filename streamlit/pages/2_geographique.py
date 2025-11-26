@@ -101,13 +101,13 @@ fig = px.choropleth(
     title=f"{analysis_type} par État"
 )
 
-fig.update_geos(fitbounds="locations", visible=False, bgcolor="#1a1d29")
+fig.update_geos(fitbounds="locations", visible=False, bgcolor="#252936")
 fig.update_layout(
     margin={"r":0,"t":40,"l":0,"b":0},
-    paper_bgcolor="#1a1d29",
-    plot_bgcolor="#1a1d29",
+    paper_bgcolor="#252936",
+    plot_bgcolor="#252936",
     font=dict(color="#ffffff"),
-    geo=dict(bgcolor="#1a1d29", lakecolor="#1a1d29"),
+    geo=dict(bgcolor="#252936", lakecolor="#252936"),
     title=dict(font=dict(color="#ffffff"))
 )
 
@@ -181,8 +181,8 @@ else:
 
     fig.update_layout(
         height=600,
-        paper_bgcolor="#1a1d29",
-        plot_bgcolor="#1a1d29",
+        paper_bgcolor="#252936",
+        plot_bgcolor="#252936",
         font=dict(color="#ffffff"),
         title=dict(font=dict(color="#ffffff"))
     )
