@@ -101,12 +101,13 @@ fig = px.choropleth(
     title=f"{analysis_type} par État"
 )
 
-fig.update_geos(fitbounds="locations", visible=False)
+fig.update_geos(fitbounds="locations", visible=False, bgcolor="#1a1d29")
 fig.update_layout(
     margin={"r":0,"t":40,"l":0,"b":0},
     paper_bgcolor="#1a1d29",
     plot_bgcolor="#1a1d29",
-    font_color="#ffffff"
+    font_color="#ffffff",
+    geo=dict(bgcolor="#1a1d29")
 )
 
 st.plotly_chart(fig, use_container_width=True)
