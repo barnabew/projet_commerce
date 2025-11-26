@@ -1,9 +1,10 @@
 import streamlit as st
 import pandas as pd
 import plotly.express as px
-from data import get_connection
+from utils import get_connection
 import styles
 import visuel
+import queries
 
 # Configuration de la page
 st.set_page_config(**styles.get_page_config())
@@ -20,22 +21,7 @@ conn = get_connection()
 
 # Section 1: Top catégories par CA
 with st.expander("Top catégories par chiffre d'affaires", expanded=False):
-    query_revenue = """
-    SELECT 
-        COALESCE(tr.product_category_name_english, cp.product_category_name) AS category,
-        SUM(coi.price + coi.freight_value) AS revenue
-    FROM clean_order_items coi
-    JOIN clean_products cp ON coi.product_id = cp.product_id
-    JOIN clean_orders co ON coi.order_id = co.order_id
-    LEFT JOIN product_category_name_translation tr 
-        ON cp.product_category_name = tr.product_category_name
-    WHERE co.order_status IN ("delivered", "shipped", "invoiced")
-    GROUP BY category
-    ORDER BY revenue DESC
-    LIMIT 15;
-    """
-
-    df_revenue = pd.read_sql(query_revenue, conn)
+    df_revenue = pd.read_sql(queries.QUERY_TOP_CATEGORIES_REVENUE, conn)
 
     fig = px.bar(
         df_revenue,
@@ -52,28 +38,7 @@ with st.expander("Top catégories par chiffre d'affaires", expanded=False):
 with st.expander("Délai moyen de livraison par catégorie", expanded=False):
     min_sales = st.slider("Min ventes par catégorie :", 20, 500, 50)
 
-    query_delivery = f"""
-    SELECT 
-        COALESCE(tr.product_category_name_english, cp.product_category_name) AS category,
-        ROUND(AVG(
-            JULIANDAY(o.order_delivered_customer_date) 
-            - JULIANDAY(o.order_purchase_timestamp)
-        ), 2) AS avg_delivery_days,
-        COUNT(*) AS total_sales
-    FROM clean_orders o
-    JOIN clean_order_items coi ON o.order_id = coi.order_id
-    JOIN clean_products cp ON cp.product_id = coi.product_id
-    LEFT JOIN product_category_name_translation tr 
-        ON cp.product_category_name = tr.product_category_name
-    WHERE o.order_status = 'delivered'
-      AND o.order_delivered_customer_date IS NOT NULL
-      AND o.order_purchase_timestamp IS NOT NULL
-    GROUP BY category
-    HAVING total_sales > {min_sales}
-    ORDER BY avg_delivery_days DESC;
-    """
-
-    df_delivery = pd.read_sql(query_delivery, conn)
+    df_delivery = pd.read_sql(queries.get_query_delivery_by_category(min_sales), conn)
 
     fig = px.bar(
         df_delivery.head(15),
@@ -89,24 +54,7 @@ with st.expander("Délai moyen de livraison par catégorie", expanded=False):
 with st.expander("Satisfaction – Notes moyennes par catégorie", expanded=False):
     min_reviews = st.slider("Min reviews par catégorie :", 20, 1000, 100)
 
-    query_reviews = f"""
-    SELECT 
-        COALESCE(tr.product_category_name_english, cp.product_category_name) AS category,
-        ROUND(AVG(r.review_score), 2) AS avg_review_score,
-        COUNT(r.review_id) AS nb_reviews
-    FROM clean_reviews r
-    JOIN clean_orders o ON r.order_id = o.order_id
-    JOIN clean_order_items coi ON o.order_id = coi.order_id
-    JOIN clean_products cp ON cp.product_id = coi.product_id
-    LEFT JOIN product_category_name_translation tr 
-        ON cp.product_category_name = tr.product_category_name
-    WHERE r.review_score BETWEEN 1 AND 5
-    GROUP BY category
-    HAVING nb_reviews > {min_reviews}
-    ORDER BY avg_review_score;
-    """
-
-    df_reviews = pd.read_sql(query_reviews, conn)
+    df_reviews = pd.read_sql(queries.get_query_reviews_by_category(min_reviews), conn)
 
     fig = px.bar(
         df_reviews,
@@ -122,24 +70,6 @@ with st.expander("Satisfaction – Notes moyennes par catégorie", expanded=Fals
 
 # Section 4: Catégories problématiques
 with st.expander("Catégories problématiques", expanded=False):
-    query_bad = """
-    SELECT 
-        COALESCE(tr.product_category_name_english, cp.product_category_name) AS category,
-        COUNT(coi.order_id) AS nb_sales,
-        ROUND(AVG(r.review_score), 2) AS avg_review_score
-    FROM clean_order_items coi
-    JOIN clean_orders o ON coi.order_id = o.order_id
-    JOIN clean_products cp ON coi.product_id = cp.product_id
-    JOIN clean_reviews r ON o.order_id = r.order_id
-    LEFT JOIN product_category_name_translation tr 
-        ON cp.product_category_name = tr.product_category_name
-    WHERE o.order_status = 'delivered'
-    GROUP BY category
-    HAVING nb_sales > 200
-       AND avg_review_score < 3.8
-    ORDER BY nb_sales DESC;
-    """
-
-    df_bad = pd.read_sql(query_bad, conn)
+    df_bad = pd.read_sql(queries.QUERY_PROBLEMATIC_CATEGORIES, conn)
 
     st.dataframe(df_bad)

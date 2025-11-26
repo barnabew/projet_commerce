@@ -1,0 +1,239 @@
+"""
+Fichier centralisé contenant toutes les requêtes SQL du projet.
+Organisation par thème : KPI, Produits, Clients, Géographie
+"""
+
+# ===========================
+# KPI GLOBAUX (Accueil)
+# ===========================
+
+QUERY_TOTAL_REVENUE = """
+SELECT SUM(price + freight_value) AS rev 
+FROM clean_order_items
+"""
+
+QUERY_TOTAL_ORDERS = """
+SELECT COUNT(DISTINCT order_id) AS c 
+FROM clean_orders
+"""
+
+QUERY_AVG_REVIEW_SCORE = """
+SELECT ROUND(AVG(review_score), 2) AS avg 
+FROM clean_reviews
+"""
+
+QUERY_AVG_DELIVERY_DELAY = """
+SELECT ROUND(AVG(
+    JULIANDAY(order_delivered_customer_date) - JULIANDAY(order_purchase_timestamp)
+), 2) AS delay
+FROM clean_orders 
+WHERE order_status = 'delivered'
+"""
+
+# ===========================
+# PRODUITS
+# ===========================
+
+QUERY_TOP_CATEGORIES_REVENUE = """
+SELECT 
+    COALESCE(tr.product_category_name_english, cp.product_category_name) AS category,
+    SUM(coi.price + coi.freight_value) AS revenue
+FROM clean_order_items coi
+JOIN clean_products cp ON coi.product_id = cp.product_id
+JOIN clean_orders co ON coi.order_id = co.order_id
+LEFT JOIN product_category_name_translation tr 
+    ON cp.product_category_name = tr.product_category_name
+WHERE co.order_status IN ('delivered', 'shipped', 'invoiced')
+GROUP BY category
+ORDER BY revenue DESC
+LIMIT 15;
+"""
+
+def get_query_delivery_by_category(min_sales):
+    """Requête pour délais de livraison par catégorie avec filtre"""
+    return f"""
+    SELECT 
+        COALESCE(tr.product_category_name_english, cp.product_category_name) AS category,
+        ROUND(AVG(
+            JULIANDAY(o.order_delivered_customer_date) 
+            - JULIANDAY(o.order_purchase_timestamp)
+        ), 2) AS avg_delivery_days,
+        COUNT(*) AS total_sales
+    FROM clean_orders o
+    JOIN clean_order_items coi ON o.order_id = coi.order_id
+    JOIN clean_products cp ON cp.product_id = coi.product_id
+    LEFT JOIN product_category_name_translation tr 
+        ON cp.product_category_name = tr.product_category_name
+    WHERE o.order_status = 'delivered'
+      AND o.order_delivered_customer_date IS NOT NULL
+      AND o.order_purchase_timestamp IS NOT NULL
+    GROUP BY category
+    HAVING total_sales > {min_sales}
+    ORDER BY avg_delivery_days DESC;
+    """
+
+def get_query_reviews_by_category(min_reviews):
+    """Requête pour notes moyennes par catégorie avec filtre"""
+    return f"""
+    SELECT 
+        COALESCE(tr.product_category_name_english, cp.product_category_name) AS category,
+        ROUND(AVG(r.review_score), 2) AS avg_review_score,
+        COUNT(r.review_id) AS nb_reviews
+    FROM clean_reviews r
+    JOIN clean_orders o ON r.order_id = o.order_id
+    JOIN clean_order_items coi ON o.order_id = coi.order_id
+    JOIN clean_products cp ON cp.product_id = coi.product_id
+    LEFT JOIN product_category_name_translation tr 
+        ON cp.product_category_name = tr.product_category_name
+    WHERE r.review_score BETWEEN 1 AND 5
+    GROUP BY category
+    HAVING nb_reviews > {min_reviews}
+    ORDER BY avg_review_score;
+    """
+
+QUERY_PROBLEMATIC_CATEGORIES = """
+SELECT 
+    COALESCE(tr.product_category_name_english, cp.product_category_name) AS category,
+    COUNT(coi.order_id) AS nb_sales,
+    ROUND(AVG(r.review_score), 2) AS avg_review_score
+FROM clean_order_items coi
+JOIN clean_orders o ON coi.order_id = o.order_id
+JOIN clean_products cp ON coi.product_id = cp.product_id
+JOIN clean_reviews r ON o.order_id = r.order_id
+LEFT JOIN product_category_name_translation tr 
+    ON cp.product_category_name = tr.product_category_name
+WHERE o.order_status = 'delivered'
+GROUP BY category
+HAVING nb_sales > 200
+   AND avg_review_score < 3.8
+ORDER BY nb_sales DESC;
+"""
+
+# ===========================
+# CLIENTS
+# ===========================
+
+QUERY_CLIENT_KPI = """
+SELECT
+    SUM(CASE WHEN cnt = 1 THEN 1 ELSE 0 END) AS one_time,
+    COUNT(*) AS total_clients
+FROM (
+    SELECT customer_unique_id, COUNT(*) AS cnt
+    FROM clean_orders o
+    JOIN clean_customers c ON o.customer_id = c.customer_id
+    GROUP BY customer_unique_id
+);
+"""
+
+QUERY_AVG_BASKET = """
+SELECT ROUND(AVG(price + freight_value), 2) AS avg_item 
+FROM clean_order_items;
+"""
+
+QUERY_ACQUISITION_CATEGORIES = """
+SELECT 
+    COALESCE(tr.product_category_name_english, cp.product_category_name) AS category,
+    COUNT(*) AS first_order_count,
+    ROUND(AVG(oi.price + oi.freight_value), 2) AS avg_basket
+FROM clean_orders o
+JOIN clean_order_items oi ON o.order_id = oi.order_id
+JOIN clean_products cp ON cp.product_id = oi.product_id
+LEFT JOIN product_category_name_translation tr 
+    ON cp.product_category_name = tr.product_category_name
+WHERE o.customer_id IN (
+    SELECT customer_id
+    FROM clean_orders
+    GROUP BY customer_id
+    HAVING COUNT(*) = 1
+)
+GROUP BY category
+ORDER BY first_order_count DESC
+LIMIT 15;
+"""
+
+QUERY_BAD_FIRST_EXPERIENCE = """
+SELECT 
+    COALESCE(tr.product_category_name_english, cp.product_category_name) AS category,
+    COUNT(*) AS first_orders,
+    SUM(CASE WHEN r.review_score <= 2 THEN 1 ELSE 0 END) AS bad_reviews,
+    ROUND(
+        SUM(CASE WHEN r.review_score <= 2 THEN 1 ELSE 0 END) * 100.0 / COUNT(*),
+        2
+    ) AS bad_review_rate
+FROM clean_orders o
+JOIN clean_order_items oi ON o.order_id = oi.order_id
+JOIN clean_products cp ON cp.product_id = oi.product_id
+LEFT JOIN product_category_name_translation tr 
+    ON cp.product_category_name = tr.product_category_name
+JOIN clean_reviews r ON r.order_id = o.order_id
+WHERE o.customer_id IN (
+    SELECT customer_id
+    FROM clean_orders
+    GROUP BY customer_id
+    HAVING COUNT(*) = 1
+)
+GROUP BY category
+HAVING first_orders > 50
+ORDER BY bad_review_rate DESC
+LIMIT 15;
+"""
+
+QUERY_DELAY_IMPACT_NEW_CLIENTS = """
+SELECT
+    ROUND(AVG(JULIANDAY(order_delivered_customer_date) 
+        - JULIANDAY(order_purchase_timestamp)), 2) AS avg_delivery_days,
+    ROUND(AVG(review_score), 2) AS avg_score,
+    COUNT(*) AS nb_orders
+FROM clean_orders o
+JOIN clean_reviews r ON o.order_id = r.order_id
+WHERE o.order_status = 'delivered'
+AND o.customer_id IN (
+    SELECT customer_id
+    FROM clean_orders
+    GROUP BY customer_id
+    HAVING COUNT(*) = 1
+)
+AND o.order_delivered_customer_date IS NOT NULL
+AND o.order_purchase_timestamp IS NOT NULL;
+"""
+
+# ===========================
+# GÉOGRAPHIE
+# ===========================
+
+QUERY_STATES_METRICS = """
+SELECT 
+    c.customer_state AS state,
+    COUNT(DISTINCT o.order_id) AS nb_orders,
+    SUM(oi.price + oi.freight_value) AS revenue,
+    ROUND(SUM(oi.price + oi.freight_value) * 1.0 
+        / COUNT(DISTINCT o.order_id), 2) AS avg_order_value,
+    ROUND(AVG(
+        JULIANDAY(o.order_delivered_customer_date) 
+        - JULIANDAY(o.order_purchase_timestamp)
+    ), 2) AS avg_delivery_days,
+    ROUND(AVG(r.review_score), 2) AS avg_review_score
+FROM clean_orders o
+JOIN clean_customers c ON o.customer_id = c.customer_id
+JOIN clean_order_items oi ON oi.order_id = o.order_id
+LEFT JOIN clean_reviews r ON r.order_id = o.order_id
+WHERE o.order_status IN ('delivered', 'shipped', 'invoiced')
+GROUP BY c.customer_state;
+"""
+
+QUERY_GEOGRAPHIC_FLOWS = """
+SELECT 
+    s.seller_state,
+    c.customer_state,
+    COUNT(*) AS nb_orders
+FROM clean_order_items coi
+JOIN clean_sellers s ON coi.seller_id = s.seller_id
+JOIN clean_orders o ON coi.order_id = o.order_id
+JOIN clean_customers c ON o.customer_id = c.customer_id
+WHERE o.order_status = 'delivered'
+  AND o.order_delivered_customer_date IS NOT NULL
+  AND o.order_purchase_timestamp IS NOT NULL
+GROUP BY s.seller_state, c.customer_state
+HAVING nb_orders > 10
+ORDER BY nb_orders DESC;
+"""

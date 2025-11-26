@@ -1,8 +1,9 @@
 import streamlit as st
 import pandas as pd
 import numpy as np
-from data import load_table, get_connection
+from utils import load_table, get_connection
 import styles
+import queries
 
 # Configuration de la page
 st.set_page_config(**styles.get_page_config())
@@ -16,24 +17,13 @@ styles.render_navbar(st, current_page="resume")
 # Récupération des données KPI
 conn = get_connection()
 
-total_rev = pd.read_sql("""
-SELECT SUM(price + freight_value) AS rev FROM clean_order_items
-""", conn)["rev"][0]
+total_rev = pd.read_sql(queries.QUERY_TOTAL_REVENUE, conn)["rev"][0]
 
-nb_orders = pd.read_sql("""
-SELECT COUNT(DISTINCT order_id) AS c FROM clean_orders
-""", conn)["c"][0]
+nb_orders = pd.read_sql(queries.QUERY_TOTAL_ORDERS, conn)["c"][0]
 
-avg_score = pd.read_sql("""
-SELECT ROUND(AVG(review_score),2) AS avg FROM clean_reviews
-""", conn)["avg"][0]
+avg_score = pd.read_sql(queries.QUERY_AVG_REVIEW_SCORE, conn)["avg"][0]
 
-avg_delay = pd.read_sql("""
-SELECT ROUND(AVG(
-    JULIANDAY(order_delivered_customer_date) - JULIANDAY(order_purchase_timestamp)
-),2) AS delay
-FROM clean_orders WHERE order_status='delivered'
-""", conn)["delay"][0]
+avg_delay = pd.read_sql(queries.QUERY_AVG_DELIVERY_DELAY, conn)["delay"][0]
 
 # Affichage des KPI
 kpi_cols = st.columns(4, gap="large")
