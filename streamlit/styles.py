@@ -223,6 +223,22 @@ def get_custom_css():
     /* Titres */
     h1, h2, h3 {
         color: #ffffff !important;
+        font-weight: 600 !important;
+    }
+    
+    h1 {
+        font-size: 2.2rem !important;
+        margin-top: 1.5rem !important;
+    }
+    
+    h2 {
+        font-size: 1.6rem !important;
+        margin-top: 1.2rem !important;
+    }
+    
+    h3 {
+        font-size: 1.3rem !important;
+        margin-top: 1rem !important;
     }
     
     /* Texte */
@@ -230,11 +246,104 @@ def get_custom_css():
         color: #c5c9d6 !important;
     }
     
+    /* Dataframes / Tables */
+    [data-testid="stDataFrame"] {
+        background: #252936 !important;
+        border: 1px solid #2d3142 !important;
+        border-radius: 8px !important;
+        padding: 1rem !important;
+    }
+    
+    [data-testid="stDataFrame"] table {
+        color: #ffffff !important;
+    }
+    
+    [data-testid="stDataFrame"] th {
+        background: #2d3344 !important;
+        color: #ffffff !important;
+        font-weight: 600 !important;
+    }
+    
+    [data-testid="stDataFrame"] td {
+        color: #c5c9d6 !important;
+    }
+    
+    /* Graphiques Plotly */
+    .js-plotly-plot {
+        background: #252936 !important;
+        border-radius: 8px !important;
+    }
+    
+    /* Selectbox / Dropdowns */
+    [data-baseweb="select"] {
+        background: #252936 !important;
+        border-radius: 6px !important;
+    }
+    
+    [data-baseweb="select"] > div {
+        background: #252936 !important;
+        border: 1px solid #2d3142 !important;
+        color: #ffffff !important;
+    }
+    
+    /* Sliders */
+    [data-testid="stSlider"] {
+        padding: 1rem 0 !important;
+    }
+    
+    [data-testid="stSlider"] [role="slider"] {
+        background: #5e81f4 !important;
+    }
+    
+    [data-testid="stSlider"] [data-baseweb="slider"] {
+        background: #2d3142 !important;
+    }
+    
     /* Info boxes */
     .stAlert {
         background: #252936 !important;
         border: 1px solid #2d3142 !important;
         border-radius: 8px !important;
+        color: #c5c9d6 !important;
+    }
+    
+    [data-testid="stNotification"] {
+        background: #252936 !important;
+        border-radius: 8px !important;
+    }
+    
+    /* Success boxes */
+    .stSuccess {
+        background: rgba(94, 244, 165, 0.1) !important;
+        border-left: 4px solid #5ef4a5 !important;
+        color: #5ef4a5 !important;
+    }
+    
+    /* Warning boxes */
+    .stWarning {
+        background: rgba(255, 196, 0, 0.1) !important;
+        border-left: 4px solid #ffc400 !important;
+        color: #ffc400 !important;
+    }
+    
+    /* Error boxes */
+    .stError {
+        background: rgba(255, 75, 75, 0.1) !important;
+        border-left: 4px solid #ff4b4b !important;
+        color: #ff4b4b !important;
+    }
+    
+    /* Info boxes */
+    .stInfo {
+        background: rgba(94, 129, 244, 0.1) !important;
+        border-left: 4px solid #5e81f4 !important;
+        color: #5e81f4 !important;
+    }
+    
+    /* Dividers */
+    hr {
+        border-color: #2d3142 !important;
+        margin: 2rem 0 !important;
     }
 
     /* ========================================
