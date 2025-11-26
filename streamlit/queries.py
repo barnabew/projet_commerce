@@ -292,15 +292,26 @@ GROUP BY review_score
 ORDER BY review_score;
 """
 
-QUERY_DELIVERY_BY_STATE = """
+QUERY_DELIVERY_DISTRIBUTION = """
 SELECT 
-    c.customer_state AS state,
-    COUNT(o.order_id) AS nb_orders,
-    ROUND(AVG(JULIANDAY(o.order_delivered_customer_date) - JULIANDAY(o.order_purchase_timestamp)), 1) AS avg_delay
-FROM clean_orders o
-JOIN clean_customers c ON o.customer_id = c.customer_id
-WHERE o.order_delivered_customer_date IS NOT NULL
-GROUP BY state
-ORDER BY avg_delay DESC
-LIMIT 15;
+    CASE 
+        WHEN JULIANDAY(order_delivered_customer_date) - JULIANDAY(order_purchase_timestamp) < 7 THEN '< 7 jours'
+        WHEN JULIANDAY(order_delivered_customer_date) - JULIANDAY(order_purchase_timestamp) < 14 THEN '7-14 jours'
+        WHEN JULIANDAY(order_delivered_customer_date) - JULIANDAY(order_purchase_timestamp) < 21 THEN '14-21 jours'
+        WHEN JULIANDAY(order_delivered_customer_date) - JULIANDAY(order_purchase_timestamp) < 30 THEN '21-30 jours'
+        ELSE '> 30 jours'
+    END AS delay_range,
+    COUNT(*) AS nb_orders
+FROM clean_orders
+WHERE order_delivered_customer_date IS NOT NULL
+  AND order_purchase_timestamp IS NOT NULL
+GROUP BY delay_range
+ORDER BY 
+    CASE delay_range
+        WHEN '< 7 jours' THEN 1
+        WHEN '7-14 jours' THEN 2
+        WHEN '14-21 jours' THEN 3
+        WHEN '21-30 jours' THEN 4
+        WHEN '> 30 jours' THEN 5
+    END;
 """

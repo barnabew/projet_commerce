@@ -49,18 +49,17 @@ st.markdown(styles.render_section_header("Analyses Détaillées"), unsafe_allow_
 chart_row1 = st.columns(2, gap="large")
 
 with chart_row1[0]:
-    # Délais de livraison par état
-    df_delays = pd.read_sql(queries.QUERY_DELIVERY_BY_STATE, conn)
+    # Distribution des délais de livraison
+    df_delays = pd.read_sql(queries.QUERY_DELIVERY_DISTRIBUTION, conn)
     
     fig_delays = px.bar(
         df_delays,
-        x="avg_delay",
-        y="state",
-        orientation="h",
-        title="Délais de Livraison - Top 15 États les Plus Lents",
-        labels={"avg_delay": "Délai moyen (jours)", "state": "État"},
-        color="avg_delay",
-        color_continuous_scale="Reds"
+        x="delay_range",
+        y="nb_orders",
+        title="Distribution des Délais de Livraison",
+        labels={"delay_range": "Délai", "nb_orders": "Nombre de commandes"},
+        color="nb_orders",
+        color_continuous_scale="RdYlGn_r"
     )
     visuel.apply_theme(fig_delays)
     st.plotly_chart(fig_delays, use_container_width=True)
