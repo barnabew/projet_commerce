@@ -55,11 +55,11 @@ def get_custom_css():
     }
     
     .navbar-buttons {
-        background: #252936 !important;
+        background: #1a1d29 !important;
         border-bottom: 1px solid #2d3142 !important;
-        margin: -1rem -2rem 2rem -2rem !important;
-        padding: 0 !important;
-        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3) !important;
+        margin: -1rem -2rem 3rem -2rem !important;
+        padding: 1.5rem 2rem 0 2rem !important;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2) !important;
         display: flex !important;
         align-items: stretch !important;
     }
@@ -80,15 +80,15 @@ def get_custom_css():
     /* Boutons de navigation - Style Geckoboard */
     .navbar-buttons button {
         width: 100% !important;
-        height: 60px !important;
-        min-height: 60px !important;
+        height: 50px !important;
+        min-height: 50px !important;
         padding: 0 24px !important;
         margin: 0 !important;
-        background: transparent !important;
-        background-color: transparent !important;
-        border: none !important;
+        background: #252936 !important;
+        background-color: #252936 !important;
+        border: 1px solid #2d3142 !important;
         border-bottom: 3px solid transparent !important;
-        border-radius: 0 !important;
+        border-radius: 6px 6px 0 0 !important;
         color: #8b92a7 !important;
         font-size: 14px !important;
         font-weight: 500 !important;
@@ -99,8 +99,8 @@ def get_custom_css():
     }
 
     .navbar-buttons button:hover {
-        background: rgba(255, 255, 255, 0.04) !important;
-        background-color: rgba(255, 255, 255, 0.04) !important;
+        background: #2a2f3e !important;
+        background-color: #2a2f3e !important;
         color: #ffffff !important;
         border-bottom-color: rgba(94, 129, 244, 0.4) !important;
     }
@@ -115,8 +115,8 @@ def get_custom_css():
     .nav-active button,
     .nav-active button:hover {
         color: #ffffff !important;
-        background: rgba(94, 129, 244, 0.08) !important;
-        background-color: rgba(94, 129, 244, 0.08) !important;
+        background: #2d3344 !important;
+        background-color: #2d3344 !important;
         border-bottom-color: #5e81f4 !important;
         font-weight: 600 !important;
     }
@@ -202,6 +202,16 @@ def get_custom_css():
     /* ========================================
        STREAMLIT ELEMENTS OVERRIDE
        ======================================== */
+    
+    /* Espacement entre les rangées de colonnes */
+    [data-testid="column"] {
+        padding: 0 0.75rem !important;
+    }
+    
+    /* Espacement vertical entre les rangées */
+    [data-testid="stHorizontalBlock"] {
+        margin-bottom: 1.5rem !important;
+    }
     
     /* Titres */
     h1, h2, h3 {

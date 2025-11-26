@@ -51,7 +51,7 @@ FROM clean_orders WHERE order_status='delivered'
 # -------------------------------
 # KPIs ROW
 # -------------------------------
-kpi_cols = st.columns(4, gap="medium")
+kpi_cols = st.columns(4, gap="large")
 
 with kpi_cols[0]:
     st.markdown(f"""
@@ -95,7 +95,7 @@ st.markdown("<div class='section-header'>Analyses Détaillées</div>", unsafe_al
 # -------------------------------
 # CHARTS
 # -------------------------------
-chart_row1 = st.columns(2, gap="medium")
+chart_row1 = st.columns(2, gap="large")
 
 with chart_row1[0]:
     st.markdown("""
@@ -113,7 +113,7 @@ with chart_row1[1]:
     </div>
     """, unsafe_allow_html=True)
 
-chart_row2 = st.columns(2, gap="medium")
+chart_row2 = st.columns(2, gap="large")
 
 with chart_row2[0]:
     st.markdown("""
