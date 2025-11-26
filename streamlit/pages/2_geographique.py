@@ -6,6 +6,7 @@ import requests
 import igraph as ig
 import plotly.graph_objects as go
 import styles
+import textes
 
 st.session_state["page"] = "geographique"
 
@@ -18,7 +19,11 @@ st.markdown(styles.get_custom_css(), unsafe_allow_html=True)
 # Navbar
 styles.render_navbar(st, current_page="geographique")
 
-with st.expander("Analyse geographique", expanded=False):
+st.markdown(styles.render_section_header("Analyse Géographique des Ventes"), unsafe_allow_html=True)
+
+with st.expander("📍 Analyse par État", expanded=True):
+        st.markdown(textes.analyse_carte_geo)
+        
         # Chargement du GeoJSON
         @st.cache_resource
         def load_geojson():
@@ -115,13 +120,7 @@ with st.expander("Analyse geographique", expanded=False):
 
 
 with st.expander("🔄 Flux Géographiques – Vendeur → Client", expanded=False):
-    st.markdown("""
-    ### 🔍 Ce que révèle le diagramme de flux
-    **Dominance de SP** : São Paulo est le principal hub vendeur (envoie vers tous les états)  
-    **Flux locaux** : La majorité des états achètent principalement depuis SP puis leur propre état  
-    **Déséquilibres** : Certains flux longue distance (SP → Nord) expliquent les délais élevés  
-    **Recommandation** : Développer des hubs secondaires (RS, RJ) pour réduire la dépendance à SP  
-    """)
+    st.markdown(textes.analyse_flux_geo)
     
     # Chargement des flux
     query_flux = """

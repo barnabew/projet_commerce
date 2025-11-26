@@ -3,6 +3,24 @@ import plotly.graph_objects as go
 import pandas as pd
 
 # ===========================
+# CONFIGURATION THEME
+# ===========================
+
+THEME_CONFIG = {
+    "paper_bgcolor": "#252936",
+    "plot_bgcolor": "#252936",
+    "font": dict(color="#ffffff"),
+    "title": dict(font=dict(color="#ffffff")),
+    "xaxis": dict(gridcolor="#2d3142"),
+    "yaxis": dict(gridcolor="#2d3142")
+}
+
+def apply_theme(fig):
+    """Applique le thème sombre à un graphique Plotly"""
+    fig.update_layout(**THEME_CONFIG)
+    return fig
+
+# ===========================
 # Delivery Time by State
 # ===========================
 

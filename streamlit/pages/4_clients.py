@@ -4,6 +4,8 @@ import numpy as np
 import plotly.express as px
 from data import run_query
 import styles
+import textes
+import visuel
 
 # Configuration de la page
 st.set_page_config(**styles.get_page_config())
@@ -15,15 +17,7 @@ st.markdown(styles.get_custom_css(), unsafe_allow_html=True)
 styles.render_navbar(st, current_page="clients")
 
 st.markdown(styles.render_section_header("Analyse Clients"), unsafe_allow_html=True)
-st.markdown("""
-Olist est un marketplace dominé par les **one-time buyers** (≈ 97%).  
-L'objectif business n'est donc **pas la fidélisation**, mais la qualité de la **première expérience**.
-
-Cette page analyse :
-- les catégories qui **attirent** des nouveaux clients,
-- celles qui **génèrent des mauvaises premières expériences**,
-- l'impact du **délai de livraison** sur la satisfaction.
-""")
+st.markdown(textes.intro_clients)
 
 # Section 1: Indicateurs clés
 with st.expander("📊 Indicateurs clés des clients", expanded=True):
@@ -87,20 +81,12 @@ ORDER BY first_order_count DESC
     )
     fig_acq.update_layout(
         xaxis_title="Catégorie",
-        yaxis_title="Nombre de nouveaux clients",
-        paper_bgcolor="#252936",
-        plot_bgcolor="#252936",
-        font=dict(color="#ffffff"),
-        title=dict(font=dict(color="#ffffff")),
-        xaxis=dict(gridcolor="#2d3142"),
-        yaxis=dict(gridcolor="#2d3142")
+        yaxis_title="Nombre de nouveaux clients"
     )
-
+    visuel.apply_theme(fig_acq)
     st.plotly_chart(fig_acq, use_container_width=True)
 
-    st.markdown("""
-    💡 *Ces catégories jouent un rôle clé dans l'acquisition : ce sont les produits les plus visibles, les plus attractifs ou les moins risqués.*
-    """)
+    st.markdown(textes.insight_categories_acquisition)
 
 # Section 3: Mauvaises premières expériences
 with st.expander("❌ Catégories avec les pires premières expériences", expanded=False):
@@ -144,21 +130,12 @@ ORDER BY bad_review_rate DESC
     )
     fig_bad.update_layout(
         xaxis_title="Catégorie",
-        yaxis_title="% Bad Reviews",
-        paper_bgcolor="#252936",
-        plot_bgcolor="#252936",
-        font=dict(color="#ffffff"),
-        title=dict(font=dict(color="#ffffff")),
-        xaxis=dict(gridcolor="#2d3142"),
-        yaxis=dict(gridcolor="#2d3142")
+        yaxis_title="% Bad Reviews"
     )
-
+    visuel.apply_theme(fig_bad)
     st.plotly_chart(fig_bad, use_container_width=True)
 
-    st.markdown("""
-    💡 *Une mauvaise première expérience = client perdu.  
-    Ces catégories nécessitent une action immédiate (qualité, logistique, description produit…)*  
-    """)
+    st.markdown(textes.insight_mauvaises_experiences)
 
 # Section 4: Impact du délai
 with st.expander("⏱️ Impact du délai sur la satisfaction des nouveaux clients", expanded=False):
@@ -187,27 +164,8 @@ AND o.order_delivered_customer_date IS NOT NULL
     colA.metric("Délai moyen (first-time)", f"{df_delay['avg_delivery_days'][0]} jours")
     colB.metric("Note moyenne (first-time)", df_delay['avg_score'][0])
 
-    st.markdown("""
-    💡 *Les nouveaux clients sont extrêmement sensibles au délai.  
-    Allonger la livraison augmente fortement le risque de non-retour.*  
-    """)
+    st.markdown(textes.insight_impact_delai)
 
 # Section 5: Recommandations
 with st.expander("💡 Recommandations Business", expanded=False):
-
-    st.markdown("""
-    ### ✔️ *1. Optimiser les catégories à fort taux de mauvaises reviews*  
-    Ce sont les produits qui font perdre le plus de clients dès le premier achat.
-
-    ### ✔️ *2. Mettre en avant les catégories d'acquisition*  
-    Elles sont idéales pour publicité, SEO, campagnes d'accueil.
-
-    ### ✔️ *3. Réduire les délais sur les premières commandes*  
-    Impact direct sur la satisfaction → augmente les chances de retour.
-
-    ### ✔️ *4. Améliorer la transparence produit (photo, taille, description)*  
-    Souvent la vraie cause des bad reviews sur un premier achat.
-
-    ### ✔️ *5. Ajouter un "suivi proactif" sur la première commande*  
-    Email, notifications → réduit l'anxiété → augmente la satisfaction.
-    """)
+    st.markdown(textes.recommandations_clients)

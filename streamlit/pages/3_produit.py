@@ -3,6 +3,7 @@ import pandas as pd
 import plotly.express as px
 from data import get_connection
 import styles
+import visuel
 
 # Configuration de la page
 st.set_page_config(**styles.get_page_config())
@@ -13,17 +14,12 @@ st.markdown(styles.get_custom_css(), unsafe_allow_html=True)
 # Navbar
 styles.render_navbar(st, current_page="produit")
 
-st.markdown(styles.render_section_header("Analyse Produits"), unsafe_allow_html=True)
 
-st.write(
-    "Cette page présente une analyse complète par catégorie de produits : "
-    "performance commerciale, délais de livraison, et satisfaction client."
-)
 
 conn = get_connection()
 
 # Section 1: Top catégories par CA
-with st.expander("💰 Top catégories par chiffre d'affaires", expanded=True):
+with st.expander("Top catégories par chiffre d'affaires", expanded=False):
     query_revenue = """
     SELECT 
         COALESCE(tr.product_category_name_english, cp.product_category_name) AS category,
@@ -49,18 +45,11 @@ with st.expander("💰 Top catégories par chiffre d'affaires", expanded=True):
         title="Top 15 catégories – Chiffre d'affaires",
         labels={"revenue": "Revenue", "category": "Category"},
     )
-    fig.update_layout(
-        paper_bgcolor="#252936",
-        plot_bgcolor="#252936",
-        font=dict(color="#ffffff"),
-        title=dict(font=dict(color="#ffffff")),
-        xaxis=dict(gridcolor="#2d3142"),
-        yaxis=dict(gridcolor="#2d3142")
-    )
+    visuel.apply_theme(fig)
     st.plotly_chart(fig, use_container_width=True)
 
 # Section 2: Délais de livraison
-with st.expander("🚚 Délai moyen de livraison par catégorie", expanded=False):
+with st.expander("Délai moyen de livraison par catégorie", expanded=False):
     min_sales = st.slider("Min ventes par catégorie :", 20, 500, 50)
 
     query_delivery = f"""
@@ -93,18 +82,11 @@ with st.expander("🚚 Délai moyen de livraison par catégorie", expanded=False
         orientation="h",
         title="Catégories les plus lentes (top 15)",
     )
-    fig.update_layout(
-        paper_bgcolor="#252936",
-        plot_bgcolor="#252936",
-        font=dict(color="#ffffff"),
-        title=dict(font=dict(color="#ffffff")),
-        xaxis=dict(gridcolor="#2d3142"),
-        yaxis=dict(gridcolor="#2d3142")
-    )
+    visuel.apply_theme(fig)
     st.plotly_chart(fig, use_container_width=True)
 
 # Section 3: Satisfaction client
-with st.expander("⭐ Satisfaction – Notes moyennes par catégorie", expanded=False):
+with st.expander("Satisfaction – Notes moyennes par catégorie", expanded=False):
     min_reviews = st.slider("Min reviews par catégorie :", 20, 1000, 100)
 
     query_reviews = f"""
@@ -135,18 +117,11 @@ with st.expander("⭐ Satisfaction – Notes moyennes par catégorie", expanded=
         color_continuous_scale="RdYlGn",
         title="Catégories les moins bien notées",
     )
-    fig.update_layout(
-        paper_bgcolor="#252936",
-        plot_bgcolor="#252936",
-        font=dict(color="#ffffff"),
-        title=dict(font=dict(color="#ffffff")),
-        xaxis=dict(gridcolor="#2d3142"),
-        yaxis=dict(gridcolor="#2d3142")
-    )
+    visuel.apply_theme(fig)
     st.plotly_chart(fig, use_container_width=True)
 
 # Section 4: Catégories problématiques
-with st.expander("⚠️ Catégories problématiques", expanded=False):
+with st.expander("Catégories problématiques", expanded=False):
     query_bad = """
     SELECT 
         COALESCE(tr.product_category_name_english, cp.product_category_name) AS category,
