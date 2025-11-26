@@ -114,7 +114,15 @@ with st.expander("Analyse geographique", expanded=False):
 
 
 
-with st.expander(" Flux Géographiques – Vendeur → Client", expanded=False):
+with st.expander("🔄 Flux Géographiques – Vendeur → Client", expanded=False):
+    st.markdown("""
+    ### 🔍 Ce que révèle le diagramme de flux
+    **Dominance de SP** : São Paulo est le principal hub vendeur (envoie vers tous les états)  
+    **Flux locaux** : La majorité des états achètent principalement depuis SP puis leur propre état  
+    **Déséquilibres** : Certains flux longue distance (SP → Nord) expliquent les délais élevés  
+    **Recommandation** : Développer des hubs secondaires (RS, RJ) pour réduire la dépendance à SP  
+    """)
+    
     # Chargement des flux
     query_flux = """
     SELECT 
