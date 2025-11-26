@@ -84,18 +84,39 @@ def get_custom_css():
         transition: all 0.2s ease !important;
         box-shadow: none !important;
         text-transform: none !important;
+        position: relative !important;
     }
 
-    /* Effet au survol : boutons deviennent blancs */
+    /* Overlay blanc au survol */
+    .navbar-buttons div.stButton > button:first-child:not([kind="primary"])::before,
+    .navbar-buttons button:not([kind="primary"])::before,
+    .navbar-buttons button[kind="secondary"]::before {
+        content: "" !important;
+        position: absolute !important;
+        top: 0 !important;
+        left: 0 !important;
+        right: 0 !important;
+        bottom: 0 !important;
+        background-color: transparent !important;
+        transition: background-color 0.2s ease !important;
+        border-radius: 3px 3px 0 0 !important;
+        pointer-events: none !important;
+    }
+
+    .navbar-buttons div.stButton > button:first-child:not([kind="primary"]):hover::before,
+    .navbar-buttons button:not([kind="primary"]):hover::before,
+    .navbar-buttons button[kind="secondary"]:hover::before {
+        background-color: rgba(255, 255, 255, 0.9) !important;
+    }
+
+    /* Effet au survol : texte devient noir */
     .navbar-buttons div.stButton > button:first-child:hover:not([kind="primary"]),
     .navbar-buttons button:hover:not([kind="primary"]),
     .navbar-buttons button[kind="secondary"]:hover,
     .navbar-buttons [data-testid="baseButton-secondary"]:hover {
-        background-color: #ffffff !important;
-        background-image: none !important;
         color: #1a1d29 !important;
-        border-color: #2d3142 !important;
         border-bottom-color: rgba(94, 129, 244, 0.4) !important;
+        z-index: 1 !important;
     }
 
     /* Style du bouton actif : fond rouge */
@@ -421,6 +442,20 @@ def render_navbar(st, current_page="resume"):
     
     # Wrapper avec classe navbar-buttons
     st.markdown('<div class="navbar-buttons">', unsafe_allow_html=True)
+    
+    # CSS spécifique pour forcer la couleur des boutons
+    st.markdown("""
+    <style>
+    button[kind="secondary"] {
+        background-color: #252936 !important;
+        color: #8b92a7 !important;
+    }
+    button[kind="secondary"]:hover {
+        background-color: #ffffff !important;
+        color: #1a1d29 !important;
+    }
+    </style>
+    """, unsafe_allow_html=True)
     
     # Créer les colonnes pour les boutons
     col1, col2, col3, col4, col5 = st.columns(5)
