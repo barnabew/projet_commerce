@@ -5,15 +5,7 @@ import pandas as pd
 import requests
 import igraph as ig
 import plotly.graph_objects as go
-import plotly.io as pio
 import styles
-
-# Configuration du template Plotly par défaut
-pio.templates["custom_dark"] = pio.templates["plotly"]
-pio.templates["custom_dark"].layout.paper_bgcolor = "#1a1d29"
-pio.templates["custom_dark"].layout.plot_bgcolor = "#1a1d29"
-pio.templates["custom_dark"].layout.font.color = "#ffffff"
-pio.templates.default = "custom_dark"
 
 st.session_state["page"] = "geographique"
 
@@ -114,8 +106,9 @@ fig.update_layout(
     margin={"r":0,"t":40,"l":0,"b":0},
     paper_bgcolor="#1a1d29",
     plot_bgcolor="#1a1d29",
-    font_color="#ffffff",
-    geo=dict(bgcolor="#1a1d29")
+    font=dict(color="#ffffff"),
+    geo=dict(bgcolor="#1a1d29", lakecolor="#1a1d29"),
+    title=dict(font=dict(color="#ffffff"))
 )
 
 st.plotly_chart(fig, use_container_width=True)
@@ -190,7 +183,8 @@ else:
         height=600,
         paper_bgcolor="#1a1d29",
         plot_bgcolor="#1a1d29",
-        font_color="#ffffff"
+        font=dict(color="#ffffff"),
+        title=dict(font=dict(color="#ffffff"))
     )
     st.plotly_chart(fig, use_container_width=True)
 

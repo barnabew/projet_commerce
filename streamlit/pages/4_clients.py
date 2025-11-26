@@ -2,16 +2,8 @@ import streamlit as st
 import pandas as pd
 import numpy as np
 import plotly.express as px
-import plotly.io as pio
 from data import run_query
 import styles
-
-# Configuration du template Plotly par défaut
-pio.templates["custom_dark"] = pio.templates["plotly"]
-pio.templates["custom_dark"].layout.paper_bgcolor = "#1a1d29"
-pio.templates["custom_dark"].layout.plot_bgcolor = "#1a1d29"
-pio.templates["custom_dark"].layout.font.color = "#ffffff"
-pio.templates.default = "custom_dark"
 
 # Configuration de la page
 st.set_page_config(**styles.get_page_config())
@@ -102,7 +94,10 @@ fig_acq.update_layout(
     yaxis_title="Nombre de nouveaux clients",
     paper_bgcolor="#1a1d29",
     plot_bgcolor="#1a1d29",
-    font_color="#ffffff"
+    font=dict(color="#ffffff"),
+    title=dict(font=dict(color="#ffffff")),
+    xaxis=dict(gridcolor="#2d3142"),
+    yaxis=dict(gridcolor="#2d3142")
 )
 
 st.plotly_chart(fig_acq, use_container_width=True)
@@ -159,7 +154,10 @@ fig_bad.update_layout(
     yaxis_title="% Bad Reviews",
     paper_bgcolor="#1a1d29",
     plot_bgcolor="#1a1d29",
-    font_color="#ffffff"
+    font=dict(color="#ffffff"),
+    title=dict(font=dict(color="#ffffff")),
+    xaxis=dict(gridcolor="#2d3142"),
+    yaxis=dict(gridcolor="#2d3142")
 )
 
 st.plotly_chart(fig_bad, use_container_width=True)
