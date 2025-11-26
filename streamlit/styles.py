@@ -84,8 +84,8 @@ def get_custom_css():
         min-height: 50px !important;
         padding: 0 24px !important;
         margin: 0 !important;
-        background: #252936 !important;
-        background-color: #252936 !important;
+        background: #1a1d29 !important;
+        background-color: #1a1d29 !important;
         border: 1px solid #2d3142 !important;
         border-bottom: 3px solid transparent !important;
         border-radius: 6px 6px 0 0 !important;
@@ -99,8 +99,8 @@ def get_custom_css():
     }
 
     .navbar-buttons button:hover {
-        background: #2a2f3e !important;
-        background-color: #2a2f3e !important;
+        background: #20232e !important;
+        background-color: #20232e !important;
         color: #ffffff !important;
         border-bottom-color: rgba(94, 129, 244, 0.4) !important;
     }
@@ -111,12 +111,12 @@ def get_custom_css():
         outline: none !important;
     }
 
-    /* Bouton actif - Style Geckoboard */
+    /* Bouton actif - Blanc */
     .nav-active button,
     .nav-active button:hover {
-        color: #ffffff !important;
-        background: #2d3344 !important;
-        background-color: #2d3344 !important;
+        color: #1a1d29 !important;
+        background: #ffffff !important;
+        background-color: #ffffff !important;
         border-bottom-color: #5e81f4 !important;
         font-weight: 600 !important;
     }
@@ -287,7 +287,6 @@ def render_navbar(st, current_page="resume"):
         st: module streamlit
         current_page: nom de la page active (resume, geographique, produit, clients, recommandations)
     """
-    import streamlit as st
     
     # Wrapper avec classe navbar-buttons
     st.markdown('<div class="navbar-buttons">', unsafe_allow_html=True)
