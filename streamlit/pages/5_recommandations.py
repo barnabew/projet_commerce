@@ -20,65 +20,61 @@ Cette page regroupe les recommandations concrètes issues des analyses :
 - Comportement clients  
 """)
 
-st.divider()
-# Logistique et délais
-st.header("1. Logistique & Délais de Livraison")
+# Section 1: Logistique
+with st.expander("🚚 1. Logistique & Délais de Livraison", expanded=True):
 
-st.subheader("Problèmes identifiés")
-st.markdown("""
-- Les délais > 10 jours font chuter significativement les notes (jusqu’à 3.2/5).  
-- Le taux de **mauvaises reviews** dépasse **35%** au-delà de 20 jours.  
-- Certaines routes logistiques, notamment **SP → Nord**, sont clairement plus lentes.
-""")
+    st.subheader("Problèmes identifiés")
+    st.markdown("""
+    - Les délais > 10 jours font chuter significativement les notes (jusqu'à 3.2/5).  
+    - Le taux de **mauvaises reviews** dépasse **35%** au-delà de 20 jours.  
+    - Certaines routes logistiques, notamment **SP → Nord**, sont clairement plus lentes.
+    """)
 
-st.subheader("Recommandations")
-st.markdown("""
-- **Optimiser les routes critiques** : prioriser les flux SP → (PA, AM, RR, AP).  
-- **Alerte automatique** sur commandes dépassant l’estimation initiale.  
-- **Partenariats logistiques régionaux** dans le Nord/Nord-Est pour réduire 2–4 jours.  
-- **Proposer un suivi plus transparent** pour réduire l’insatisfaction liée à l’attente.
-""")
+    st.subheader("Recommandations")
+    st.markdown("""
+    - **Optimiser les routes critiques** : prioriser les flux SP → (PA, AM, RR, AP).  
+    - **Alerte automatique** sur commandes dépassant l'estimation initiale.  
+    - **Partenariats logistiques régionaux** dans le Nord/Nord-Est pour réduire 2–4 jours.  
+    - **Proposer un suivi plus transparent** pour réduire l'insatisfaction liée à l'attente.
+    """)
 
-st.divider()
-# Produits et assortiment
-st.header("2. Produits & Assortiment")
+# Section 2: Produits
+with st.expander("📦 2. Produits & Assortiment", expanded=False):
 
-st.subheader("Problèmes identifiés")
-st.markdown("""
-- Quelques catégories génèrent des **notes très faibles** (ex : office furniture 3.49/5).  
-- D'autres sont **à fort potentiel** : health_beauty, gifts, sports…  
-- Le pricing + shipping impacte fortement la satisfaction dans certaines catégories.
-""")
+    st.subheader("Problèmes identifiés")
+    st.markdown("""
+    - Quelques catégories génèrent des **notes très faibles** (ex : office furniture 3.49/5).  
+    - D'autres sont **à fort potentiel** : health_beauty, gifts, sports…  
+    - Le pricing + shipping impacte fortement la satisfaction dans certaines catégories.
+    """)
 
-st.subheader("Recommandations")
-st.markdown("""
-- **Auditer les mauvaises catégories** (packaging, qualité, fournisseurs).  
-- **Mettre en avant les catégories héro** dans campagnes marketing.  
-- **Optimiser le pricing + shipping** pour les articles volumineux (mobilier).  
-- **Créer des bundles** pour augmenter le panier moyen dans les catégories populaires.
-""")
+    st.subheader("Recommandations")
+    st.markdown("""
+    - **Auditer les mauvaises catégories** (packaging, qualité, fournisseurs).  
+    - **Mettre en avant les catégories héro** dans campagnes marketing.  
+    - **Optimiser le pricing + shipping** pour les articles volumineux (mobilier).  
+    - **Créer des bundles** pour augmenter le panier moyen dans les catégories populaires.
+    """)
 
-st.divider()
-# Géographie et expansion
-st.header("3. Géographie & Expansion")
+# Section 3: Géographie
+with st.expander("🌎 3. Géographie & Expansion", expanded=False):
 
-st.subheader("Constat")
-st.markdown("""
-- Le CA est très concentré : SP > RJ > MG.  
-- Certaines régions ont un **panier moyen élevé** mais une faible base client (ex: Norte).  
-- Les délais y sont souvent plus longs → impact direct sur les notes.
-""")
+    st.subheader("Constat")
+    st.markdown("""
+    - Le CA est très concentré : SP > RJ > MG.  
+    - Certaines régions ont un **panier moyen élevé** mais une faible base client (ex: Norte).  
+    - Les délais y sont souvent plus longs → impact direct sur les notes.
+    """)
 
-st.subheader("Recommandations")
-st.markdown("""
-- **Campagnes ciblées** dans RS, PR, SC : bonnes notes et bons délais → potentiel d’expansion.  
-- **Développer des hubs logistiques** dans NO/NE pour accélérer la livraison.  
-- **Publicité géographique** : push sur les régions où la concurrence est faible.
-""")
+    st.subheader("Recommandations")
+    st.markdown("""
+    - **Campagnes ciblées** dans RS, PR, SC : bonnes notes et bons délais → potentiel d'expansion.  
+    - **Développer des hubs logistiques** dans NO/NE pour accélérer la livraison.  
+    - **Publicité géographique** : push sur les régions où la concurrence est faible.
+    """)
 
-st.divider()
-# Clients et comportement
-st.header("4. Clients & Comportement d'Achat")
+# Section 4: Clients
+with st.expander("👥 4. Clients & Comportement d'Achat", expanded=False):
 
 st.subheader("Observations clés")
 st.markdown("""
@@ -110,12 +106,12 @@ st.divider()
 # Priorités stratégiques
 st.header("5. Priorités Stratégiques (Top 5)")
 
-st.markdown("""
-### 1. Accélérer la livraison (levier n°1 pour améliorer la note client)
-### 2. Améliorer la qualité des catégories problématiques (mobilier, audio…)
-### 3. Investir dans l'acquisition : les clients reviennent très peu
-### 4. Développer la logistique dans le Nord & Nord-Est
-### 5. Mettre en avant les produits les plus performants en marketing
-""")
+    st.markdown("""
+    ### 1. Accélérer la livraison (levier n°1 pour améliorer la note client)
+    ### 2. Améliorer la qualité des catégories problématiques (mobilier, audio…)
+    ### 3. Investir dans l'acquisition : les clients reviennent très peu
+    ### 4. Développer la logistique dans le Nord & Nord-Est
+    ### 5. Mettre en avant les produits les plus performants en marketing
+    """)
 
-st.success("Cette page regroupe les recommandations les plus importantes pour orienter la stratégie business.")
+    st.success("Cette page regroupe les recommandations les plus importantes pour orienter la stratégie business.")

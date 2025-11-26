@@ -25,8 +25,8 @@ Cette page analyse :
 - l'impact du **délai de livraison** sur la satisfaction.
 """)
 
-# Indicateurs clés des clients
-st.header("Indicateurs clés des clients")
+# Section 1: Indicateurs clés
+with st.expander("📊 Indicateurs clés des clients", expanded=True):
 
 query_kpi = """
 SELECT
@@ -50,14 +50,12 @@ query_score = "SELECT ROUND(AVG(review_score), 2) AS avg_score FROM clean_review
 avg_score = run_query(query_score)["avg_score"][0]
 
 col1, col2, col3 = st.columns(3)
-col1.metric("Clients one-time", f"{pct_one_time} %")
-col2.metric("Panier moyen (par article)", f"{avg_item} R$")
-col3.metric("Note moyenne", avg_score)
+    col1.metric("Clients one-time", f"{pct_one_time} %")
+    col2.metric("Panier moyen (par article)", f"{avg_item} R$")
+    col3.metric("Note moyenne", avg_score)
 
-st.divider()
-
-# Catégories qui attirent le plus de nouveaux clients
-st.header("Catégories qui attirent le plus de nouveaux clients")
+# Section 2: Catégories d'acquisition
+with st.expander("🎯 Catégories qui attirent le plus de nouveaux clients", expanded=False):
 
 query_acquisition = """
 SELECT 
@@ -100,16 +98,14 @@ fig_acq.update_layout(
     yaxis=dict(gridcolor="#2d3142")
 )
 
-st.plotly_chart(fig_acq, use_container_width=True)
+    st.plotly_chart(fig_acq, use_container_width=True)
 
-st.markdown("""
-💡 *Ces catégories jouent un rôle clé dans l’acquisition : ce sont les produits les plus visibles, les plus attractifs ou les moins risqués.*
-""")
+    st.markdown("""
+    💡 *Ces catégories jouent un rôle clé dans l'acquisition : ce sont les produits les plus visibles, les plus attractifs ou les moins risqués.*
+    """)
 
-st.divider()
-
-# Catégories avec les pires premières expériences
-st.header("Catégories avec les pires premières expériences")
+# Section 3: Mauvaises premières expériences
+with st.expander("❌ Catégories avec les pires premières expériences", expanded=False):
 
 query_bad_rate = """
 SELECT 
@@ -160,17 +156,15 @@ fig_bad.update_layout(
     yaxis=dict(gridcolor="#2d3142")
 )
 
-st.plotly_chart(fig_bad, use_container_width=True)
+    st.plotly_chart(fig_bad, use_container_width=True)
 
-st.markdown("""
-💡 *Une mauvaise première expérience = client perdu.  
-Ces catégories nécessitent une action immédiate (qualité, logistique, description produit…)*  
-""")
+    st.markdown("""
+    💡 *Une mauvaise première expérience = client perdu.  
+    Ces catégories nécessitent une action immédiate (qualité, logistique, description produit…)*  
+    """)
 
-st.divider()
-
-# Impact du délai sur la satisfaction
-st.header("Impact du délai sur la satisfaction des nouveaux clients")
+# Section 4: Impact du délai
+with st.expander("⏱️ Impact du délai sur la satisfaction des nouveaux clients", expanded=False):
 
 query_delay = """
 SELECT
@@ -194,32 +188,30 @@ AND o.order_purchase_timestamp IS NOT NULL;
 df_delay = run_query(query_delay)
 
 colA, colB = st.columns(2)
-colA.metric("Délai moyen (first-time)", f"{df_delay['avg_delivery_days'][0]} jours")
-colB.metric("Note moyenne (first-time)", df_delay['avg_score'][0])
+    colA.metric("Délai moyen (first-time)", f"{df_delay['avg_delivery_days'][0]} jours")
+    colB.metric("Note moyenne (first-time)", df_delay['avg_score'][0])
 
-st.markdown("""
-💡 *Les nouveaux clients sont extrêmement sensibles au délai.  
-Allonger la livraison augmente fortement le risque de non-retour.*  
-""")
+    st.markdown("""
+    💡 *Les nouveaux clients sont extrêmement sensibles au délai.  
+    Allonger la livraison augmente fortement le risque de non-retour.*  
+    """)
 
-st.divider()
+# Section 5: Recommandations
+with st.expander("💡 Recommandations Business", expanded=False):
 
-# Recommandations Business
-st.header("Recommandations Business")
+    st.markdown("""
+    ### ✔️ *1. Optimiser les catégories à fort taux de mauvaises reviews*  
+    Ce sont les produits qui font perdre le plus de clients dès le premier achat.
 
-st.markdown("""
-### ✔️ *1. Optimiser les catégories à fort taux de mauvaises reviews*  
-Ce sont les produits qui font perdre le plus de clients dès le premier achat.
+    ### ✔️ *2. Mettre en avant les catégories d'acquisition*  
+    Elles sont idéales pour publicité, SEO, campagnes d'accueil.
 
-### ✔️ *2. Mettre en avant les catégories d’acquisition*  
-Elles sont idéales pour publicité, SEO, campagnes d’accueil.
+    ### ✔️ *3. Réduire les délais sur les premières commandes*  
+    Impact direct sur la satisfaction → augmente les chances de retour.
 
-### ✔️ *3. Réduire les délais sur les premières commandes*  
-Impact direct sur la satisfaction → augmente les chances de retour.
+    ### ✔️ *4. Améliorer la transparence produit (photo, taille, description)*  
+    Souvent la vraie cause des bad reviews sur un premier achat.
 
-### ✔️ *4. Améliorer la transparence produit (photo, taille, description)*  
-Souvent la vraie cause des bad reviews sur un premier achat.
-
-### ✔️ *5. Ajouter un “suivi proactif” sur la première commande*  
-Email, notifications → réduit l’anxiété → augmente la satisfaction.
-""")
+    ### ✔️ *5. Ajouter un "suivi proactif" sur la première commande*  
+    Email, notifications → réduit l'anxiété → augmente la satisfaction.
+    """)
