@@ -19,7 +19,7 @@ def get_page_config():
 
 def get_custom_css():
     """
-    Retourne le CSS personnalisé pour le dashboard
+    Retourne le CSS personnalisé pour le dashboard (style Geckoboard)
     
     Returns:
         str: Code CSS complet avec balises <style>
@@ -28,11 +28,11 @@ def get_custom_css():
     <style>
     
     /* ========================================
-       BASE STYLES
+       BASE STYLES - GECKOBOARD DARK THEME
        ======================================== */
     html, body, .stApp {
-        background: linear-gradient(135deg, #0a1628 0%, #111d30 100%) !important;
-        font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, sans-serif;
+        background: #1a1d29 !important;
+        font-family: 'Inter', 'Segoe UI', -apple-system, BlinkMacSystemFont, sans-serif;
     }
 
     /* REMOVE SIDEBAR */
@@ -40,230 +40,205 @@ def get_custom_css():
     div[data-testid="collapsedControl"] { display: none !important; }
 
     .block-container {
-        padding-top: 1rem !important;
+        padding-top: 0rem !important;
+        padding-bottom: 2rem !important;
         max-width: 100% !important;
     }
 
     /* ========================================
-       NAVBAR - HORIZONTAL LAYOUT
+       NAVBAR - GECKOBOARD STYLE
        ======================================== */
     
-    /* Conteneur principal des boutons de navigation */
-    div[data-testid="column"]:has(button[key^="nav_"]) {
-        background: linear-gradient(135deg, #162841 0%, #1a2f4a 100%) !important;
-    }
-    
-    /* Ligne contenant tous les boutons de nav */
-    div[data-testid="column"]:has(button[key^="nav_"]):first-child {
-        margin: -1rem -2rem 2.5rem -2rem !important;
-        padding: 0 2rem !important;
-    }
-    
-    .navbar-container {
-        background: linear-gradient(135deg, #162841 0%, #1a2f4a 100%);
-        border-bottom: 2px solid rgba(77, 168, 255, 0.2);
-        box-shadow: 0 4px 24px rgba(0, 0, 0, 0.4);
-        margin: -1rem -2rem 0rem -2rem;
-        padding: 0;
-        display: none;
-    }
-
-    .navbar-content {
-        max-width: 1600px;
-        margin: 0 auto;
-        padding: 0 2rem;
-        display: flex;
-        align-items: center;
-        gap: 0;
-    }
-
-    .navbar-brand {
-        color: #4DA8FF;
-        font-size: 20px;
-        font-weight: 700;
-        padding: 18px 24px 18px 0;
-        letter-spacing: -0.5px;
-        border-right: 1px solid rgba(255, 255, 255, 0.08);
-        margin-right: 0;
-        flex-shrink: 0;
-    }
-
-    .navbar-buttons {
-        display: flex;
-        flex: 1;
-        gap: 0;
-        background: linear-gradient(135deg, #162841 0%, #1a2f4a 100%);
-        border-bottom: 2px solid rgba(77, 168, 255, 0.2);
-        box-shadow: 0 4px 24px rgba(0, 0, 0, 0.4);
-        margin: -1rem -2rem 2.5rem -2rem;
-        padding: 0 2rem;
-    }
-
-    /* Style pour les colonnes Streamlit dans la navbar */
-    .navbar-buttons [data-testid="column"] {
-        flex: 1;
-        background: transparent !important;
-    }
-
-    /* Container des boutons Streamlit */
-    .navbar-buttons [data-testid="column"] > div {
-        background: transparent !important;
-    }
-
-    .navbar-buttons [data-testid="stVerticalBlock"] {
-        background: transparent !important;
+    /* Masquer les éléments par défaut de Streamlit dans la navbar */
+    .navbar-buttons > div[data-testid="stVerticalBlock"] {
         gap: 0 !important;
     }
+    
+    .navbar-buttons {
+        background: #252936 !important;
+        border-bottom: 1px solid #2d3142 !important;
+        margin: -1rem -2rem 2rem -2rem !important;
+        padding: 0 !important;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3) !important;
+        display: flex !important;
+        align-items: stretch !important;
+    }
 
-    /* Masquer complètement le style par défaut des boutons Streamlit */
-    .navbar-buttons button,
-    .navbar-buttons button[kind="primary"],
-    .navbar-buttons button[kind="secondary"] {
+    /* Colonnes de la navbar */
+    .navbar-buttons [data-testid="column"] {
+        flex: 1 !important;
+        background: transparent !important;
+        padding: 0 !important;
+        margin: 0 !important;
+    }
+
+    .navbar-buttons [data-testid="column"] > div {
+        background: transparent !important;
+        padding: 0 !important;
+    }
+
+    /* Boutons de navigation - Style Geckoboard */
+    .navbar-buttons button {
         width: 100% !important;
-        height: 100% !important;
-        min-height: 54px !important;
-        padding: 18px 16px !important;
+        height: 60px !important;
+        min-height: 60px !important;
+        padding: 0 24px !important;
+        margin: 0 !important;
         background: transparent !important;
         background-color: transparent !important;
         border: none !important;
-        border-radius: 0 !important;
-        color: #95adc7 !important;
-        font-size: 15px !important;
-        font-weight: 500 !important;
         border-bottom: 3px solid transparent !important;
-        transition: all 0.3s ease !important;
+        border-radius: 0 !important;
+        color: #8b92a7 !important;
+        font-size: 14px !important;
+        font-weight: 500 !important;
+        letter-spacing: 0.3px !important;
+        transition: all 0.2s ease !important;
         box-shadow: none !important;
+        text-transform: none !important;
     }
 
-    .navbar-buttons button:hover,
-    .navbar-buttons button[kind="primary"]:hover,
-    .navbar-buttons button[kind="secondary"]:hover {
-        background: rgba(77, 168, 255, 0.08) !important;
-        background-color: rgba(77, 168, 255, 0.08) !important;
-        color: #d4e3f5 !important;
-        border-bottom-color: rgba(77, 168, 255, 0.3) !important;
+    .navbar-buttons button:hover {
+        background: rgba(255, 255, 255, 0.04) !important;
+        background-color: rgba(255, 255, 255, 0.04) !important;
+        color: #ffffff !important;
+        border-bottom-color: rgba(94, 129, 244, 0.4) !important;
     }
 
     .navbar-buttons button:focus,
-    .navbar-buttons button:active,
-    .navbar-buttons button[kind="primary"]:focus,
-    .navbar-buttons button[kind="primary"]:active {
+    .navbar-buttons button:active {
         box-shadow: none !important;
         outline: none !important;
-        background: transparent !important;
-        background-color: transparent !important;
     }
 
-    /* Bouton actif */
+    /* Bouton actif - Style Geckoboard */
     .nav-active button,
-    .nav-active button[kind="primary"],
-    .nav-active button[kind="secondary"] {
+    .nav-active button:hover {
         color: #ffffff !important;
-        background: rgba(77, 168, 255, 0.12) !important;
-        background-color: rgba(77, 168, 255, 0.12) !important;
-        border-bottom-color: #4DA8FF !important;
+        background: rgba(94, 129, 244, 0.08) !important;
+        background-color: rgba(94, 129, 244, 0.08) !important;
+        border-bottom-color: #5e81f4 !important;
         font-weight: 600 !important;
     }
 
     /* ========================================
-       KPI CARDS
+       KPI CARDS - GECKOBOARD STYLE
        ======================================== */
     .kpi-card {
-        background: linear-gradient(135deg, #162841 0%, #1a2f4a 100%);
-        padding: 28px;
-        border-radius: 12px;
-        border: 1px solid rgba(77, 168, 255, 0.15);
-        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.25);
-        transition: all 0.3s ease;
+        background: #252936 !important;
+        padding: 24px !important;
+        border-radius: 8px !important;
+        border: 1px solid #2d3142 !important;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2) !important;
+        transition: all 0.2s ease !important;
     }
 
     .kpi-card:hover {
-        transform: translateY(-3px);
-        box-shadow: 0 8px 30px rgba(77, 168, 255, 0.15);
-        border-color: rgba(77, 168, 255, 0.25);
+        transform: translateY(-2px) !important;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3) !important;
+        border-color: #3d4152 !important;
     }
 
     .kpi-label {
-        color: #95adc7;
-        font-size: 13px;
-        text-transform: uppercase;
-        letter-spacing: 1.2px;
-        font-weight: 600;
-        margin-bottom: 10px;
+        color: #8b92a7 !important;
+        font-size: 12px !important;
+        text-transform: uppercase !important;
+        letter-spacing: 1px !important;
+        font-weight: 600 !important;
+        margin-bottom: 8px !important;
     }
 
     .kpi-value {
-        color: #ffffff;
-        font-size: 34px;
-        font-weight: 700;
-        line-height: 1.2;
-        letter-spacing: -0.5px;
+        color: #ffffff !important;
+        font-size: 32px !important;
+        font-weight: 700 !important;
+        line-height: 1.2 !important;
+        letter-spacing: -0.5px !important;
     }
 
     /* ========================================
-       CHART CONTAINERS
+       CHART CONTAINERS - GECKOBOARD STYLE
        ======================================== */
     .chart-container {
-        background: linear-gradient(135deg, #162841 0%, #1a2f4a 100%);
-        padding: 30px;
-        border-radius: 12px;
-        border: 1px solid rgba(77, 168, 255, 0.15);
-        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.25);
-        transition: all 0.3s ease;
-        min-height: 300px;
+        background: #252936 !important;
+        padding: 24px !important;
+        border-radius: 8px !important;
+        border: 1px solid #2d3142 !important;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2) !important;
+        transition: all 0.2s ease !important;
     }
 
     .chart-container:hover {
-        box-shadow: 0 8px 30px rgba(77, 168, 255, 0.12);
-        border-color: rgba(77, 168, 255, 0.22);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3) !important;
+        border-color: #3d4152 !important;
     }
 
     .chart-title {
-        color: #ffffff;
-        font-size: 18px;
-        font-weight: 600;
-        margin-bottom: 8px;
-        letter-spacing: -0.3px;
+        color: #ffffff !important;
+        font-size: 16px !important;
+        font-weight: 600 !important;
+        margin-bottom: 6px !important;
     }
 
     .chart-subtitle {
-        color: #95adc7;
-        font-size: 14px;
-        margin-bottom: 20px;
+        color: #8b92a7 !important;
+        font-size: 13px !important;
+        margin-bottom: 16px !important;
     }
 
     /* ========================================
-       SECTION TITLE
+       SECTION TITLE - GECKOBOARD STYLE
        ======================================== */
     .section-header {
-        color: #ffffff;
-        font-size: 26px;
-        font-weight: 700;
-        margin: 40px 0 25px 0;
-        letter-spacing: -0.5px;
-        padding-left: 15px;
-        border-left: 4px solid #4DA8FF;
+        color: #ffffff !important;
+        font-size: 22px !important;
+        font-weight: 600 !important;
+        margin: 32px 0 20px 0 !important;
+        letter-spacing: -0.3px !important;
+        padding-left: 12px !important;
+        border-left: 3px solid #5e81f4 !important;
     }
 
     /* ========================================
-       SCROLLBAR
+       STREAMLIT ELEMENTS OVERRIDE
+       ======================================== */
+    
+    /* Titres */
+    h1, h2, h3 {
+        color: #ffffff !important;
+    }
+    
+    /* Texte */
+    p, div, span, label {
+        color: #c5c9d6 !important;
+    }
+    
+    /* Info boxes */
+    .stAlert {
+        background: #252936 !important;
+        border: 1px solid #2d3142 !important;
+        border-radius: 8px !important;
+    }
+
+    /* ========================================
+       SCROLLBAR - GECKOBOARD STYLE
        ======================================== */
     ::-webkit-scrollbar {
-        width: 10px;
-        height: 10px;
+        width: 8px;
+        height: 8px;
     }
 
     ::-webkit-scrollbar-track {
-        background: #0a1628;
+        background: #1a1d29;
     }
 
     ::-webkit-scrollbar-thumb {
-        background: rgba(77, 168, 255, 0.3);
-        border-radius: 5px;
+        background: #3d4152;
+        border-radius: 4px;
     }
 
     ::-webkit-scrollbar-thumb:hover {
-        background: rgba(77, 168, 255, 0.5);
+        background: #4d5262;
     }
 
     </style>
