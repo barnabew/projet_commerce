@@ -65,13 +65,15 @@ def get_custom_css():
     /* Style des boutons inactifs : fond gris */
     .navbar-buttons div.stButton > button:first-child,
     .navbar-buttons button,
-    .navbar-buttons button[kind="secondary"] {
+    .navbar-buttons button[kind="secondary"],
+    .navbar-buttons [data-testid="baseButton-secondary"] {
         width: 100% !important;
         height: 50px !important;
         min-height: 50px !important;
         padding: 0 24px !important;
         margin: 0 !important;
         background-color: #252936 !important;
+        background-image: none !important;
         border: 1px solid #2d3142 !important;
         border-bottom: 3px solid transparent !important;
         border-radius: 3px 3px 0 0 !important;
@@ -85,10 +87,12 @@ def get_custom_css():
     }
 
     /* Effet au survol : boutons deviennent blancs */
-    .navbar-buttons div.stButton > button:first-child:hover,
-    .navbar-buttons button:hover,
-    .navbar-buttons button[kind="secondary"]:hover {
+    .navbar-buttons div.stButton > button:first-child:hover:not([kind="primary"]),
+    .navbar-buttons button:hover:not([kind="primary"]),
+    .navbar-buttons button[kind="secondary"]:hover,
+    .navbar-buttons [data-testid="baseButton-secondary"]:hover {
         background-color: #ffffff !important;
+        background-image: none !important;
         color: #1a1d29 !important;
         border-color: #2d3142 !important;
         border-bottom-color: rgba(94, 129, 244, 0.4) !important;
@@ -96,8 +100,10 @@ def get_custom_css():
 
     /* Style du bouton actif : fond rouge */
     .navbar-buttons div.stButton > button:first-child[kind="primary"],
-    .navbar-buttons button[kind="primary"] {
+    .navbar-buttons button[kind="primary"],
+    .navbar-buttons [data-testid="baseButton-primary"] {
         background-color: #ff4b4b !important;
+        background-image: none !important;
         color: #ffffff !important;
         border: 1px solid #ff1a1a !important;
         border-bottom: 3px solid #ff1a1a !important;
