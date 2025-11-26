@@ -201,3 +201,73 @@ reco_priorites = """
 """
 
 reco_conclusion = "Cette page regroupe les recommandations les plus importantes pour orienter la stratégie business."
+
+# ===========================
+# TEXTES PAGE PRODUITS
+# ===========================
+
+intro_produits = """
+Cette page analyse la performance des catégories de produits selon plusieurs dimensions :
+- **Chiffre d'affaires** : Quelles catégories génèrent le plus de revenus ?
+- **Délais de livraison** : Quelles catégories sont les plus lentes à livrer ?
+- **Satisfaction client** : Quelles catégories reçoivent les meilleures/pires notes ?
+- **Catégories problématiques** : Identification des zones à risque
+"""
+
+analyse_top_categories_ca = """
+### 🔍 Insights clés
+
+**Concentration du CA sur quelques catégories**  
+Les 15 premières catégories représentent une part importante du chiffre d'affaires total. Cette concentration indique des produits phares à préserver et optimiser.
+
+**Opportunités de croissance**  
+Les catégories bien positionnées peuvent bénéficier de campagnes marketing ciblées pour augmenter encore leur performance.
+
+**Diversification recommandée**  
+Une trop forte dépendance à quelques catégories peut être risquée. Il est important de développer d'autres segments porteurs.
+"""
+
+analyse_delais_livraison = """
+### 🔍 Insights clés
+
+**Impact direct sur la satisfaction**  
+Les catégories avec des délais élevés (>15 jours) ont généralement des notes clients plus faibles. Le délai est un facteur critique de satisfaction.
+
+**Problèmes logistiques identifiés**  
+Certaines catégories (meubles, électroménager volumineux) souffrent de contraintes logistiques structurelles qui rallongent les délais.
+
+**Opportunités d'optimisation**  
+Réduire les délais de 2-3 jours sur les catégories lentes peut améliorer significativement la satisfaction et réduire le taux de mauvaises reviews.
+"""
+
+analyse_satisfaction_categories = """
+### 🔍 Insights clés
+
+**Notes faibles = problèmes récurrents**  
+Les catégories avec des notes <3.5 accumulent des problèmes : qualité produit, écart description/réalité, délais, packaging inadéquat.
+
+**Corrélation délai/satisfaction**  
+On observe une forte corrélation entre délais longs et notes basses. Les clients sont moins tolérants quand ils attendent longtemps.
+
+**Catégories à surveiller**  
+Les catégories bien notées (>4.0) sont des modèles de bonnes pratiques à reproduire ailleurs.
+"""
+
+analyse_categories_problematiques = """
+### 🔍 Analyse des catégories problématiques
+
+**Critères d'identification**  
+Une catégorie est considérée comme problématique si elle cumule :
+- Plus de 200 ventes (volume significatif)
+- Une note moyenne <3.8 (insatisfaction notable)
+
+**Actions prioritaires**  
+Ces catégories nécessitent une intervention immédiate :
+1. **Audit qualité** : Vérifier les produits et fournisseurs
+2. **Analyse des reviews** : Identifier les plaintes récurrentes
+3. **Amélioration logistique** : Réduire les délais si c'est un facteur
+4. **Communication produit** : Améliorer les descriptions/photos pour éviter les déceptions
+
+**Impact business**  
+Corriger ces catégories peut transformer des clients insatisfaits en clients satisfaits et améliorer significativement la réputation globale de la marketplace.
+"""
