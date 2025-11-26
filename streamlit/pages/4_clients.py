@@ -17,10 +17,11 @@ st.markdown(styles.get_custom_css(), unsafe_allow_html=True)
 # Navbar
 styles.render_navbar(st, current_page="clients")
 
+st.markdown(styles.render_section_header("Analyse Clients"), unsafe_allow_html=True)
 st.markdown(textes.intro_clients)
 
 # Section 1: Indicateurs clés
-with st.expander("Indicateurs clés des clients", expanded=False):
+with st.expander("📊 Indicateurs clés des clients", expanded=True):
     df_kpi = run_query(queries.QUERY_CLIENT_KPI)
 
     pct_one_time = round(df_kpi["one_time"][0] * 100 / df_kpi["total_clients"][0], 2)
@@ -35,7 +36,7 @@ with st.expander("Indicateurs clés des clients", expanded=False):
     col3.metric("Note moyenne", avg_score)
 
 # Section 2: Catégories d'acquisition
-with st.expander("Catégories qui attirent le plus de nouveaux clients", expanded=False):
+with st.expander("🎯 Catégories qui attirent le plus de nouveaux clients", expanded=False):
     df_acq = run_query(queries.QUERY_ACQUISITION_CATEGORIES)
 
     fig_acq = px.bar(
@@ -43,7 +44,7 @@ with st.expander("Catégories qui attirent le plus de nouveaux clients", expande
         x="category",
         y="first_order_count",
         title="Top 15 catégories (premier achat)",
-        labels={"first_order_count": "Nouveaux clients"}
+        labels={"first_order_count": "Nouveaux clients", "category": "Catégorie"}
     )
     fig_acq.update_layout(
         xaxis_title="Catégorie",
@@ -55,7 +56,7 @@ with st.expander("Catégories qui attirent le plus de nouveaux clients", expande
     st.markdown(textes.insight_categories_acquisition)
 
 # Section 3: Mauvaises premières expériences
-with st.expander("Catégories avec les pires premières expériences", expanded=False):
+with st.expander("❌ Catégories avec les pires premières expériences", expanded=False):
     df_bad = run_query(queries.QUERY_BAD_FIRST_EXPERIENCE)
 
     fig_bad = px.bar(
@@ -65,7 +66,7 @@ with st.expander("Catégories avec les pires premières expériences", expanded=
         color="bad_review_rate",
         color_continuous_scale="Reds",
         title="Taux de mauvaises reviews (first-time buyers)",
-        labels={"bad_review_rate": "% Bad Reviews"}
+        labels={"bad_review_rate": "% Bad Reviews", "category": "Catégorie"}
     )
     fig_bad.update_layout(
         xaxis_title="Catégorie",
@@ -77,7 +78,7 @@ with st.expander("Catégories avec les pires premières expériences", expanded=
     st.markdown(textes.insight_mauvaises_experiences)
 
 # Section 4: Impact du délai
-with st.expander("Impact du délai sur la satisfaction des nouveaux clients", expanded=False):
+with st.expander("⏱️ Impact du délai sur la satisfaction des nouveaux clients", expanded=False):
     df_delay = run_query(queries.QUERY_DELAY_IMPACT_NEW_CLIENTS)
 
     colA, colB = st.columns(2)
@@ -87,5 +88,5 @@ with st.expander("Impact du délai sur la satisfaction des nouveaux clients", ex
     st.markdown(textes.insight_impact_delai)
 
 # Section 5: Recommandations
-with st.expander("Recommandations Business", expanded=False):
+with st.expander("💡 Recommandations Business", expanded=False):
     st.markdown(textes.recommandations_clients)
