@@ -259,7 +259,7 @@ def get_custom_css():
     
     /* Fond des graphiques Plotly */
     .js-plotly-plot {
-        background: #252936 !important;
+        background: #1a1d29 !important;
         border-radius: 8px !important;
     }
     
