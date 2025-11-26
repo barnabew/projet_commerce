@@ -43,7 +43,7 @@ def get_custom_css():
         background: #1a1d29 !important;
         border-bottom: 1px solid #2d3142 !important;
         margin: -1rem -2rem 2rem -2rem !important;
-        padding: 0 2rem 0 2rem !important;
+        padding: 1.5rem 2rem 0 2rem !important;
         box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2) !important;
         display: flex !important;
         align-items: stretch !important;
@@ -74,7 +74,7 @@ def get_custom_css():
         background-color: #252936 !important;
         border: 1px solid #2d3142 !important;
         border-bottom: 3px solid transparent !important;
-        border-radius: 1.5px 1.5px 0 0 !important;
+        border-radius: 3px 3px 0 0 !important;
         color: #8b92a7 !important;
         font-size: 14px !important;
         font-weight: 500 !important;
