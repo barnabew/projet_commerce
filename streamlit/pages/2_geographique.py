@@ -21,9 +21,8 @@ st.markdown(styles.get_custom_css(), unsafe_allow_html=True)
 # Navbar
 styles.render_navbar(st, current_page="geographique")
 
-st.markdown(styles.render_section_header("Analyse Géographique des Ventes"), unsafe_allow_html=True)
 
-with st.expander("📍 Analyse par État", expanded=True):
+with st.expander("Analyse par État", expanded=False):
     st.markdown(textes.analyse_carte_geo)
     
     # Chargement du GeoJSON
@@ -65,7 +64,7 @@ with st.expander("📍 Analyse par État", expanded=True):
 
 
 
-with st.expander("🔄 Flux Géographiques – Vendeur → Client", expanded=False):
+with st.expander("Flux Géographiques – Vendeur → Client", expanded=False):
     st.markdown(textes.analyse_flux_geo)
     
     # Chargement des flux
