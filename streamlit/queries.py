@@ -242,17 +242,36 @@ ORDER BY nb_orders DESC;
 # ACCUEIL - GRAPHIQUES
 # ===========================
 
-QUERY_MONTHLY_SALES = """
+QUERY_TOP_REVENUE_CATEGORIES = """
 SELECT 
-    strftime('%Y-%m', o.order_purchase_timestamp) AS month,
-    COUNT(DISTINCT o.order_id) AS nb_orders,
+    COALESCE(tr.product_category_name_english, cp.product_category_name) AS category,
     SUM(oi.price + oi.freight_value) AS revenue
-FROM clean_orders o
-JOIN clean_order_items oi ON o.order_id = oi.order_id
+FROM clean_order_items oi
+JOIN clean_products cp ON oi.product_id = cp.product_id
+JOIN clean_orders o ON oi.order_id = o.order_id
+LEFT JOIN product_category_name_translation tr 
+    ON cp.product_category_name = tr.product_category_name
 WHERE o.order_status IN ('delivered', 'shipped', 'invoiced')
+GROUP BY category
+ORDER BY revenue DESC
+LIMIT 10;
+"""
+
+QUERY_DELIVERY_TIME_STATS = """
+SELECT 
+    c.customer_state AS state,
+    COUNT(DISTINCT o.order_id) AS nb_orders,
+    ROUND(AVG(JULIANDAY(o.order_delivered_customer_date) - JULIANDAY(o.order_purchase_timestamp)), 2) AS avg_delay,
+    ROUND(MIN(JULIANDAY(o.order_delivered_customer_date) - JULIANDAY(o.order_purchase_timestamp)), 2) AS min_delay,
+    ROUND(MAX(JULIANDAY(o.order_delivered_customer_date) - JULIANDAY(o.order_purchase_timestamp)), 2) AS max_delay
+FROM clean_orders o
+JOIN clean_customers c ON o.customer_id = c.customer_id
+WHERE o.order_status = 'delivered'
+  AND o.order_delivered_customer_date IS NOT NULL
   AND o.order_purchase_timestamp IS NOT NULL
-GROUP BY month
-ORDER BY month;
+GROUP BY c.customer_state
+ORDER BY avg_delay DESC
+LIMIT 15;
 """
 
 QUERY_TOP_STATES_ORDERS = """

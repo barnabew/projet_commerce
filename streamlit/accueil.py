@@ -49,19 +49,21 @@ st.markdown(styles.render_section_header("Analyses Détaillées"), unsafe_allow_
 chart_row1 = st.columns(2, gap="large")
 
 with chart_row1[0]:
-    # Évolution mensuelle des ventes
-    df_monthly = pd.read_sql(queries.QUERY_MONTHLY_SALES, conn)
+    # Top catégories par CA
+    df_revenue_cat = pd.read_sql(queries.QUERY_TOP_REVENUE_CATEGORIES, conn)
     
-    fig_monthly = px.line(
-        df_monthly,
-        x="month",
-        y="revenue",
-        title="Évolution des Ventes",
-        labels={"month": "Mois", "revenue": "Chiffre d'affaires (R$)"},
-        markers=True
+    fig_revenue_cat = px.bar(
+        df_revenue_cat,
+        x="revenue",
+        y="category",
+        orientation="h",
+        title="Top 10 Catégories par Chiffre d'Affaires",
+        labels={"revenue": "Chiffre d'affaires (R$)", "category": "Catégorie"},
+        color="revenue",
+        color_continuous_scale="Blues"
     )
-    visuel.apply_theme(fig_monthly)
-    st.plotly_chart(fig_monthly, use_container_width=True)
+    visuel.apply_theme(fig_revenue_cat)
+    st.plotly_chart(fig_revenue_cat, use_container_width=True)
 
 with chart_row1[1]:
     # Top états par commandes
@@ -95,17 +97,18 @@ with chart_row2[0]:
     st.plotly_chart(fig_categories, use_container_width=True)
 
 with chart_row2[1]:
-    # Distribution des notes
-    df_reviews = pd.read_sql(queries.QUERY_REVIEW_DISTRIBUTION, conn)
+    # Délais de livraison par état
+    df_delays = pd.read_sql(queries.QUERY_DELIVERY_TIME_STATS, conn)
     
-    fig_reviews = px.bar(
-        df_reviews,
-        x="review_score",
-        y="nb_reviews",
-        title="Distribution des Notes Client",
-        labels={"review_score": "Note", "nb_reviews": "Nombre de reviews"},
-        color="review_score",
-        color_continuous_scale="RdYlGn"
+    st.markdown("### Délais de Livraison par État (Top 15 plus lents)")
+    st.dataframe(
+        df_delays.rename(columns={
+            "state": "État",
+            "nb_orders": "Nb commandes",
+            "avg_delay": "Délai moyen (j)",
+            "min_delay": "Min (j)",
+            "max_delay": "Max (j)"
+        }),
+        use_container_width=True,
+        hide_index=True
     )
-    visuel.apply_theme(fig_reviews)
-    st.plotly_chart(fig_reviews, use_container_width=True)
