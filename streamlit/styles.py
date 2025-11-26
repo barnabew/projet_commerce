@@ -4,12 +4,7 @@ Gestion des styles CSS pour le dashboard Olist Analytics
 """
 
 def get_page_config():
-    """
-    Configuration de la page Streamlit
-    
-    Returns:
-        dict: Configuration à passer à st.set_page_config()
-    """
+    """Configuration de base pour toutes les pages"""
     return {
         "page_title": "Olist Dashboard",
         "layout": "wide",
@@ -18,38 +13,28 @@ def get_page_config():
 
 
 def get_custom_css():
-    """
-    Retourne le CSS personnalisé pour le dashboard (style Geckoboard)
-    
-    Returns:
-        str: Code CSS complet avec balises <style>
-    """
+    """Retourne tout le CSS personnalisé pour le dashboard"""
     return """
     <style>
     
-    /* ========================================
-       BASE STYLES - GECKOBOARD DARK THEME
-       ======================================== */
+    /* Couleur de fond générale du dashboard */
     html, body, .stApp {
         background: #1a1d29 !important;
         font-family: 'Inter', 'Segoe UI', -apple-system, BlinkMacSystemFont, sans-serif;
     }
 
-    /* REMOVE SIDEBAR */
+    /* Masquer la barre latérale de Streamlit */
     section[data-testid="stSidebar"] { display: none !important; }
     div[data-testid="collapsedControl"] { display: none !important; }
 
+    /* Réglage de l'espacement global */
     .block-container {
         padding-top: 0rem !important;
         padding-bottom: 2rem !important;
         max-width: 100% !important;
     }
 
-    /* ========================================
-       NAVBAR - GECKOBOARD STYLE
-       ======================================== */
-    
-    /* Masquer les éléments par défaut de Streamlit dans la navbar */
+    /* Conteneur principal de la barre de navigation */
     .navbar-buttons > div[data-testid="stVerticalBlock"] {
         gap: 0 !important;
     }
@@ -64,7 +49,7 @@ def get_custom_css():
         align-items: stretch !important;
     }
 
-    /* Colonnes de la navbar */
+    /* Organisation des colonnes dans la navbar */
     .navbar-buttons [data-testid="column"] {
         flex: 1 !important;
         background: transparent !important;
@@ -77,7 +62,7 @@ def get_custom_css():
         padding: 0 !important;
     }
 
-    /* Boutons de navigation - TOUS gris par défaut */
+    /* Style des boutons inactifs : fond gris */
     .navbar-buttons button,
     .navbar-buttons button[kind="secondary"] {
         width: 100% !important;
@@ -99,7 +84,7 @@ def get_custom_css():
         text-transform: none !important;
     }
 
-    /* Hover sur boutons - deviennent blancs */
+    /* Effet au survol : boutons deviennent blancs */
     .navbar-buttons button:hover,
     .navbar-buttons button[kind="secondary"]:hover {
         background: #ffffff !important;
@@ -108,7 +93,7 @@ def get_custom_css():
         border-bottom-color: rgba(94, 129, 244, 0.4) !important;
     }
 
-    /* Bouton actif (primary) - ROUGE */
+    /* Style du bouton actif : fond rouge */
     .navbar-buttons button[kind="primary"] {
         background: #ff4b4b !important;
         background-color: #ff4b4b !important;
@@ -118,24 +103,21 @@ def get_custom_css():
         font-weight: 600 !important;
     }
 
+    /* Bouton actif au survol : rouge plus clair */
     .navbar-buttons button[kind="primary"]:hover {
         background: #ff6b6b !important;
         background-color: #ff6b6b !important;
         color: #ffffff !important;
     }
-        background-color: #ff6b6b !important;
-        color: #ffffff !important;
-    }
 
+    /* Supprimer les effets de focus */
     .navbar-buttons button:focus,
     .navbar-buttons button:active {
         box-shadow: none !important;
         outline: none !important;
     }
 
-    /* ========================================
-       KPI CARDS - GECKOBOARD STYLE
-       ======================================== */
+    /* Cartes KPI : petites boîtes pour afficher les indicateurs clés */
     .kpi-card {
         background: #252936 !important;
         padding: 24px !important;
@@ -145,12 +127,14 @@ def get_custom_css():
         transition: all 0.2s ease !important;
     }
 
+    /* Effet au survol des cartes KPI */
     .kpi-card:hover {
         transform: translateY(-2px) !important;
         box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3) !important;
         border-color: #3d4152 !important;
     }
 
+    /* Texte du label dans les cartes KPI */
     .kpi-label {
         color: #8b92a7 !important;
         font-size: 12px !important;
@@ -160,6 +144,7 @@ def get_custom_css():
         margin-bottom: 8px !important;
     }
 
+    /* Valeur affichée dans les cartes KPI */
     .kpi-value {
         color: #ffffff !important;
         font-size: 32px !important;
@@ -168,9 +153,7 @@ def get_custom_css():
         letter-spacing: -0.5px !important;
     }
 
-    /* ========================================
-       CHART CONTAINERS - GECKOBOARD STYLE
-       ======================================== */
+    /* Conteneurs pour les graphiques */
     .chart-container {
         background: #252936 !important;
         padding: 24px !important;
@@ -180,11 +163,13 @@ def get_custom_css():
         transition: all 0.2s ease !important;
     }
 
+    /* Effet au survol des conteneurs de graphiques */
     .chart-container:hover {
         box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3) !important;
         border-color: #3d4152 !important;
     }
 
+    /* Titre du graphique */
     .chart-title {
         color: #ffffff !important;
         font-size: 16px !important;
@@ -192,15 +177,14 @@ def get_custom_css():
         margin-bottom: 6px !important;
     }
 
+    /* Sous-titre du graphique */
     .chart-subtitle {
         color: #8b92a7 !important;
         font-size: 13px !important;
         margin-bottom: 16px !important;
     }
 
-    /* ========================================
-       SECTION TITLE - GECKOBOARD STYLE
-       ======================================== */
+    /* Titres de section avec barre bleue à gauche */
     .section-header {
         color: #ffffff !important;
         font-size: 22px !important;
@@ -211,11 +195,9 @@ def get_custom_css():
         border-left: 3px solid #5e81f4 !important;
     }
 
-    /* ========================================
-       STREAMLIT ELEMENTS OVERRIDE
        ======================================== */
     
-    /* Espacement entre les rangées de colonnes */
+    /* Espacement horizontal entre les colonnes */
     [data-testid="column"] {
         padding: 0 0.75rem !important;
     }
@@ -225,7 +207,7 @@ def get_custom_css():
         margin-bottom: 1.5rem !important;
     }
     
-    /* Titres */
+    /* Style des titres h1, h2, h3 */
     h1, h2, h3 {
         color: #ffffff !important;
         font-weight: 600 !important;
@@ -246,12 +228,12 @@ def get_custom_css():
         margin-top: 1rem !important;
     }
     
-    /* Texte */
+    /* Couleur du texte général */
     p, div, span, label {
         color: #c5c9d6 !important;
     }
     
-    /* Dataframes / Tables */
+    /* Style des tableaux de données */
     [data-testid="stDataFrame"] {
         background: #252936 !important;
         border: 1px solid #2d3142 !important;
@@ -263,23 +245,25 @@ def get_custom_css():
         color: #ffffff !important;
     }
     
+    /* En-têtes de colonnes des tableaux */
     [data-testid="stDataFrame"] th {
         background: #2d3344 !important;
         color: #ffffff !important;
         font-weight: 600 !important;
     }
     
+    /* Cellules de données des tableaux */
     [data-testid="stDataFrame"] td {
         color: #c5c9d6 !important;
     }
     
-    /* Graphiques Plotly */
+    /* Fond des graphiques Plotly */
     .js-plotly-plot {
         background: #252936 !important;
         border-radius: 8px !important;
     }
     
-    /* Selectbox / Dropdowns */
+    /* Style des menus déroulants (selectbox) */
     [data-baseweb="select"] {
         background: #252936 !important;
         border-radius: 6px !important;
@@ -291,20 +275,22 @@ def get_custom_css():
         color: #ffffff !important;
     }
     
-    /* Sliders */
+    /* Style des sliders (curseurs) */
     [data-testid="stSlider"] {
         padding: 1rem 0 !important;
     }
     
+    /* Bouton du slider : couleur bleue */
     [data-testid="stSlider"] [role="slider"] {
         background: #5e81f4 !important;
     }
     
+    /* Barre du slider */
     [data-testid="stSlider"] [data-baseweb="slider"] {
         background: #2d3142 !important;
     }
     
-    /* Info boxes */
+    /* Boîtes d'alerte générales */
     .stAlert {
         background: #252936 !important;
         border: 1px solid #2d3142 !important;
@@ -317,52 +303,52 @@ def get_custom_css():
         border-radius: 8px !important;
     }
     
-    /* Success boxes */
+    /* Boîtes de succès : vertes */
     .stSuccess {
         background: rgba(94, 244, 165, 0.1) !important;
         border-left: 4px solid #5ef4a5 !important;
         color: #5ef4a5 !important;
     }
     
-    /* Warning boxes */
+    /* Boîtes d'avertissement : jaunes */
     .stWarning {
         background: rgba(255, 196, 0, 0.1) !important;
         border-left: 4px solid #ffc400 !important;
         color: #ffc400 !important;
     }
     
-    /* Error boxes */
+    /* Boîtes d'erreur : rouges */
     .stError {
         background: rgba(255, 75, 75, 0.1) !important;
         border-left: 4px solid #ff4b4b !important;
         color: #ff4b4b !important;
     }
     
-    /* Info boxes */
+    /* Boîtes d'information : bleues */
     .stInfo {
         background: rgba(94, 129, 244, 0.1) !important;
         border-left: 4px solid #5e81f4 !important;
         color: #5e81f4 !important;
     }
     
-    /* Dividers */
+    /* Lignes de séparation */
     hr {
         border-color: #2d3142 !important;
         margin: 2rem 0 !important;
     }
 
-    /* ========================================
-       SCROLLBAR - GECKOBOARD STYLE
-       ======================================== */
+    /* Largeur de la barre de défilement */
     ::-webkit-scrollbar {
         width: 8px;
         height: 8px;
     }
 
+    /* Fond de la barre de défilement */
     ::-webkit-scrollbar-track {
         background: #1a1d29;
     }
 
+    /* Curseur de la barre de défilement */
     ::-webkit-scrollbar-thumb {
         background: #3d4152;
         border-radius: 4px;
@@ -377,13 +363,7 @@ def get_custom_css():
 
 
 def get_navbar_html():
-    """
-    Retourne le HTML de base pour la navbar
-    (sans les boutons Streamlit qui sont ajoutés après)
-    
-    Returns:
-        tuple: (html_start, html_end) pour encadrer les boutons
-    """
+    # Retourne le HTML de base pour la navbar (encadre les boutons)
     start = """
     <div class="navbar-container">
         <div class="navbar-content">
@@ -401,13 +381,7 @@ def get_navbar_html():
 
 
 def render_navbar(st, current_page="resume"):
-    """
-    Affiche la navbar complète avec les boutons de navigation
-    
-    Args:
-        st: module streamlit
-        current_page: nom de la page active (resume, geographique, produit, clients, recommandations)
-    """
+    # Affiche la navbar avec les boutons de navigation
     
     # Initialiser session state
     if "current_page" not in st.session_state:

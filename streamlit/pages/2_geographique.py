@@ -18,12 +18,9 @@ st.markdown(styles.get_custom_css(), unsafe_allow_html=True)
 # Navbar
 styles.render_navbar(st, current_page="geographique")
 
-st.markdown("<div class='section-header'>🌍 Analyse Géographique des Ventes</div>", unsafe_allow_html=True)
+st.markdown("<div class='section-header'>Analyse Géographique des Ventes</div>", unsafe_allow_html=True)
 
-# ============================================================
-# 🔹 GEOJSON
-# ============================================================
-
+# Chargement du GeoJSON
 @st.cache_resource
 def load_geojson():
     url = "https://raw.githubusercontent.com/codeforamerica/click_that_hood/master/public/data/brazil-states.geojson"
@@ -31,10 +28,7 @@ def load_geojson():
 
 geojson = load_geojson()
 
-# ============================================================
-# 🔹 RÉCUPÉRATION DE TOUTES LES DONNÉES PAR ÉTAT
-# ============================================================
-
+# Récupération des données par état
 query = """
     SELECT 
         c.customer_state AS state,
@@ -57,10 +51,7 @@ query = """
 
 df_state = run_query(query)
 
-# ============================================================
-# 🔹 MENU DE L’ANALYSE À COLORER
-# ============================================================
-
+# Sélection du type d'analyse
 analysis_type = st.selectbox(
     "Sélectionnez l’analyse affichée sur la carte :",
     [
@@ -82,10 +73,7 @@ metric_map = {
 
 metric_col, metric_title = metric_map[analysis_type]
 
-# ============================================================
-# 🔹 CARTE CHOROPLETH ENRICHIE
-# ============================================================
-
+# Carte choropleth
 fig = px.choropleth(
     df_state,
     geojson=geojson,
@@ -118,14 +106,10 @@ fig.update_layout(margin={"r":0,"t":40,"l":0,"b":0})
 
 st.plotly_chart(fig, use_container_width=True)
 
+# Section flux géographiques
+st.title("Flux Géographiques – Vendeur → Client")
 
-
-
-st.title("🌐 Flux Géographiques – Vendeur → Client")
-
-# --------------------------
-# Charger les flux
-# --------------------------
+# Chargement des flux
 query_flux = """
 SELECT 
     s.seller_state,
@@ -146,11 +130,9 @@ conn = get_connection()
 df = pd.read_sql(query_flux, conn)
 
 # Liste des états vendeurs
-seller_list = sorted(df["seller_state"].unique())
+seller_list = sorted(df['seller_state'].unique())
 
-# ---------------------------
-# Sélecteur d’état vendeur
-# ---------------------------
+# Sélecteur d'état vendeur
 selected_state = st.selectbox(
     "Sélectionner un État vendeur",
     seller_list,
@@ -164,9 +146,7 @@ st.subheader(f"Flux depuis : **{selected_state}**")
 if df_state.empty:
     st.info("Aucun flux significatif pour cet état.")
 else:
-    # ---------------------------
-    # Sankey pour un seul état
-    # ---------------------------
+    # Diagramme Sankey pour un seul état
     sources = [0] * len(df_state)
     targets = list(range(1, len(df_state) + 1))
     values = df_state["nb_orders"].tolist()
@@ -195,6 +175,6 @@ else:
     fig.update_layout(height=600)
     st.plotly_chart(fig, use_container_width=True)
 
-# Tableau
-st.subheader("📋 Détails des flux")
+# Tableau détaillé des flux
+st.subheader("Détails des flux")
 st.dataframe(df_state)

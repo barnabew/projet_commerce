@@ -13,7 +13,7 @@ st.markdown(styles.get_custom_css(), unsafe_allow_html=True)
 # Navbar
 styles.render_navbar(st, current_page="produit")
 
-st.markdown("<div class='section-header'>📦 Analyse Produits</div>", unsafe_allow_html=True)
+st.markdown("<div class='section-header'>Analyse Produits</div>", unsafe_allow_html=True)
 
 st.write(
     "Cette page présente une analyse complète par catégorie de produits : "
@@ -22,10 +22,8 @@ st.write(
 
 conn = get_connection()
 
-# ==========================================
-# 1️⃣ TOP CATEGORIES PAR CHIFFRE D'AFFAIRES
-# ==========================================
-st.header("🏆 Top catégories par chiffre d’affaires")
+# Top catégories par chiffre d'affaires
+st.header("Top catégories par chiffre d'affaires")
 
 query_revenue = """
 SELECT 
@@ -54,10 +52,8 @@ fig = px.bar(
 )
 st.plotly_chart(fig, use_container_width=True)
 
-# ==========================================
-# 2️⃣ DÉLAI MOYEN DE LIVRAISON PAR CATÉGORIE
-# ==========================================
-st.header("⏱️ Délai moyen de livraison par catégorie")
+# Délai moyen de livraison par catégorie
+st.header("Délai moyen de livraison par catégorie")
 
 min_sales = st.slider("Min ventes par catégorie :", 20, 500, 50)
 
@@ -93,10 +89,8 @@ fig = px.bar(
 )
 st.plotly_chart(fig, use_container_width=True)
 
-# ==========================================
-# 3️⃣ NOTES MOYENNES PAR CATÉGORIE
-# ==========================================
-st.header("⭐ Satisfaction – Notes moyennes par catégorie")
+# Notes moyennes par catégorie
+st.header("Satisfaction – Notes moyennes par catégorie")
 
 min_reviews = st.slider("Min reviews par catégorie :", 20, 1000, 100)
 
@@ -130,10 +124,8 @@ fig = px.bar(
 )
 st.plotly_chart(fig, use_container_width=True)
 
-# ==========================================
-# 4️⃣ CATÉGORIES PROBLÉMATIQUES (VENTES HAUTES + NOTE BASSE)
-# ==========================================
-st.header("⚠️ Catégories problématiques")
+# Catégories problématiques
+st.header("Catégories problématiques")
 
 query_bad = """
 SELECT 

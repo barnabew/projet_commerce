@@ -14,22 +14,19 @@ st.markdown(styles.get_custom_css(), unsafe_allow_html=True)
 # Navbar
 styles.render_navbar(st, current_page="clients")
 
-st.markdown("<div class='section-header'>👥 Analyse Clients</div>", unsafe_allow_html=True)
+st.markdown("<div class='section-header'>Analyse Clients</div>", unsafe_allow_html=True)
 st.markdown("""
 Olist est un marketplace dominé par les **one-time buyers** (≈ 97%).  
-L’objectif business n’est donc **pas la fidélisation**, mais la qualité de la **première expérience**.
+L'objectif business n'est donc **pas la fidélisation**, mais la qualité de la **première expérience**.
 
 Cette page analyse :
 - les catégories qui **attirent** des nouveaux clients,
 - celles qui **génèrent des mauvaises premières expériences**,
-- l’impact du **délai de livraison** sur la satisfaction.
+- l'impact du **délai de livraison** sur la satisfaction.
 """)
 
-# =====================================================================
-# 1) KPI GLOBAUX
-# =====================================================================
-
-st.header("📊 Indicateurs clés des clients")
+# Indicateurs clés des clients
+st.header("Indicateurs clés des clients")
 
 query_kpi = """
 SELECT
@@ -53,17 +50,14 @@ query_score = "SELECT ROUND(AVG(review_score), 2) AS avg_score FROM clean_review
 avg_score = run_query(query_score)["avg_score"][0]
 
 col1, col2, col3 = st.columns(3)
-col1.metric("🧍‍♂️ Clients one-time", f"{pct_one_time} %")
-col2.metric("🛒 Panier moyen (par article)", f"{avg_item} R$")
-col3.metric("⭐ Note moyenne", avg_score)
+col1.metric("Clients one-time", f"{pct_one_time} %")
+col2.metric("Panier moyen (par article)", f"{avg_item} R$")
+col3.metric("Note moyenne", avg_score)
 
 st.divider()
 
-# =====================================================================
-# 2) CATÉGORIES QUI ATTIRENT LE PLUS DE NOUVEAUX CLIENTS
-# =====================================================================
-
-st.header("🎯 Catégories qui attirent le plus de nouveaux clients")
+# Catégories qui attirent le plus de nouveaux clients
+st.header("Catégories qui attirent le plus de nouveaux clients")
 
 query_acquisition = """
 SELECT 
@@ -105,11 +99,8 @@ st.markdown("""
 
 st.divider()
 
-# =====================================================================
-# 3) CATÉGORIES AVEC LES PIRES PREMIÈRES EXPÉRIENCES (BAD REVIEW RATE)
-# =====================================================================
-
-st.header("⚠️ Catégories avec les pires premières expériences")
+# Catégories avec les pires premières expériences
+st.header("Catégories avec les pires premières expériences")
 
 query_bad_rate = """
 SELECT 
@@ -160,11 +151,8 @@ Ces catégories nécessitent une action immédiate (qualité, logistique, descri
 
 st.divider()
 
-# =====================================================================
-# 4) IMPACT DU DÉLAI SUR LES ONE-TIME BUYERS
-# =====================================================================
-
-st.header("⏱️ Impact du délai sur la satisfaction des nouveaux clients")
+# Impact du délai sur la satisfaction
+st.header("Impact du délai sur la satisfaction des nouveaux clients")
 
 query_delay = """
 SELECT
@@ -188,8 +176,8 @@ AND o.order_purchase_timestamp IS NOT NULL;
 df_delay = run_query(query_delay)
 
 colA, colB = st.columns(2)
-colA.metric("📦 Délai moyen (first-time)", f"{df_delay['avg_delivery_days'][0]} jours")
-colB.metric("⭐ Note moyenne (first-time)", df_delay["avg_score"][0])
+colA.metric("Délai moyen (first-time)", f"{df_delay['avg_delivery_days'][0]} jours")
+colB.metric("Note moyenne (first-time)", df_delay['avg_score'][0])
 
 st.markdown("""
 💡 *Les nouveaux clients sont extrêmement sensibles au délai.  
@@ -198,11 +186,8 @@ Allonger la livraison augmente fortement le risque de non-retour.*
 
 st.divider()
 
-# =====================================================================
-# 5) RECOMMANDATIONS BUSINESS
-# =====================================================================
-
-st.header("💼 Recommandations Business")
+# Recommandations Business
+st.header("Recommandations Business")
 
 st.markdown("""
 ### ✔️ *1. Optimiser les catégories à fort taux de mauvaises reviews*  
