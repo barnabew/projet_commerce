@@ -97,15 +97,13 @@ st.markdown("""
 
 - **Campagnes de retargeting uniquement pour les clients satisfaits**.
 
-- **STRATÉGIE D’ACQUISITION plutôt que fidélisation** :  
-  - Puisque presque tous les clients achètent une fois.  
-  - Focus sur SEO, réseaux sociaux, ads produit.
-""")
+    - **STRATÉGIE D'ACQUISITION plutôt que fidélisation** :  
+      - Puisque presque tous les clients achètent une fois.  
+      - Focus sur SEO, réseaux sociaux, ads produit.
+    """)
 
-st.divider()
-# Priorités stratégiques
-st.header("5. Priorités Stratégiques (Top 5)")
-
+# Section 5: Priorités stratégiques
+with st.expander("🎯 5. Priorités Stratégiques (Top 5)", expanded=True):
     st.markdown("""
     ### 1. Accélérer la livraison (levier n°1 pour améliorer la note client)
     ### 2. Améliorer la qualité des catégories problématiques (mobilier, audio…)
