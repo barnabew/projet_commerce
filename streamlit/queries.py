@@ -291,3 +291,16 @@ WHERE review_score BETWEEN 1 AND 5
 GROUP BY review_score
 ORDER BY review_score;
 """
+
+QUERY_DELIVERY_BY_STATE = """
+SELECT 
+    c.customer_state AS state,
+    COUNT(o.order_id) AS nb_orders,
+    ROUND(AVG(JULIANDAY(o.order_delivered_customer_date) - JULIANDAY(o.order_purchase_timestamp)), 1) AS avg_delay
+FROM clean_orders o
+JOIN clean_customers c ON o.customer_id = c.customer_id
+WHERE o.order_delivered_customer_date IS NOT NULL
+GROUP BY state
+ORDER BY avg_delay DESC
+LIMIT 15;
+"""

@@ -49,19 +49,21 @@ st.markdown(styles.render_section_header("Analyses Détaillées"), unsafe_allow_
 chart_row1 = st.columns(2, gap="large")
 
 with chart_row1[0]:
-    # Évolution mensuelle des ventes
-    df_monthly = pd.read_sql(queries.QUERY_MONTHLY_SALES, conn)
+    # Délais de livraison par état
+    df_delays = pd.read_sql(queries.QUERY_DELIVERY_BY_STATE, conn)
     
-    fig_monthly = px.line(
-        df_monthly,
-        x="month",
-        y="revenue",
-        title="Évolution des Ventes",
-        labels={"month": "Mois", "revenue": "Chiffre d'affaires (R$)"},
-        markers=True
+    fig_delays = px.bar(
+        df_delays,
+        x="avg_delay",
+        y="state",
+        orientation="h",
+        title="Délais de Livraison - Top 15 États les Plus Lents",
+        labels={"avg_delay": "Délai moyen (jours)", "state": "État"},
+        color="avg_delay",
+        color_continuous_scale="Reds"
     )
-    visuel.apply_theme(fig_monthly)
-    st.plotly_chart(fig_monthly, use_container_width=True)
+    visuel.apply_theme(fig_delays)
+    st.plotly_chart(fig_delays, use_container_width=True)
 
 with chart_row1[1]:
     # Top états par commandes
