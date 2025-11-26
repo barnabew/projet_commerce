@@ -89,7 +89,13 @@ fig_acq = px.bar(
     title="Top 15 catégories (premier achat)",
     labels={"first_order_count": "Nouveaux clients"}
 )
-fig_acq.update_layout(xaxis_title="Catégorie", yaxis_title="Nombre de nouveaux clients")
+fig_acq.update_layout(
+    xaxis_title="Catégorie",
+    yaxis_title="Nombre de nouveaux clients",
+    paper_bgcolor="#1a1d29",
+    plot_bgcolor="#1a1d29",
+    font_color="#ffffff"
+)
 
 st.plotly_chart(fig_acq, use_container_width=True)
 
@@ -140,7 +146,13 @@ fig_bad = px.bar(
     title="Taux de mauvaises reviews (first-time buyers)",
     labels={"bad_review_rate": "% Bad Reviews"}
 )
-fig_bad.update_layout(xaxis_title="Catégorie", yaxis_title="% Bad Reviews")
+fig_bad.update_layout(
+    xaxis_title="Catégorie",
+    yaxis_title="% Bad Reviews",
+    paper_bgcolor="#1a1d29",
+    plot_bgcolor="#1a1d29",
+    font_color="#ffffff"
+)
 
 st.plotly_chart(fig_bad, use_container_width=True)
 

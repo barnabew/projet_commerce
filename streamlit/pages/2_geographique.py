@@ -102,7 +102,12 @@ fig = px.choropleth(
 )
 
 fig.update_geos(fitbounds="locations", visible=False)
-fig.update_layout(margin={"r":0,"t":40,"l":0,"b":0})
+fig.update_layout(
+    margin={"r":0,"t":40,"l":0,"b":0},
+    paper_bgcolor="#1a1d29",
+    plot_bgcolor="#1a1d29",
+    font_color="#ffffff"
+)
 
 st.plotly_chart(fig, use_container_width=True)
 
@@ -172,7 +177,12 @@ else:
         ]
     )
 
-    fig.update_layout(height=600)
+    fig.update_layout(
+        height=600,
+        paper_bgcolor="#1a1d29",
+        plot_bgcolor="#1a1d29",
+        font_color="#ffffff"
+    )
     st.plotly_chart(fig, use_container_width=True)
 
 # Tableau détaillé des flux

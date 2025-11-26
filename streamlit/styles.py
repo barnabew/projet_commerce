@@ -70,8 +70,8 @@ def get_custom_css():
         min-height: 50px !important;
         padding: 0 24px !important;
         margin: 0 !important;
-        background: #252936 !important;
-        background-color: #252936 !important;
+        background: #ffffff !important;
+        background-color: #ffffff  !important;
         border: 1px solid #2d3142 !important;
         border-bottom: 3px solid transparent !important;
         border-radius: 6px 6px 0 0 !important;
@@ -87,8 +87,8 @@ def get_custom_css():
     /* Effet au survol : boutons deviennent blancs */
     .navbar-buttons button:hover,
     .navbar-buttons button[kind="secondary"]:hover {
-        background: #ffffff !important;
-        background-color: #ffffff !important;
+        background: #252936 !important;
+        background-color: #252936 !important;
         color: #1a1d29 !important;
         border-bottom-color: rgba(94, 129, 244, 0.4) !important;
     }

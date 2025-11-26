@@ -47,8 +47,13 @@ fig = px.bar(
     x="revenue",
     y="category",
     orientation="h",
-    title="Top 15 catégories – Chiffre d’affaires",
+    title="Top 15 catégories – Chiffre d'affaires",
     labels={"revenue": "Revenue", "category": "Category"},
+)
+fig.update_layout(
+    paper_bgcolor="#1a1d29",
+    plot_bgcolor="#1a1d29",
+    font_color="#ffffff"
 )
 st.plotly_chart(fig, use_container_width=True)
 
@@ -87,6 +92,11 @@ fig = px.bar(
     orientation="h",
     title="Catégories les plus lentes (top 15)",
 )
+fig.update_layout(
+    paper_bgcolor="#1a1d29",
+    plot_bgcolor="#1a1d29",
+    font_color="#ffffff"
+)
 st.plotly_chart(fig, use_container_width=True)
 
 # Notes moyennes par catégorie
@@ -121,6 +131,11 @@ fig = px.bar(
     color="avg_review_score",
     color_continuous_scale="RdYlGn",
     title="Catégories les moins bien notées",
+)
+fig.update_layout(
+    paper_bgcolor="#1a1d29",
+    plot_bgcolor="#1a1d29",
+    font_color="#ffffff"
 )
 st.plotly_chart(fig, use_container_width=True)
 
