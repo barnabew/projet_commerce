@@ -380,6 +380,31 @@ def get_navbar_html():
     return start, end
 
 
+def render_kpi_card(label, value):
+    """Génère une carte KPI"""
+    return f"""
+    <div class="kpi-card">
+        <div class="kpi-label">{label}</div>
+        <div class="kpi-value">{value}</div>
+    </div>
+    """
+
+
+def render_chart_container(title, subtitle):
+    """Génère un conteneur de graphique"""
+    return f"""
+    <div class="chart-container">
+        <div class="chart-title">{title}</div>
+        <div class="chart-subtitle">{subtitle}</div>
+    </div>
+    """
+
+
+def render_section_header(title):
+    """Génère un titre de section"""
+    return f'<div class="section-header">{title}</div>'
+
+
 def render_navbar(st, current_page="resume"):
     # Affiche la navbar avec les boutons de navigation
     

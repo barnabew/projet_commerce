@@ -10,7 +10,7 @@ st.markdown(styles.get_custom_css(), unsafe_allow_html=True)
 # Navbar
 styles.render_navbar(st, current_page="recommandations")
 
-st.markdown("<div class='section-header'>Recommandations Stratégiques</div>", unsafe_allow_html=True)
+st.markdown(styles.render_section_header("Recommandations Stratégiques"), unsafe_allow_html=True)
 st.markdown("""
 Cette page regroupe les recommandations concrètes issues des analyses :
 - Ventes & performance globale  

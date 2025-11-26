@@ -13,7 +13,7 @@ st.markdown(styles.get_custom_css(), unsafe_allow_html=True)
 # Navbar
 styles.render_navbar(st, current_page="produit")
 
-st.markdown("<div class='section-header'>Analyse Produits</div>", unsafe_allow_html=True)
+st.markdown(styles.render_section_header("Analyse Produits"), unsafe_allow_html=True)
 
 st.write(
     "Cette page présente une analyse complète par catégorie de produits : "

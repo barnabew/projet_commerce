@@ -14,7 +14,7 @@ st.markdown(styles.get_custom_css(), unsafe_allow_html=True)
 # Navbar
 styles.render_navbar(st, current_page="clients")
 
-st.markdown("<div class='section-header'>Analyse Clients</div>", unsafe_allow_html=True)
+st.markdown(styles.render_section_header("Analyse Clients"), unsafe_allow_html=True)
 st.markdown("""
 Olist est un marketplace dominé par les **one-time buyers** (≈ 97%).  
 L'objectif business n'est donc **pas la fidélisation**, mais la qualité de la **première expérience**.

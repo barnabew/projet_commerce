@@ -18,7 +18,7 @@ st.markdown(styles.get_custom_css(), unsafe_allow_html=True)
 # Navbar
 styles.render_navbar(st, current_page="geographique")
 
-st.markdown("<div class='section-header'>Analyse Géographique des Ventes</div>", unsafe_allow_html=True)
+st.markdown(styles.render_section_header("Analyse Géographique des Ventes"), unsafe_allow_html=True)
 
 # Chargement du GeoJSON
 @st.cache_resource
