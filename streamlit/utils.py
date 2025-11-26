@@ -25,6 +25,7 @@ def get_connection():
     return sqlite3.connect(DB_PATH)
 
 
+@st.cache_data(ttl=3600)  # Cache pendant 1 heure
 def run_query(query):
     conn = get_connection()
     df = pd.read_sql(query, conn)
@@ -32,7 +33,7 @@ def run_query(query):
     return df
 
 
-@st.cache_data
+@st.cache_data(ttl=3600)  # Cache pendant 1 heure
 def load_table(table_name):
     conn = get_connection()
     df = pd.read_sql(f"SELECT * FROM {table_name}", conn)

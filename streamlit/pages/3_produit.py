@@ -1,7 +1,7 @@
 import streamlit as st
 import pandas as pd
 import plotly.express as px
-from utils import get_connection
+from utils import run_query
 import styles
 import visuel
 import queries
@@ -19,13 +19,11 @@ styles.render_navbar(st, current_page="produit")
 st.markdown(styles.render_section_header("Analyse des Produits"), unsafe_allow_html=True)
 st.markdown(textes.intro_produits)
 
-conn = get_connection()
-
 # Section 1: Top catégories par CA
 with st.expander("💰 Top catégories par chiffre d'affaires", expanded=True):
     st.markdown(textes.analyse_top_categories_ca)
     
-    df_revenue = pd.read_sql(queries.QUERY_TOP_CATEGORIES_REVENUE, conn)
+    df_revenue = run_query(queries.QUERY_TOP_CATEGORIES_REVENUE)
 
     fig = px.bar(
         df_revenue,
@@ -44,7 +42,7 @@ with st.expander("⏱️ Délai moyen de livraison par catégorie", expanded=Fal
     
     min_sales = st.slider("Min ventes par catégorie :", 20, 500, 50)
 
-    df_delivery = pd.read_sql(queries.get_query_delivery_by_category(min_sales), conn)
+    df_delivery = run_query(queries.get_query_delivery_by_category(min_sales))
 
     fig = px.bar(
         df_delivery.head(15),
@@ -63,7 +61,7 @@ with st.expander("⭐ Satisfaction – Notes moyennes par catégorie", expanded=
     
     min_reviews = st.slider("Min reviews par catégorie :", 20, 1000, 100)
 
-    df_reviews = pd.read_sql(queries.get_query_reviews_by_category(min_reviews), conn)
+    df_reviews = run_query(queries.get_query_reviews_by_category(min_reviews))
 
     fig = px.bar(
         df_reviews,
@@ -82,6 +80,6 @@ with st.expander("⭐ Satisfaction – Notes moyennes par catégorie", expanded=
 with st.expander("⚠️ Catégories problématiques", expanded=False):
     st.markdown(textes.analyse_categories_problematiques)
     
-    df_bad = pd.read_sql(queries.QUERY_PROBLEMATIC_CATEGORIES, conn)
+    df_bad = run_query(queries.QUERY_PROBLEMATIC_CATEGORIES)
 
     st.dataframe(df_bad, use_container_width=True)

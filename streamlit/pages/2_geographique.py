@@ -1,5 +1,5 @@
 import streamlit as st
-from utils import run_query, get_connection
+from utils import run_query
 import plotly.express as px
 import pandas as pd
 import requests
@@ -68,8 +68,7 @@ with st.expander("Flux Géographiques – Vendeur → Client", expanded=False):
     st.markdown(textes.analyse_flux_geo)
     
     # Chargement des flux
-    conn = get_connection()
-    df = pd.read_sql(queries.QUERY_GEOGRAPHIC_FLOWS, conn)
+    df = run_query(queries.QUERY_GEOGRAPHIC_FLOWS)
 
     # Liste des états vendeurs
     seller_list = sorted(df['seller_state'].unique())
