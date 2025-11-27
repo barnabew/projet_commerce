@@ -279,7 +279,7 @@ LEFT JOIN product_category_name_translation tr
 WHERE co.order_status IN ('delivered', 'shipped', 'invoiced')
 GROUP BY category
 ORDER BY nb_sales DESC
-LIMIT 10;
+LIMIT 20;
 """
 
 QUERY_REVIEW_DISTRIBUTION = """
