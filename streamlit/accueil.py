@@ -16,26 +16,38 @@ st.markdown(styles.get_custom_css(), unsafe_allow_html=True)
 # Navbar
 styles.render_navbar(st, current_page="resume")
 
-# Récupération des données KPI (avec cache)
-total_rev = run_query(queries.QUERY_TOTAL_REVENUE)["rev"][0]
-nb_orders = run_query(queries.QUERY_TOTAL_ORDERS)["c"][0]
+# Message stratégique
+st.markdown("""
+### 🎯 Stratégie : Expérience One-Shot Parfaite → Viralité
+
+**97% des clients Olist n'achètent qu'une seule fois.**  
+Plutôt que de lutter contre cette réalité, nous optimisons **chaque première expérience** pour transformer les clients en **ambassadeurs**.
+
+**Objectif** : Croissance via bouche-à-oreille et parrainage (20% d'acquisition organique d'ici 12 mois)
+""")
+
+st.markdown("---")
+
+# Récupération des données KPI (avec cache) - Focus Expérience One-Shot
+pct_5_stars = run_query(queries.QUERY_PERCENT_5_STARS)["pct_5_stars"][0]
+pct_fast = run_query(queries.QUERY_PERCENT_FAST_DELIVERY)["pct_fast"][0]
+avg_basket = run_query(queries.QUERY_AVG_BASKET)["avg_basket"][0]
 avg_score = run_query(queries.QUERY_AVG_REVIEW_SCORE)["avg"][0]
-avg_delay = run_query(queries.QUERY_AVG_DELIVERY_DELAY)["delay"][0]
 
 # Affichage des KPI
 kpi_cols = st.columns(4, gap="large")
 
 with kpi_cols[0]:
-    st.markdown(styles.render_kpi_card("Revenue Total", f"R$ {total_rev:,.0f}"), unsafe_allow_html=True)
+    st.markdown(styles.render_kpi_card("Clients 5⭐", f"{pct_5_stars}%"), unsafe_allow_html=True)
 
 with kpi_cols[1]:
-    st.markdown(styles.render_kpi_card("Commandes", f"{nb_orders:,}"), unsafe_allow_html=True)
+    st.markdown(styles.render_kpi_card("Livraison <7j", f"{pct_fast}%"), unsafe_allow_html=True)
 
 with kpi_cols[2]:
-    st.markdown(styles.render_kpi_card("Note Moyenne", f"{avg_score} ⭐"), unsafe_allow_html=True)
+    st.markdown(styles.render_kpi_card("Panier Moyen", f"R$ {avg_basket:,.0f}"), unsafe_allow_html=True)
 
 with kpi_cols[3]:
-    st.markdown(styles.render_kpi_card("Délai Moyen", f"{avg_delay} j"), unsafe_allow_html=True)
+    st.markdown(styles.render_kpi_card("Satisfaction", f"{avg_score}/5 ⭐"), unsafe_allow_html=True)
 
 # Section titre
 st.markdown(styles.render_section_header("Analyses Détaillées"), unsafe_allow_html=True)

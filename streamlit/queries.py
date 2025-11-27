@@ -4,7 +4,7 @@ Organisation par thème : KPI, Produits, Clients, Géographie
 """
 
 # ===========================
-# KPI GLOBAUX (Accueil)
+# KPI GLOBAUX (Accueil) - Focus Expérience One-Shot
 # ===========================
 
 QUERY_TOTAL_REVENUE = """
@@ -15,6 +15,39 @@ FROM clean_order_items
 QUERY_TOTAL_ORDERS = """
 SELECT COUNT(DISTINCT order_id) AS c 
 FROM clean_orders
+"""
+
+QUERY_PERCENT_5_STARS = """
+SELECT ROUND(
+    100.0 * SUM(CASE WHEN review_score = 5 THEN 1 ELSE 0 END) / COUNT(*), 
+    1
+) AS pct_5_stars
+FROM clean_reviews
+WHERE review_score IS NOT NULL
+"""
+
+QUERY_PERCENT_FAST_DELIVERY = """
+SELECT ROUND(
+    100.0 * SUM(CASE 
+        WHEN JULIANDAY(order_delivered_customer_date) - JULIANDAY(order_purchase_timestamp) < 7 
+        THEN 1 ELSE 0 END
+    ) / COUNT(*), 
+    1
+) AS pct_fast
+FROM clean_orders 
+WHERE order_status = 'delivered'
+AND order_delivered_customer_date IS NOT NULL
+AND order_purchase_timestamp IS NOT NULL
+"""
+
+QUERY_AVG_BASKET = """
+SELECT ROUND(AVG(order_value), 2) AS avg_basket
+FROM (
+    SELECT o.order_id, SUM(oi.price + oi.freight_value) AS order_value
+    FROM clean_orders o
+    JOIN clean_order_items oi ON o.order_id = oi.order_id
+    GROUP BY o.order_id
+)
 """
 
 QUERY_AVG_REVIEW_SCORE = """
