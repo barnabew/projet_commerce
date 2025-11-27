@@ -26,13 +26,13 @@ with st.expander("📊 Indicateurs clés des clients", expanded=True):
 
     pct_one_time = round(df_kpi["one_time"][0] * 100 / df_kpi["total_clients"][0], 2)
 
-    avg_item = run_query(queries.QUERY_AVG_BASKET)["avg_item"][0]
+    avg_basket = run_query(queries.QUERY_AVG_BASKET)["avg_basket"][0]
 
     avg_score = run_query(queries.QUERY_AVG_REVIEW_SCORE)["avg"][0]
 
     col1, col2, col3 = st.columns(3)
     col1.metric("Clients one-time", f"{pct_one_time} %")
-    col2.metric("Panier moyen (par article)", f"{avg_item} R$")
+    col2.metric("Panier moyen", f"R$ {avg_basket:.2f}")
     col3.metric("Note moyenne", avg_score)
 
 # Section 2: Catégories d'acquisition
