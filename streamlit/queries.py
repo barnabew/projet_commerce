@@ -41,13 +41,11 @@ AND order_purchase_timestamp IS NOT NULL
 """
 
 QUERY_AVG_BASKET = """
-SELECT ROUND(AVG(order_value), 2) AS avg_basket
-FROM (
-    SELECT o.order_id, SUM(oi.price + oi.freight_value) AS order_value
-    FROM clean_orders o
-    JOIN clean_order_items oi ON o.order_id = oi.order_id
-    GROUP BY o.order_id
-)
+SELECT ROUND(
+    SUM(price + freight_value) * 1.0 / COUNT(DISTINCT order_id), 
+    2
+) AS avg_basket
+FROM clean_order_items
 """
 
 QUERY_AVG_REVIEW_SCORE = """
@@ -156,11 +154,6 @@ FROM (
     JOIN clean_customers c ON o.customer_id = c.customer_id
     GROUP BY customer_unique_id
 );
-"""
-
-QUERY_AVG_BASKET = """
-SELECT ROUND(AVG(price + freight_value), 2) AS avg_item 
-FROM clean_order_items;
 """
 
 QUERY_ACQUISITION_CATEGORIES = """
