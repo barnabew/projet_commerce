@@ -82,7 +82,7 @@ with chart_row2[0]:
         x="nb_sales",
         y="category",
         orientation="h",
-        title="Catégories Populaires - Top 20",
+        title="Catégories Populaires - Top 10",
         labels={"nb_sales": "Nombre de ventes", "category": "Catégorie"}
     )
     visuel.apply_theme(fig_categories)
