@@ -52,9 +52,7 @@ with chart_row1[0]:
         x="delay_range",
         y="nb_orders",
         title="Distribution des Délais de Livraison",
-        labels={"delay_range": "Délai", "nb_orders": "Nombre de commandes"},
-        color="nb_orders",
-        color_continuous_scale="RdYlGn_r"
+        labels={"delay_range": "Délai", "nb_orders": "Nombre de commandes"}
     )
     visuel.apply_theme(fig_delays)
     st.plotly_chart(fig_delays, use_container_width=True)
@@ -99,9 +97,7 @@ with chart_row2[1]:
         x="review_score",
         y="nb_reviews",
         title="Distribution des Notes Client",
-        labels={"review_score": "Note", "nb_reviews": "Nombre de reviews"},
-        color="review_score",
-        color_continuous_scale="RdYlGn"
+        labels={"review_score": "Note", "nb_reviews": "Nombre de reviews"}
     )
     visuel.apply_theme(fig_reviews)
     st.plotly_chart(fig_reviews, use_container_width=True)
