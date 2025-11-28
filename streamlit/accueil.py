@@ -32,7 +32,7 @@ with st.expander("Comprendre l'Objectif de ce Projet", expanded=False):
     - Long terme (12-18 mois minimum)
     - Incertain (peut-être que le catalogue ne favorise PAS les achats répétés)
     
-    **✅ Approche data-driven** : Accepter le modèle one-shot et l'optimiser
+    **Approche data-driven** : Accepter le modèle one-shot et l'optimiser
     - Transformer chaque client en **ambassadeur** via une expérience parfaite
     - Croissance via **bouche-à-oreille** et **recommandations**
     - Impact rapide et mesurable

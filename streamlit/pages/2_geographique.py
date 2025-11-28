@@ -28,9 +28,9 @@ st.markdown("""
 **Avec 97% de clients one-shot, la géographie n'est pas qu'une question de volume de ventes, mais de qualité de l'expérience.**
 
 Cette page identifie :
-- 🌟 **Les régions d'excellence** : Où les clients vivent la meilleure expérience (→ ambassadeurs potentiels)
-- ⚠️ **Les zones à risque** : Où l'expérience est catastrophique (→ bouche-à-oreille négatif)
-- 📊 **L'impact des routes logistiques** : Comment la géographie détermine la satisfaction
+- **Les régions d'excellence** : Où les clients vivent la meilleure expérience (→ ambassadeurs potentiels)
+- **Les zones à risque** : Où l'expérience est catastrophique (→ bouche-à-oreille négatif)
+- **L'impact des routes logistiques** : Comment la géographie détermine la satisfaction
 """)
 
 st.markdown("---")
