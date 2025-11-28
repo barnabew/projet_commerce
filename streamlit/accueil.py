@@ -66,7 +66,7 @@ with chart_row1[0]:
         title="Impact du Délai de Livraison sur la Satisfaction",
         labels={"review_score": "Note", "delivery_days": "Délai de livraison (jours)"},
         color="review_score",
-        color_discrete_sequence=px.colors.sequential.RdYlGn_r
+        color_discrete_sequence=["#d73027", "#fc8d59", "#fee08b", "#91cf60", "#1a9850"]
     )
     fig_delay_sat.update_layout(showlegend=False)
     visuel.apply_theme(fig_delay_sat)
