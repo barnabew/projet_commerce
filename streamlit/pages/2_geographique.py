@@ -21,8 +21,21 @@ st.markdown(styles.get_custom_css(), unsafe_allow_html=True)
 # Navbar
 styles.render_navbar(st, current_page="geographique")
 
+# Titre et intro
+st.markdown(styles.render_section_header("Géographie de l'Expérience Client"), unsafe_allow_html=True)
 
-with st.expander("Analyse par État", expanded=False):
+st.markdown("""
+**Avec 97% de clients one-shot, la géographie n'est pas qu'une question de volume de ventes, mais de qualité de l'expérience.**
+
+Cette page identifie :
+- 🌟 **Les régions d'excellence** : Où les clients vivent la meilleure expérience (→ ambassadeurs potentiels)
+- ⚠️ **Les zones à risque** : Où l'expérience est catastrophique (→ bouche-à-oreille négatif)
+- 📊 **L'impact des routes logistiques** : Comment la géographie détermine la satisfaction
+""")
+
+st.markdown("---")
+
+with st.expander("🗺️ Performance de l'Expérience par État", expanded=False):
     st.markdown(textes.analyse_carte_geo)
     
     # Chargement du GeoJSON
@@ -64,7 +77,7 @@ with st.expander("Analyse par État", expanded=False):
 
 
 
-with st.expander("Flux Géographiques – Vendeur → Client", expanded=False):
+with st.expander("🚚 Routes Logistiques et Impact sur l'Expérience", expanded=False):
     st.markdown(textes.analyse_flux_geo)
     
     # Chargement des flux

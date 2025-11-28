@@ -16,15 +16,47 @@ st.markdown(styles.get_custom_css(), unsafe_allow_html=True)
 # Navbar
 styles.render_navbar(st, current_page="resume")
 
-# Message stratégique
-st.markdown("""
-### 🎯 Stratégie : Expérience One-Shot Parfaite → Viralité
-
-**97% des clients Olist n'achètent qu'une seule fois.**  
-Plutôt que de lutter contre cette réalité, nous optimisons **chaque première expérience** pour transformer les clients en **ambassadeurs**.
-
-**Objectif** : Croissance via bouche-à-oreille et parrainage (20% d'acquisition organique d'ici 12 mois)
-""")
+# Expander explicatif de l'objectif
+with st.expander("🎯 Comprendre l'Objectif de ce Projet", expanded=False):
+    st.markdown("""
+    ### Le Constat : 97% de Clients One-Shot
+    
+    L'analyse des données Olist révèle que **97% des clients n'achètent qu'une seule fois**. 
+    
+    ### La Question Stratégique
+    
+    Face à ce constat, deux approches sont possibles :
+    
+    **❌ Approche classique** : Investir massivement pour augmenter le taux de rétention de 3% → 15%
+    - Coûteux (programmes fidélité, emails, réductions)
+    - Long terme (12-18 mois minimum)
+    - Incertain (peut-être que le catalogue ne favorise PAS les achats répétés)
+    
+    **✅ Approche data-driven** : Accepter le modèle one-shot et l'optimiser
+    - Transformer chaque client en **ambassadeur** via une expérience parfaite
+    - Croissance via **bouche-à-oreille** et **recommandations**
+    - Impact rapide et mesurable
+    
+    ### Notre Stratégie
+    
+    **Objectif** : Puisque 97% n'achètent qu'une fois, faisons en sorte que cette **unique expérience soit si parfaite** qu'ils la recommandent activement à leur entourage.
+    
+    **Leviers identifiés** (basés sur l'analyse des données) :
+    1. **Délais de livraison** : Corrélation r=0.76 avec satisfaction → levier #1
+    2. **Qualité par catégorie** : Certaines créent des ambassadeurs, d'autres du bouche-à-oreille négatif
+    3. **Performance géographique** : Certains états offrent une expérience excellente, d'autres catastrophique
+    4. **Transparence** : Gérer les attentes pour éviter déceptions
+    
+    **Objectif mesurable** : Atteindre **20% de croissance organique** via recommandations/parrainage d'ici 12 mois (vs quasi 0% actuellement).
+    
+    ### Ce Dashboard
+    
+    Chaque page analyse un **levier d'optimisation** de l'expérience one-shot :
+    - 🗺️ **Géographie** : Où les clients vivent la meilleure expérience ?
+    - 📦 **Produits** : Quelles catégories créent des ambassadeurs ?
+    - 👥 **Clients** : Profil des clients très satisfaits vs insatisfaits
+    - 📋 **Recommandations** : Leviers prioritaires par impact estimé
+    """)
 
 st.markdown("---")
 

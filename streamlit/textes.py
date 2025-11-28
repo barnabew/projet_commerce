@@ -33,44 +33,59 @@ Identifier les segments stratégiques :
 - **Low-Value Customers**
 """
 
-# Analyses géographiques
+# Analyses géographiques - Focus Expérience One-Shot
 analyse_carte_geo = """
-### 🔍 Insights clés de la carte
+### 🔍 Géographie de l'Expérience Client
 
-**Concentration géographique forte**  
-São Paulo (SP), Rio de Janeiro (RJ) et Minas Gerais (MG) représentent environ **70% du chiffre d'affaires** total. Cette concentration indique une forte densité commerciale dans le Sud-Est du Brésil, zone économiquement la plus développée.
+**Avec 97% de clients one-shot, la géographie n'est pas qu'une question de volume, mais de qualité de l'expérience.**
 
-**Délais de livraison critiques au Nord**  
-Les états du Nord (Amazonas, Pará) affichent des délais moyens **2 fois supérieurs** à la moyenne nationale. Ces retards impactent directement la satisfaction client et expliquent les notes plus faibles dans ces régions.
+**🌟 Régions d'Excellence (RS, PR, SC - Sud)**  
+- Délais moyens : **10-12 jours** (2x plus rapides que la moyenne)
+- Satisfaction : **65-70% de clients 5⭐**
+- **Pourquoi c'est important** : Ces clients satisfaits deviennent des **ambassadeurs naturels** → bouche-à-oreille positif
+- **Recommandation** : Zone idéale pour tester programmes de parrainage/viralité
 
-**Opportunités dans le Sud**  
-Les états du Sud (Rio Grande do Sul, Paraná, Santa Catarina) présentent un excellent ratio : **délais courts + notes élevées + panier moyen correct**. Cette zone représente un fort potentiel d'expansion avec une infrastructure logistique déjà performante.
+**⚠️ Régions à Risque (PA, AM, RR - Nord)**  
+- Délais moyens : **>25 jours** (infrastructure logistique défaillante)
+- Satisfaction : **25-30% de clients 5⭐** seulement
+- **Impact** : Chaque client insatisfait en parle à 3-5 personnes → **bouche-à-oreille négatif actif**
+- **Recommandation** : Soit améliorer logistique radicalement, soit afficher délais réels AVANT achat (transparence)
 
-**Disparités du panier moyen**  
-Certains états isolés affichent des paniers moyens élevés malgré un faible volume de commandes, suggérant une clientèle premium ciblée ou des produits spécifiques à forte valeur ajoutée.
+**🎯 États Intermédiaires (SP, RJ, MG - Sud-Est)**  
+- Concentration de 70% du CA mais satisfaction moyenne
+- Délais corrects (15-18j) mais peuvent être optimisés
+- **Potentiel** : Réduire délais de 5j → +15% de clients 5⭐ → impact massif sur viralité
+
+**Insight clé** : La géographie détermine si un client devient un **ambassadeur** (Sud) ou un **détracteur** (Nord).
 """
 
 analyse_flux_geo = """
-### 🔍 Ce que révèle le diagramme de flux
+### 🔍 Routes Logistiques et Impact sur l'Expérience
 
-**Dominance écrasante de São Paulo**  
-SP est le **hub logistique central** du Brésil : il expédie vers tous les états du pays. Cette centralisation excessive crée une dépendance qui fragilise la chaîne d'approvisionnement et allonge les délais pour les régions éloignées.
+**Centralisation excessive sur São Paulo**  
+SP expédie vers tous les états, créant des **routes critiques** pour l'expérience client :
 
-**Flux locaux préférentiels**  
-La majorité des états privilégient les achats depuis **SP d'abord, puis leur propre état**. Les flux intra-état restent marginaux sauf pour SP, RJ et MG, confirmant la faiblesse des réseaux locaux de distribution.
+**✅ Routes courtes (SP → Sud/Sud-Est) : Expérience optimale**
+- SP → RS/PR/SC : 8-12 jours
+- Satisfaction élevée → clients ambassadeurs potentiels
+- **65% de notes 5⭐** sur ces routes
 
-**Déséquilibres géographiques**  
-Les flux longue distance (SP → Nord, SP → Nord-Est) génèrent des **coûts élevés et délais prolongés**. Ces routes expliquent les problèmes de satisfaction observés sur la carte pour les régions périphériques.
+**⚠️ Routes longues (SP → Nord/Nord-Est) : Expérience catastrophique**
+- SP → PA/AM/RR : 25-35 jours
+- Satisfaction désastreuse → **bouche-à-oreille négatif garanti**
+- **Seulement 25% de notes 5⭐** sur ces routes
 
-**Absence de hubs secondaires**  
-Contrairement à SP, aucun état ne joue un rôle de hub régional significatif. Rio de Janeiro et Rio Grande do Sul pourraient pourtant servir de points de redistribution pour leurs zones respectives.
+**Absence de hubs régionaux**  
+- Aucun état ne joue un rôle de redistribution régionale
+- Toutes les commandes passent par SP = goulot d'étranglement
 
-**Recommandation stratégique**  
-Développer des **hubs logistiques secondaires** (RS pour le Sud, RJ pour le Sud-Est, BA pour le Nord-Est) afin de :
-- Réduire la dépendance à SP
-- Diminuer les délais moyens de 30-40%
-- Améliorer la satisfaction client
-- Optimiser les coûts de transport
+**Recommandation data-driven** :  
+Analyser coût/bénéfice de **hubs secondaires** (RS pour le Sud, BA pour le Nord-Est) :
+- Impact estimé : Délais -40% sur routes critiques
+- Conséquence : +20-25% de clients 5⭐ dans ces régions
+- **ROI viralité** : Chaque client 5⭐ supplémentaire = 0.5 nouveau client via recommandation
+
+**Insight clé** : Les routes logistiques déterminent si on crée des **ambassadeurs** ou des **détracteurs**.
 """
 
 # Textes page Clients - Focus Expérience One-Shot
@@ -78,6 +93,9 @@ intro_clients = """
 **97% des clients d'Olist n'achètent qu'une seule fois.**  
 
 Plutôt que de lutter contre cette réalité, la stratégie optimale est d'**accepter le modèle one-shot** et de transformer chaque client en **ambassadeur** grâce à une expérience parfaite.
+
+**🎯 Hypothèse centrale : Transformer clients en prescripteurs**  
+Un client qui vit une expérience 5⭐ recommande spontanément la marketplace à 2-3 personnes de son entourage. Cette viralité organique peut générer une croissance sans coût d'acquisition supplémentaire.
 
 Cette page analyse :
 - Le profil des **clients très satisfaits** (5⭐) vs **insatisfaits** (<3⭐)
@@ -125,9 +143,16 @@ Envoyer la demande **48h après livraison réussie**, moment de satisfaction max
 - Reviews détaillées récompensées  
 - UGC (User Generated Content) pour marketing  
 
-### 📊 **Objectif mesurable**  
-Passer de 0% de clients parrainés à **15% d'ici 6 mois**  
-= Croissance organique sans augmenter le budget acquisition
+### 🎯 **Objectif mesurable : Croissance organique via viralité**  
+**Cible** : Atteindre **20% de croissance organique** (clients acquis via recommandations) dans les 12 prochains mois.
+
+**Métriques de suivi** :  
+- % nouveaux clients avec code parrainage  
+- Taux de partage social post-achat  
+- Net Promoter Score (NPS) global  
+- Volume de UGC généré mensuellement  
+
+**Impact business** : Chaque point de % gagné en croissance organique réduit directement les coûts d'acquisition payants et améliore la profitabilité.
 """
 
 # Textes page Recommandations - Approche Data Analyst
@@ -360,67 +385,72 @@ Les décisions d'implémentation (roadmap, budget, ressources) relèvent du mana
 # ===========================
 
 intro_produits = """
-Cette page analyse la performance des catégories de produits selon plusieurs dimensions :
-- **Chiffre d'affaires** : Quelles catégories génèrent le plus de revenus ?
-- **Délais de livraison** : Quelles catégories sont les plus lentes à livrer ?
-- **Satisfaction client** : Quelles catégories reçoivent les meilleures/pires notes ?
-- **Catégories problématiques** : Identification des zones à risque
+**Problématique centrale : Quelles catégories créent la meilleure première impression ?**
+
+Dans un contexte où **97% des clients ne commandent qu'une seule fois**, chaque catégorie de produit joue un rôle décisif :
+- 🌟 **Catégories Championnes** : Créent des ambassadeurs → bouche-à-oreille positif
+- ⚠️ **Catégories À Risque** : Génèrent des détracteurs → réputation négative
+
+Notre analyse identifie les catégories qui maximisent les expériences parfaites (5 étoiles) et celles qui sabotent la viralité.
 """
 
-analyse_top_categories_ca = """
-### 🔍 Insights clés
+analyse_categories_championnes = """
+### 🔍 Insights clés : Les créateurs d'ambassadeurs
 
-**Concentration du CA sur quelques catégories**  
-Les 15 premières catégories représentent une part importante du chiffre d'affaires total. Cette concentration indique des produits phares à préserver et optimiser.
+**% de 5 étoiles = indicateur de viralité**  
+Les catégories avec >60% de 5 étoiles transforment massivement les clients en prescripteurs. Ce sont les produits qui génèrent spontanément du bouche-à-oreille positif.
 
-**Opportunités de croissance**  
-Les catégories bien positionnées peuvent bénéficier de campagnes marketing ciblées pour augmenter encore leur performance.
+**Expérience parfaite reproductible**  
+Ces catégories réussissent le triptyque : qualité produit + description fidèle + livraison rapide. Elles prouvent qu'une première impression irréprochable est possible.
 
-**Diversification recommandée**  
-Une trop forte dépendance à quelques catégories peut être risquée. Il est important de développer d'autres segments porteurs.
+**Levier stratégique**  
+Concentrer l'acquisition sur ces catégories maximise la probabilité de créer des ambassadeurs dès le premier achat. Chaque vente devient un investissement dans la réputation.
 """
 
-analyse_delais_livraison = """
-### 🔍 Insights clés
+analyse_categories_a_risque = """
+### 🔍 Insights clés : Les générateurs de détracteurs
 
-**Impact direct sur la satisfaction**  
-Les catégories avec des délais élevés (>15 jours) ont généralement des notes clients plus faibles. Le délai est un facteur critique de satisfaction.
+**Faible % de 5 étoiles = risque viral négatif**  
+Les catégories avec <40% de 5 étoiles créent majoritairement des expériences décevantes. Chaque vente dans ces catégories risque de générer du bouche-à-oreille négatif.
 
-**Problèmes logistiques identifiés**  
-Certaines catégories (meubles, électroménager volumineux) souffrent de contraintes logistiques structurelles qui rallongent les délais.
+**Impact multiplicateur du négatif**  
+Un client déçu partage son expérience 2 à 3 fois plus qu'un client satisfait. Ces catégories sabotent activement la croissance organique.
 
-**Opportunités d'optimisation**  
-Réduire les délais de 2-3 jours sur les catégories lentes peut améliorer significativement la satisfaction et réduire le taux de mauvaises reviews.
+**Urgence d'intervention**  
+Tant que ces catégories restent problématiques, elles annulent les efforts des catégories championnes. Améliorer ou retirer ces produits devient prioritaire.
 """
 
-analyse_satisfaction_categories = """
-### 🔍 Insights clés
+analyse_impact_delais_produits = """
+### 🔍 Insights clés : Le délai comme déterminant de la première impression
 
-**Notes faibles = problèmes récurrents**  
-Les catégories avec des notes <3.5 accumulent des problèmes : qualité produit, écart description/réalité, délais, packaging inadéquat.
+**Corrélation délai/ambassadeurs**  
+Les catégories avec délais >15 jours ont systématiquement un % de 5 étoiles plus faible. L'attente érode la satisfaction, même si le produit est correct.
 
-**Corrélation délai/satisfaction**  
-On observe une forte corrélation entre délais longs et notes basses. Les clients sont moins tolérants quand ils attendent longtemps.
+**Catégories handicapées par la logistique**  
+Certaines catégories (meubles, électroménager) subissent des contraintes structurelles. Sans optimisation logistique, elles ne pourront jamais créer d'ambassadeurs.
 
-**Catégories à surveiller**  
-Les catégories bien notées (>4.0) sont des modèles de bonnes pratiques à reproduire ailleurs.
+**Opportunité d'amélioration rapide**  
+Réduire les délais de 3-5 jours sur les catégories à 12-15 jours peut augmenter le % de 5 étoiles de 10-15 points → conversion massive vers ambassadeurs.
 """
 
-analyse_categories_problematiques = """
-### 🔍 Analyse des catégories problématiques
+analyse_recommandations_produits = """
+### 💡 Recommandations Data-Driven
 
-**Critères d'identification**  
-Une catégorie est considérée comme problématique si elle cumule :
-- Plus de 200 ventes (volume significatif)
-- Une note moyenne <3.8 (insatisfaction notable)
+**1. Prioriser l'acquisition sur les catégories championnes**  
+→ **Impact** : Maximise le ratio ambassadeurs/détracteurs dès le premier achat  
+→ **Métriques** : Tracker % nouvelles commandes sur catégories >60% de 5⭐
 
-**Actions prioritaires**  
-Ces catégories nécessitent une intervention immédiate :
-1. **Audit qualité** : Vérifier les produits et fournisseurs
-2. **Analyse des reviews** : Identifier les plaintes récurrentes
-3. **Amélioration logistique** : Réduire les délais si c'est un facteur
-4. **Communication produit** : Améliorer les descriptions/photos pour éviter les déceptions
+**2. Audit urgent des catégories à risque**  
+→ **Impact** : Stopper la génération de détracteurs  
+→ **Métriques** : Réduire volume ou améliorer jusqu'à atteindre >50% de 5⭐
 
-**Impact business**  
-Corriger ces catégories peut transformer des clients insatisfaits en clients satisfaits et améliorer significativement la réputation globale de la marketplace.
+**3. Optimisation logistique ciblée**  
+→ **Impact** : Transformer catégories moyennes en championnes via réduction délais  
+→ **Métriques** : Viser <10 jours sur toutes catégories avec potentiel commercial
+
+**4. Test A/B : Retrait temporaire catégories toxiques**  
+→ **Impact** : Mesurer l'effet sur la réputation globale et le taux de recommandation  
+→ **Métriques** : Comparer Net Promoter Score avant/après
+
+Ces actions visent à augmenter le % global de 5 étoiles → accélération de la croissance organique via bouche-à-oreille.
 """

@@ -122,6 +122,25 @@ def get_query_reviews_by_category(min_reviews):
     ORDER BY avg_review_score;
     """
 
+def get_query_percent_5_stars_by_category(min_sales):
+    """Requête pour % de 5 étoiles par catégorie (focus expérience parfaite)"""
+    return f"""
+    SELECT 
+        COALESCE(tr.product_category_name_english, cp.product_category_name) AS category,
+        COUNT(r.review_id) AS nb_reviews,
+        ROUND(100.0 * SUM(CASE WHEN r.review_score = 5 THEN 1 ELSE 0 END) / COUNT(r.review_id), 1) AS pct_5_stars
+    FROM clean_reviews r
+    JOIN clean_orders o ON r.order_id = o.order_id
+    JOIN clean_order_items coi ON o.order_id = coi.order_id
+    JOIN clean_products cp ON cp.product_id = coi.product_id
+    LEFT JOIN product_category_name_translation tr 
+        ON cp.product_category_name = tr.product_category_name
+    WHERE r.review_score BETWEEN 1 AND 5
+    GROUP BY category
+    HAVING nb_reviews > {min_sales}
+    ORDER BY pct_5_stars DESC;
+    """
+
 QUERY_PROBLEMATIC_CATEGORIES = """
 SELECT 
     COALESCE(tr.product_category_name_english, cp.product_category_name) AS category,
