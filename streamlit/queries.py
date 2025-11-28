@@ -341,3 +341,15 @@ ORDER BY
         WHEN '> 30 jours' THEN 5
     END;
 """
+
+QUERY_DELAY_VS_SATISFACTION = """
+SELECT 
+    r.review_score,
+    ROUND(JULIANDAY(o.order_delivered_customer_date) - JULIANDAY(o.order_purchase_timestamp), 1) AS delivery_days
+FROM clean_orders o
+JOIN clean_reviews r ON o.order_id = r.order_id
+WHERE o.order_delivered_customer_date IS NOT NULL
+  AND o.order_purchase_timestamp IS NOT NULL
+  AND r.review_score BETWEEN 1 AND 5
+  AND JULIANDAY(o.order_delivered_customer_date) - JULIANDAY(o.order_purchase_timestamp) BETWEEN 0 AND 100;
+"""

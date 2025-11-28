@@ -56,18 +56,21 @@ st.markdown(styles.render_section_header("Analyses Détaillées"), unsafe_allow_
 chart_row1 = st.columns(2, gap="large")
 
 with chart_row1[0]:
-    # Distribution des délais de livraison
-    df_delays = run_query(queries.QUERY_DELIVERY_DISTRIBUTION)
+    # Corrélation Délai vs Satisfaction
+    df_delay_sat = run_query(queries.QUERY_DELAY_VS_SATISFACTION)
     
-    fig_delays = px.bar(
-        df_delays,
-        x="delay_range",
-        y="nb_orders",
-        title="Distribution des Délais de Livraison",
-        labels={"delay_range": "Délai", "nb_orders": "Nombre de commandes"}
+    fig_delay_sat = px.box(
+        df_delay_sat,
+        x="review_score",
+        y="delivery_days",
+        title="Impact du Délai de Livraison sur la Satisfaction",
+        labels={"review_score": "Note", "delivery_days": "Délai de livraison (jours)"},
+        color="review_score",
+        color_discrete_sequence=px.colors.sequential.RdYlGn_r
     )
-    visuel.apply_theme(fig_delays)
-    st.plotly_chart(fig_delays, use_container_width=True)
+    fig_delay_sat.update_layout(showlegend=False)
+    visuel.apply_theme(fig_delay_sat)
+    st.plotly_chart(fig_delay_sat, use_container_width=True)
 
 with chart_row1[1]:
     # Top états par commandes
