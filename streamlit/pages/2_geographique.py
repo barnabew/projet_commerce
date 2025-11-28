@@ -35,7 +35,7 @@ Cette page identifie :
 
 st.markdown("---")
 
-with st.expander("Performance de l'Expérience par État", expanded=False):
+with st.expander("Performance de l'Expérience par État", expanded=True):
     st.markdown(textes.analyse_carte_geo)
     
     # Chargement du GeoJSON

@@ -14,7 +14,7 @@ styles.render_navbar(st, current_page="recommandations")
 st.markdown(textes.intro_recommandations)
 
 # Section 1: Logistique
-with st.expander("1. Logistique & Délais de Livraison", expanded=False):
+with st.expander("1. Logistique & Délais de Livraison", expanded=True):
     st.subheader("Problèmes identifiés")
     st.markdown(textes.reco_logistique_problemes)
 

@@ -17,7 +17,7 @@ st.markdown(styles.get_custom_css(), unsafe_allow_html=True)
 styles.render_navbar(st, current_page="resume")
 
 # Expander explicatif de l'objectif
-with st.expander("Comprendre l'Objectif de ce Projet", expanded=False):
+with st.expander("Comprendre l'Objectif de ce Projet", expanded=True):
     st.markdown("""
     ### Le Constat : 97% de Clients One-Shot
     
