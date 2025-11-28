@@ -23,39 +23,43 @@ with st.expander("Comprendre l'Objectif de ce Projet", expanded=True):
     
     L'analyse des données Olist révèle que **97% des clients n'achètent qu'une seule fois**. 
     
-    ### La Question Stratégique
+    ### Comprendre le Business Model d'Olist
     
-    Face à ce constat, deux approches sont possibles :
+    **Olist n'est pas une marketplace classique** - c'est une **plateforme B2B** qui :
+    - Connecte des **petits vendeurs** aux grandes marketplaces brésiliennes (Mercado Libre, B2W, etc.)
+    - Gère la **logistique et les paiements** pour ces vendeurs
+    - Les clients finaux achètent sur les marketplaces, **sans savoir que c'est Olist derrière**
     
-    **Approche classique** : Investir massivement pour augmenter le taux de rétention de 3% → 15%
-    - Coûteux (programmes fidélité, emails, réductions)
-    - Long terme (12-18 mois minimum)
-    - Incertain (peut-être que le catalogue ne favorise PAS les achats répétés)
+    ### La Vraie Question Stratégique
     
-    **Approche data-driven** : Accepter le modèle one-shot et l'optimiser
-    - Transformer chaque client en **ambassadeur** via une expérience parfaite
-    - Croissance via **bouche-à-oreille** et **recommandations**
-    - Impact rapide et mesurable
+    **Le 97% one-shot n'est pas un bug, c'est structurel** : les clients ne connaissent même pas Olist.
     
-    ### Notre Stratégie
+    **Mais pourquoi c'est important quand même ?**
     
-    **Objectif** : Puisque 97% n'achètent qu'une fois, faisons en sorte que cette **unique expérience soit si parfaite** qu'ils la recommandent activement à leur entourage.
+    ### Notre Stratégie : Satisfaction Client = Arme Compétitive pour Vendeurs
     
-    **Leviers identifiés** (basés sur l'analyse des données) :
-    1. **Délais de livraison** : Corrélation r=0.76 avec satisfaction → levier #1
-    2. **Qualité par catégorie** : Certaines créent des ambassadeurs, d'autres du bouche-à-oreille négatif
-    3. **Performance géographique** : Certains états offrent une expérience excellente, d'autres catastrophique
-    4. **Transparence** : Gérer les attentes pour éviter déceptions
+    **La Logique Business :**
     
-    **Objectif mesurable** : Atteindre **20% de croissance organique** via recommandations/parrainage d'ici 12 mois (vs quasi 0% actuellement).
+    1. **Client satisfait** (livraison rapide, bon produit) → **Review 5 étoiles**
+    2. **Vendeur avec bonnes reviews** → **Plus visible et compétitif** sur les marketplaces
+    3. **Vendeur performant** → **Reste fidèle à Olist** + recommande à d'autres vendeurs
+    4. **Olist recrute plus de vendeurs** → **Croissance B2B**
+    
+    **Leviers d'optimisation** (basés sur l'analyse des données) :
+    1. **Délais de livraison** : Corrélation r=0.76 avec satisfaction → impact direct sur reviews
+    2. **Catégories performantes** : Certaines offrent un avantage compétitif, d'autres tuent la réputation
+    3. **Disparités géographiques** : Sud = excellente expérience, Nord = catastrophique
+    4. **Transparence délais** : Gérer les attentes pour éviter mauvaises reviews
+    
+    **Objectif mesurable** : Passer de **55% à 65% de clients 5 étoiles** → amélioration compétitivité vendeurs Olist vs concurrence.
     
     ### Ce Dashboard
     
-    Chaque page analyse un **levier d'optimisation** de l'expérience one-shot :
-    - **Géographie** : Où les clients vivent la meilleure expérience ?
-    - **Produits** : Quelles catégories créent des ambassadeurs ?
-    - **Clients** : Profil des clients très satisfaits vs insatisfaits
-    - **Recommandations** : Leviers prioritaires par impact estimé
+    Chaque page identifie les **leviers pour améliorer la compétitivité des vendeurs Olist** :
+    - **Géographie** : Où les vendeurs Olist performent le mieux ?
+    - **Produits** : Quelles catégories donnent un avantage compétitif ?
+    - **Clients** : Profil des clients très satisfaits (= bonnes reviews garanties)
+    - **Recommandations** : Actions prioritaires pour améliorer reviews vendeurs
     """)
 
 st.markdown("---")
@@ -103,15 +107,17 @@ with chart_row1[0]:
     st.plotly_chart(fig_delay_sat, use_container_width=True)
 
 with chart_row1[1]:
-    # Top états par commandes
-    df_states = run_query(queries.QUERY_TOP_STATES_ORDERS)
+    # Top états par satisfaction (où vendeurs performent le mieux)
+    df_states = run_query(queries.QUERY_TOP_STATES_SATISFACTION)
     
     fig_states = px.bar(
         df_states,
         x="state",
-        y="nb_orders",
-        title="Répartition Géographique - Top 10 États",
-        labels={"state": "État", "nb_orders": "Nombre de commandes"}
+        y="pct_5_stars",
+        title="États où Vendeurs Performent le Mieux (% 5 étoiles)",
+        labels={"state": "État", "pct_5_stars": "% de 5 étoiles"},
+        color="pct_5_stars",
+        color_continuous_scale=[[0, "#ff4b4b"], [0.5, "#ffa500"], [1, "#00cc66"]]
     )
     visuel.apply_theme(fig_states)
     st.plotly_chart(fig_states, use_container_width=True)
@@ -119,16 +125,18 @@ with chart_row1[1]:
 chart_row2 = st.columns(2, gap="large")
 
 with chart_row2[0]:
-    # Top catégories par ventes
-    df_categories = run_query(queries.QUERY_TOP_CATEGORIES_SALES)
+    # Top catégories par satisfaction (avantage compétitif)
+    df_categories = run_query(queries.QUERY_TOP_CATEGORIES_SATISFACTION)
     
     fig_categories = px.bar(
         df_categories,
-        x="nb_sales",
+        x="pct_5_stars",
         y="category",
         orientation="h",
-        title="Catégories Populaires - Top 10",
-        labels={"nb_sales": "Nombre de ventes", "category": "Catégorie"}
+        title="Catégories Donnant Avantage Compétitif (% 5 étoiles)",
+        labels={"pct_5_stars": "% de 5 étoiles", "category": "Catégorie"},
+        color="pct_5_stars",
+        color_continuous_scale=[[0, "#ff4b4b"], [0.5, "#ffa500"], [1, "#00cc66"]]
     )
     visuel.apply_theme(fig_categories)
     st.plotly_chart(fig_categories, use_container_width=True)

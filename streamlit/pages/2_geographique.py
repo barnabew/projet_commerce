@@ -22,15 +22,15 @@ st.markdown(styles.get_custom_css(), unsafe_allow_html=True)
 styles.render_navbar(st, current_page="geographique")
 
 # Titre et intro
-st.markdown(styles.render_section_header("Géographie de l'Expérience Client"), unsafe_allow_html=True)
+st.markdown(styles.render_section_header("Géographie = Compétitivité Vendeurs"), unsafe_allow_html=True)
 
 st.markdown("""
-**Avec 97% de clients one-shot, la géographie n'est pas qu'une question de volume de ventes, mais de qualité de l'expérience.**
+**Avec 97% de clients one-shot, la géographie détermine la performance reviews des vendeurs Olist.**
 
-Cette page identifie :
-- **Les régions d'excellence** : Où les clients vivent la meilleure expérience (→ ambassadeurs potentiels)
-- **Les zones à risque** : Où l'expérience est catastrophique (→ bouche-à-oreille négatif)
-- **L'impact des routes logistiques** : Comment la géographie détermine la satisfaction
+Cette analyse identifie :
+- **Les régions d'excellence** : Où les vendeurs Olist obtiennent les meilleures reviews (avantage compétitif)
+- **Les zones à risque** : Où les vendeurs Olist sont désavantagés (mauvaises reviews structurelles)
+- **L'impact des routes logistiques** : Comment la géographie crée des gagnants et des perdants
 """)
 
 st.markdown("---")

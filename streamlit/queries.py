@@ -312,6 +312,23 @@ ORDER BY nb_orders DESC
 LIMIT 10;
 """
 
+QUERY_TOP_STATES_SATISFACTION = """
+SELECT 
+    c.customer_state AS state,
+    COUNT(r.review_id) AS nb_reviews,
+    ROUND(100.0 * SUM(CASE WHEN r.review_score = 5 THEN 1 ELSE 0 END) / COUNT(r.review_id), 1) AS pct_5_stars,
+    ROUND(AVG(r.review_score), 2) AS avg_score
+FROM clean_orders o
+JOIN clean_customers c ON o.customer_id = c.customer_id
+JOIN clean_reviews r ON o.order_id = r.order_id
+WHERE o.order_status = 'delivered'
+  AND r.review_score BETWEEN 1 AND 5
+GROUP BY c.customer_state
+HAVING nb_reviews > 100
+ORDER BY pct_5_stars DESC
+LIMIT 10;
+"""
+
 QUERY_TOP_CATEGORIES_SALES = """
 SELECT 
     COALESCE(tr.product_category_name_english, cp.product_category_name) AS category,
@@ -324,6 +341,26 @@ LEFT JOIN product_category_name_translation tr
 WHERE co.order_status IN ('delivered', 'shipped', 'invoiced')
 GROUP BY category
 ORDER BY nb_sales DESC
+LIMIT 10;
+"""
+
+QUERY_TOP_CATEGORIES_SATISFACTION = """
+SELECT 
+    COALESCE(tr.product_category_name_english, cp.product_category_name) AS category,
+    COUNT(r.review_id) AS nb_reviews,
+    ROUND(100.0 * SUM(CASE WHEN r.review_score = 5 THEN 1 ELSE 0 END) / COUNT(r.review_id), 1) AS pct_5_stars,
+    ROUND(AVG(r.review_score), 2) AS avg_score
+FROM clean_reviews r
+JOIN clean_orders o ON r.order_id = o.order_id
+JOIN clean_order_items coi ON o.order_id = coi.order_id
+JOIN clean_products cp ON coi.product_id = cp.product_id
+LEFT JOIN product_category_name_translation tr 
+    ON cp.product_category_name = tr.product_category_name
+WHERE o.order_status = 'delivered'
+  AND r.review_score BETWEEN 1 AND 5
+GROUP BY category
+HAVING nb_reviews > 100
+ORDER BY pct_5_stars DESC
 LIMIT 10;
 """
 

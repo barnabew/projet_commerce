@@ -33,46 +33,46 @@ Identifier les segments stratégiques :
 - **Low-Value Customers**
 """
 
-# Analyses géographiques - Focus Expérience One-Shot
+# Analyses géographiques - Focus Compétitivité Vendeurs Olist
 analyse_carte_geo = """
-### Géographie de l'Expérience Client
+### Géographie de l'Expérience Client = Compétitivité Vendeurs
 
-**Avec 97% de clients one-shot, la géographie n'est pas qu'une question de volume, mais de qualité de l'expérience.**
+**Avec 97% de clients one-shot, la géographie détermine la performance reviews des vendeurs.**
 
 **Régions d'Excellence (RS, PR, SC - Sud)**  
 - Délais moyens : **10-12 jours** (2x plus rapides que la moyenne)
 - Satisfaction : **65-70% de clients 5 étoiles**
-- **Pourquoi c'est important** : Ces clients satisfaits deviennent des **ambassadeurs naturels** → bouche-à-oreille positif
-- **Recommandation** : Zone idéale pour tester programmes de parrainage/viralité
+- **Impact pour vendeurs** : Reviews exceptionnelles → meilleure visibilité sur marketplaces
+- **Recommandation** : Prioriser expansion vendeurs dans ces régions (avantage compétitif garanti)
 
 **Régions à Risque (PA, AM, RR - Nord)**  
 - Délais moyens : **>25 jours** (infrastructure logistique défaillante)
 - Satisfaction : **25-30% de clients 5 étoiles** seulement
-- **Impact** : Chaque client insatisfait en parle à 3-5 personnes → **bouche-à-oreille négatif actif**
-- **Recommandation** : Soit améliorer logistique radicalement, soit afficher délais réels AVANT achat (transparence)
+- **Impact pour vendeurs** : Mauvaises reviews → chute de compétitivité vs concurrence locale
+- **Recommandation** : Afficher délais réels AVANT achat (transparence) ou améliorer logistique
 
 **États Intermédiaires (SP, RJ, MG - Sud-Est)**  
 - Concentration de 70% du CA mais satisfaction moyenne
 - Délais corrects (15-18j) mais peuvent être optimisés
-- **Potentiel** : Réduire délais de 5j → +15% de clients 5 étoiles → impact massif sur viralité
+- **Potentiel** : Réduire délais de 5j → +15% de clients 5 étoiles → boost compétitivité vendeurs
 
-**Insight clé** : La géographie détermine si un client devient un **ambassadeur** (Sud) ou un **détracteur** (Nord).
+**Insight clé** : La géographie détermine si les vendeurs Olist sont **compétitifs** (Sud) ou **désavantagés** (Nord).
 """
 
 analyse_flux_geo = """
-### Routes Logistiques et Impact sur l'Expérience
+### Routes Logistiques et Compétitivité Vendeurs
 
 **Centralisation excessive sur São Paulo**  
-SP expédie vers tous les états, créant des **routes critiques** pour l'expérience client :
+SP expédie vers tous les états, créant des **disparités de performance** pour les vendeurs Olist :
 
-**Routes courtes (SP → Sud/Sud-Est) : Expérience optimale**
+**Routes courtes (SP → Sud/Sud-Est) : Avantage compétitif**
 - SP → RS/PR/SC : 8-12 jours
-- Satisfaction élevée → clients ambassadeurs potentiels
+- Satisfaction élevée → vendeurs Olist dominent sur reviews
 - **65% de notes 5 étoiles** sur ces routes
 
-**Routes longues (SP → Nord/Nord-Est) : Expérience catastrophique**
+**Routes longues (SP → Nord/Nord-Est) : Désavantage compétitif**
 - SP → PA/AM/RR : 25-35 jours
-- Satisfaction désastreuse → **bouche-à-oreille négatif garanti**
+- Satisfaction désastreuse → **vendeurs Olist pénalisés** vs concurrence locale
 - **Seulement 25% de notes 5 étoiles** sur ces routes
 
 **Absence de hubs régionaux**  
@@ -83,9 +83,9 @@ SP expédie vers tous les états, créant des **routes critiques** pour l'expér
 Analyser coût/bénéfice de **hubs secondaires** (RS pour le Sud, BA pour le Nord-Est) :
 - Impact estimé : Délais -40% sur routes critiques
 - Conséquence : +20-25% de clients 5 étoiles dans ces régions
-- **ROI viralité** : Chaque client 5 étoiles supplémentaire = 0.5 nouveau client via recommandation
+- **ROI business** : Vendeurs Olist deviennent compétitifs partout au Brésil (vs actuellement seulement Sud/Sud-Est)
 
-**Insight clé** : Les routes logistiques déterminent si on crée des **ambassadeurs** ou des **détracteurs**.
+**Insight clé** : Les routes logistiques créent un **avantage compétitif** (Sud) ou un **handicap** (Nord) pour les vendeurs Olist.
 """
 
 # Textes page Clients - Focus Expérience One-Shot
@@ -385,24 +385,27 @@ Les décisions d'implémentation (roadmap, budget, ressources) relèvent du mana
 # ===========================
 
 intro_produits = """
-**Problématique centrale : Quelles catégories créent la meilleure première impression ?**
+**Problématique centrale : Quelles catégories donnent un avantage compétitif aux vendeurs Olist ?**
 
-Dans un contexte où **97% des clients ne commandent qu'une seule fois**, chaque catégorie de produit joue un rôle décisif :
-- **Catégories Championnes** : Créent des ambassadeurs → bouche-à-oreille positif
-- **Catégories À Risque** : Génèrent des détracteurs → réputation négative
+Dans un contexte où **97% des clients ne commandent qu'une seule fois**, chaque catégorie détermine la performance reviews des vendeurs :
+- **Catégories Championnes** : Reviews exceptionnelles → visibilité accrue sur marketplaces
+- **Catégories À Risque** : Mauvaises reviews → perte de compétitivité
 
-Notre analyse identifie les catégories qui maximisent les expériences parfaites (5 étoiles) et celles qui sabotent la viralité.
+Notre analyse identifie les catégories qui maximisent les 5 étoiles (arme commerciale) et celles qui pénalisent les vendeurs.
 """
 
 analyse_categories_championnes = """
-### Insights clés : Les créateurs d'ambassadeurs
+### Insights clés : Les catégories qui créent un avantage compétitif
 
-**% de 5 étoiles = indicateur de viralité**  
-Les catégories avec >60% de 5 étoiles transforment massivement les clients en prescripteurs. Ce sont les produits qui génèrent spontanément du bouche-à-oreille positif.
+**% de 5 étoiles = indicateur de compétitivité vendeurs**  
+Les catégories avec >60% de 5 étoiles donnent aux vendeurs Olist une position dominante sur les marketplaces. Ces produits génèrent des reviews qui battent la concurrence.
 
 **Expérience parfaite reproductible**  
-Ces catégories réussissent le triptyque : qualité produit + description fidèle + livraison rapide. Elles prouvent qu'une première impression irréprochable est possible.
+Ces catégories réussissent le triptyque : qualité produit + description fidèle + livraison rapide. Elles prouvent qu'une domination reviews est possible.
 
+**Levier stratégique**  
+Recruter des vendeurs dans ces catégories = garantir leur succès commercial dès le départ. Chaque vente renforce leur position concurrentielle.
+"""
 **Levier stratégique**  
 Concentrer l'acquisition sur ces catégories maximise la probabilité de créer des ambassadeurs dès le premier achat. Chaque vente devient un investissement dans la réputation.
 """
