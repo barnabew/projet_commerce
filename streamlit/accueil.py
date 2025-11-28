@@ -17,7 +17,7 @@ st.markdown(styles.get_custom_css(), unsafe_allow_html=True)
 styles.render_navbar(st, current_page="resume")
 
 # Expander explicatif de l'objectif
-with st.expander("🎯 Comprendre l'Objectif de ce Projet", expanded=False):
+with st.expander("Comprendre l'Objectif de ce Projet", expanded=False):
     st.markdown("""
     ### Le Constat : 97% de Clients One-Shot
     
@@ -27,7 +27,7 @@ with st.expander("🎯 Comprendre l'Objectif de ce Projet", expanded=False):
     
     Face à ce constat, deux approches sont possibles :
     
-    **❌ Approche classique** : Investir massivement pour augmenter le taux de rétention de 3% → 15%
+    **Approche classique** : Investir massivement pour augmenter le taux de rétention de 3% → 15%
     - Coûteux (programmes fidélité, emails, réductions)
     - Long terme (12-18 mois minimum)
     - Incertain (peut-être que le catalogue ne favorise PAS les achats répétés)
@@ -52,10 +52,10 @@ with st.expander("🎯 Comprendre l'Objectif de ce Projet", expanded=False):
     ### Ce Dashboard
     
     Chaque page analyse un **levier d'optimisation** de l'expérience one-shot :
-    - 🗺️ **Géographie** : Où les clients vivent la meilleure expérience ?
-    - 📦 **Produits** : Quelles catégories créent des ambassadeurs ?
-    - 👥 **Clients** : Profil des clients très satisfaits vs insatisfaits
-    - 📋 **Recommandations** : Leviers prioritaires par impact estimé
+    - **Géographie** : Où les clients vivent la meilleure expérience ?
+    - **Produits** : Quelles catégories créent des ambassadeurs ?
+    - **Clients** : Profil des clients très satisfaits vs insatisfaits
+    - **Recommandations** : Leviers prioritaires par impact estimé
     """)
 
 st.markdown("---")
@@ -70,7 +70,7 @@ avg_score = run_query(queries.QUERY_AVG_REVIEW_SCORE)["avg"][0]
 kpi_cols = st.columns(4, gap="large")
 
 with kpi_cols[0]:
-    st.markdown(styles.render_kpi_card("Clients 5⭐", f"{pct_5_stars}%"), unsafe_allow_html=True)
+    st.markdown(styles.render_kpi_card("Clients 5 étoiles", f"{pct_5_stars}%"), unsafe_allow_html=True)
 
 with kpi_cols[1]:
     st.markdown(styles.render_kpi_card("Livraison <7j", f"{pct_fast}%"), unsafe_allow_html=True)
@@ -79,7 +79,7 @@ with kpi_cols[2]:
     st.markdown(styles.render_kpi_card("Panier Moyen", f"R$ {avg_basket:,.0f}"), unsafe_allow_html=True)
 
 with kpi_cols[3]:
-    st.markdown(styles.render_kpi_card("Satisfaction", f"{avg_score}/5 ⭐"), unsafe_allow_html=True)
+    st.markdown(styles.render_kpi_card("Satisfaction", f"{avg_score}/5"), unsafe_allow_html=True)
 
 # Section titre
 st.markdown(styles.render_section_header("Analyses Détaillées"), unsafe_allow_html=True)

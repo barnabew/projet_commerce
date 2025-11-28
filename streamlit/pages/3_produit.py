@@ -20,7 +20,7 @@ st.markdown(styles.render_section_header("Produits et Première Impression"), un
 st.markdown(textes.intro_produits)
 
 # Section 1: Catégories championnes - % de 5 étoiles
-with st.expander("🌟 Catégories Championnes – Créatrices d'Ambassadeurs", expanded=True):
+with st.expander("Catégories Championnes – Créatrices d'Ambassadeurs", expanded=True):
     st.markdown(textes.analyse_categories_championnes)
     
     min_sales_champ = st.slider("Min reviews par catégorie :", 50, 500, 100, key="slider_champ")
@@ -41,7 +41,7 @@ with st.expander("🌟 Catégories Championnes – Créatrices d'Ambassadeurs", 
     st.plotly_chart(fig, use_container_width=True)
 
 # Section 2: Catégories à risque - Faible % de 5 étoiles
-with st.expander("⚠️ Catégories À Risque – Génératrices de Détracteurs", expanded=False):
+with st.expander("Catégories À Risque – Génératrices de Détracteurs", expanded=False):
     st.markdown(textes.analyse_categories_a_risque)
     
     min_sales_risk = st.slider("Min reviews par catégorie :", 50, 500, 100, key="slider_risk")
@@ -62,7 +62,7 @@ with st.expander("⚠️ Catégories À Risque – Génératrices de Détracteur
     st.plotly_chart(fig, use_container_width=True)
 
 # Section 3: Impact des délais sur la première impression
-with st.expander("⏱️ Impact des Délais sur la Première Impression", expanded=False):
+with st.expander("Impact des Délais sur la Première Impression", expanded=False):
     st.markdown(textes.analyse_impact_delais_produits)
     
     min_sales_delay = st.slider("Min ventes par catégorie :", 20, 500, 50, key="slider_delay")
@@ -81,5 +81,5 @@ with st.expander("⏱️ Impact des Délais sur la Première Impression", expand
     st.plotly_chart(fig, use_container_width=True)
 
 # Section 4: Recommandations
-with st.expander("💡 Recommandations Data-Driven", expanded=False):
+with st.expander("Recommandations Data-Driven", expanded=False):
     st.markdown(textes.analyse_recommandations_produits)

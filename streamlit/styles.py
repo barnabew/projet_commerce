@@ -395,7 +395,7 @@ def get_navbar_html():
     start = """
     <div class="navbar-container">
         <div class="navbar-content">
-            <div class="navbar-brand">📊 Olist Analytics</div>
+            <div class="navbar-brand">Olist Analytics</div>
             <div class="navbar-buttons" id="navbar-buttons-container">
     """
     

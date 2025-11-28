@@ -35,45 +35,45 @@ Identifier les segments stratégiques :
 
 # Analyses géographiques - Focus Expérience One-Shot
 analyse_carte_geo = """
-### 🔍 Géographie de l'Expérience Client
+### Géographie de l'Expérience Client
 
 **Avec 97% de clients one-shot, la géographie n'est pas qu'une question de volume, mais de qualité de l'expérience.**
 
-**🌟 Régions d'Excellence (RS, PR, SC - Sud)**  
+**Régions d'Excellence (RS, PR, SC - Sud)**  
 - Délais moyens : **10-12 jours** (2x plus rapides que la moyenne)
-- Satisfaction : **65-70% de clients 5⭐**
+- Satisfaction : **65-70% de clients 5 étoiles**
 - **Pourquoi c'est important** : Ces clients satisfaits deviennent des **ambassadeurs naturels** → bouche-à-oreille positif
 - **Recommandation** : Zone idéale pour tester programmes de parrainage/viralité
 
-**⚠️ Régions à Risque (PA, AM, RR - Nord)**  
+**Régions à Risque (PA, AM, RR - Nord)**  
 - Délais moyens : **>25 jours** (infrastructure logistique défaillante)
-- Satisfaction : **25-30% de clients 5⭐** seulement
+- Satisfaction : **25-30% de clients 5 étoiles** seulement
 - **Impact** : Chaque client insatisfait en parle à 3-5 personnes → **bouche-à-oreille négatif actif**
 - **Recommandation** : Soit améliorer logistique radicalement, soit afficher délais réels AVANT achat (transparence)
 
-**🎯 États Intermédiaires (SP, RJ, MG - Sud-Est)**  
+**États Intermédiaires (SP, RJ, MG - Sud-Est)**  
 - Concentration de 70% du CA mais satisfaction moyenne
 - Délais corrects (15-18j) mais peuvent être optimisés
-- **Potentiel** : Réduire délais de 5j → +15% de clients 5⭐ → impact massif sur viralité
+- **Potentiel** : Réduire délais de 5j → +15% de clients 5 étoiles → impact massif sur viralité
 
 **Insight clé** : La géographie détermine si un client devient un **ambassadeur** (Sud) ou un **détracteur** (Nord).
 """
 
 analyse_flux_geo = """
-### 🔍 Routes Logistiques et Impact sur l'Expérience
+### Routes Logistiques et Impact sur l'Expérience
 
 **Centralisation excessive sur São Paulo**  
 SP expédie vers tous les états, créant des **routes critiques** pour l'expérience client :
 
-**✅ Routes courtes (SP → Sud/Sud-Est) : Expérience optimale**
+**Routes courtes (SP → Sud/Sud-Est) : Expérience optimale**
 - SP → RS/PR/SC : 8-12 jours
 - Satisfaction élevée → clients ambassadeurs potentiels
-- **65% de notes 5⭐** sur ces routes
+- **65% de notes 5 étoiles** sur ces routes
 
-**⚠️ Routes longues (SP → Nord/Nord-Est) : Expérience catastrophique**
+**Routes longues (SP → Nord/Nord-Est) : Expérience catastrophique**
 - SP → PA/AM/RR : 25-35 jours
 - Satisfaction désastreuse → **bouche-à-oreille négatif garanti**
-- **Seulement 25% de notes 5⭐** sur ces routes
+- **Seulement 25% de notes 5 étoiles** sur ces routes
 
 **Absence de hubs régionaux**  
 - Aucun état ne joue un rôle de redistribution régionale
@@ -82,8 +82,8 @@ SP expédie vers tous les états, créant des **routes critiques** pour l'expér
 **Recommandation data-driven** :  
 Analyser coût/bénéfice de **hubs secondaires** (RS pour le Sud, BA pour le Nord-Est) :
 - Impact estimé : Délais -40% sur routes critiques
-- Conséquence : +20-25% de clients 5⭐ dans ces régions
-- **ROI viralité** : Chaque client 5⭐ supplémentaire = 0.5 nouveau client via recommandation
+- Conséquence : +20-25% de clients 5 étoiles dans ces régions
+- **ROI viralité** : Chaque client 5 étoiles supplémentaire = 0.5 nouveau client via recommandation
 
 **Insight clé** : Les routes logistiques déterminent si on crée des **ambassadeurs** ou des **détracteurs**.
 """
@@ -94,56 +94,56 @@ intro_clients = """
 
 Plutôt que de lutter contre cette réalité, la stratégie optimale est d'**accepter le modèle one-shot** et de transformer chaque client en **ambassadeur** grâce à une expérience parfaite.
 
-**🎯 Hypothèse centrale : Transformer clients en prescripteurs**  
-Un client qui vit une expérience 5⭐ recommande spontanément la marketplace à 2-3 personnes de son entourage. Cette viralité organique peut générer une croissance sans coût d'acquisition supplémentaire.
+**Hypothèse centrale : Transformer clients en prescripteurs**  
+Un client qui vit une expérience 5 étoiles recommande spontanément la marketplace à 2-3 personnes de son entourage. Cette viralité organique peut générer une croissance sans coût d'acquisition supplémentaire.
 
 Cette page analyse :
-- Le profil des **clients très satisfaits** (5⭐) vs **insatisfaits** (<3⭐)
+- Le profil des **clients très satisfaits** (5 étoiles) vs **insatisfaits** (<3 étoiles)
 - Les catégories qui génèrent la **meilleure première expérience**
 - L'impact du **délai de livraison** sur la probabilité de recommandation
 - Les opportunités de **viralité** et de **bouche-à-oreille**
 """
 
 insight_categories_acquisition = """
-💡 **Ces catégories créent les meilleures premières impressions**  
+**Ces catégories créent les meilleures premières impressions**  
 Si l'expérience est parfaite sur ces produits, les clients deviennent des prescripteurs naturels auprès de leur entourage.
 """
 
 insight_mauvaises_experiences = """
-💡 **Zones à risque : une mauvaise première expérience tue toute recommandation**  
+**Zones à risque : une mauvaise première expérience tue toute recommandation**  
 Ces catégories nécessitent une action urgente pour éviter le bouche-à-oreille négatif.
 """
 
 insight_impact_delai = """
-💡 **Le délai est le facteur #1 de satisfaction sur une première commande**  
-Livraison rapide (<7j) = 65% de notes 5⭐  
-Livraison lente (>20j) = 25% de notes 5⭐  
+**Le délai est le facteur #1 de satisfaction sur une première commande**  
+Livraison rapide (<7j) = 65% de notes 5 étoiles  
+Livraison lente (>20j) = 25% de notes 5 étoiles  
 **Impact direct sur la viralité potentielle**
 """
 
 recommandations_clients = """
-### ✔️ **1. Garantir une expérience 5⭐ sur la première commande**  
+### **1. Garantir une expérience 5 étoiles sur la première commande**  
 - Emballage premium  
 - Note manuscrite personnalisée  
 - Échantillon gratuit surprise  
 - Suivi proactif de livraison  
 
-### ✔️ **2. Programme de parrainage agressif**  
+### **2. Programme de parrainage agressif**  
 Offrir **R$ 50** pour chaque ami parrainé (coût acquisition < valeur panier moyen)
 
-### ✔️ **3. Timing optimal pour demande d'avis**  
+### **3. Timing optimal pour demande d'avis**  
 Envoyer la demande **48h après livraison réussie**, moment de satisfaction maximale
 
-### ✔️ **4. Incentives au partage social**  
+### **4. Incentives au partage social**  
 - Réduction 10% sur prochain achat si partage Instagram/Facebook  
 - Concours photos produits avec récompenses  
 
-### ✔️ **5. Transformer clients 5⭐ en créateurs de contenu**  
+### **5. Transformer clients 5 étoiles en créateurs de contenu**  
 - Programme ambassadeurs  
 - Reviews détaillées récompensées  
 - UGC (User Generated Content) pour marketing  
 
-### 🎯 **Objectif mesurable : Croissance organique via viralité**  
+### **Objectif mesurable : Croissance organique via viralité**  
 **Cible** : Atteindre **20% de croissance organique** (clients acquis via recommandations) dans les 12 prochains mois.
 
 **Métriques de suivi** :  
@@ -157,7 +157,7 @@ Envoyer la demande **48h après livraison réussie**, moment de satisfaction max
 
 # Textes page Recommandations - Approche Data Analyst
 intro_recommandations = """
-## 🎯 Insights Clés et Recommandations Data-Driven
+## Insights Clés et Recommandations Data-Driven
 
 **Constat principal** : 97% des clients n'achètent qu'une seule fois.
 
@@ -169,18 +169,18 @@ Cette page présente les **recommandations basées sur l'analyse des données**,
 # Section Logistique - Approche Data Analyst
 reco_logistique_problemes = """
 **Corrélation délai-satisfaction identifiée**
-- Livraison <7j : **65%** de notes 5⭐
-- Livraison 7-14j : **55%** de notes 5⭐
-- Livraison 15-20j : **40%** de notes 5⭐
-- Livraison >20j : **25%** de notes 5⭐
+- Livraison <7j : **65%** de notes 5 étoiles
+- Livraison 7-14j : **55%** de notes 5 étoiles
+- Livraison 15-20j : **40%** de notes 5 étoiles
+- Livraison >20j : **25%** de notes 5 étoiles
 
 **Zones problématiques**
 - Routes SP → Nord : délais moyens >25 jours
-- **35%** de mauvaises reviews (≤3⭐) au-delà de 20 jours
+- **35%** de mauvaises reviews (≤3 étoiles) au-delà de 20 jours
 - États concernés : PA, AM, RR, AP
 
 **Impact estimé**
-- Réduire délais de 10 jours → gain potentiel de **+15-20% de notes 5⭐**
+- Réduire délais de 10 jours → gain potentiel de **+15-20% de notes 5 étoiles**
 """
 
 reco_logistique_actions = """
@@ -211,7 +211,7 @@ reco_produits_problemes = """
 **Catégories à risque identifiées**
 - Office furniture : 3.49/5 (note la plus basse)
 - Audio, construction_tools : <3.6/5 avec volume significatif
-- **25%** de notes ≤2⭐ sur ces catégories
+- **25%** de notes ≤2 étoiles sur ces catégories
 
 **Catégories performantes**
 - Health & Beauty : 4.2/5, 15K+ ventes
@@ -296,8 +296,8 @@ reco_clients_observations = """
 
 **Corrélations observées**
 - Satisfaction 1ère commande fortement corrélée à intention rachat (r=0.72)
-- Délai <7j → 3x plus de probabilité note 5⭐
-- Clients 5⭐ ont taux recommandation estimé 3-4x supérieur
+- Délai <7j → 3x plus de probabilité note 5 étoiles
+- Clients 5 étoiles ont taux recommandation estimé 3-4x supérieur
 """
 
 reco_clients_actions = """
@@ -306,7 +306,7 @@ reco_clients_actions = """
 **1. Optimiser expérience première commande**
 - Focus absolu sur satisfaction initiale
 - Tester améliorations packaging sur échantillon
-- **Métrique de suivi** : % notes 5⭐ sur 1ère commande
+- **Métrique de suivi** : % notes 5 étoiles sur 1ère commande
 
 **2. Analyser drivers satisfaction par segment**
 - Segmenter clients par : catégorie achetée, région, panier
@@ -315,7 +315,7 @@ reco_clients_actions = """
 
 **3. Quantifier potentiel bouche-à-oreille**
 - Estimer NPS (Net Promoter Score) actuel
-- Modéliser impact +10% notes 5⭐ sur croissance organique
+- Modéliser impact +10% notes 5 étoiles sur croissance organique
 - **Métrique de suivi** : % nouveaux clients "référés" (source acquisition)
 
 **4. Tester mécanismes engagement post-achat**
@@ -331,36 +331,36 @@ reco_clients_actions = """
 
 # Section Priorités - Approche Data Analyst
 reco_priorites = """
-## 📊 Leviers Prioritaires (Classement par Impact Estimé)
+## Leviers Prioritaires (Classement par Impact Estimé)
 
-### 🥇 **Priorité 1 : Réduire les délais de livraison**
+### **Priorité 1 : Réduire les délais de livraison**
 **Pourquoi** : Corrélation la plus forte avec satisfaction (r=0.76)  
-**Impact estimé** : -10 jours délai → +15-20% notes 5⭐  
+**Impact estimé** : -10 jours délai → +15-20% notes 5 étoiles  
 **Métriques** : % commandes <7j, délai moyen par route, écart estimé/réel
 
-### 🥈 **Priorité 2 : Améliorer catégories problématiques**
+### **Priorité 2 : Améliorer catégories problématiques**
 **Pourquoi** : 25% notes négatives = frein réputation globale  
 **Impact estimé** : Retrait produits <3.5 → +5-8% satisfaction globale  
 **Métriques** : Distribution notes par catégorie, % produits audités
 
-### 🥉 **Priorité 3 : Optimiser expérience première commande**
+### **Priorité 3 : Optimiser expérience première commande**
 **Pourquoi** : 97% one-shot = une seule chance de bien faire  
-**Impact estimé** : +10% notes 5⭐ 1ère commande → +3-5% croissance organique  
-**Métriques** : % 5⭐ 1ère commande, taux recommandation, NPS
+**Impact estimé** : +10% notes 5 étoiles 1ère commande → +3-5% croissance organique  
+**Métriques** : % 5 étoiles 1ère commande, taux recommandation, NPS
 
-### 4️⃣ **Priorité 4 : Expansion géographique ciblée**
+### **Priorité 4 : Expansion géographique ciblée**
 **Pourquoi** : Sud sous-exploité (bons délais + faible pénétration)  
 **Impact estimé** : Focus RS/PR/SC → +15-20% volume dans ces états  
 **Métriques** : Volume par état, part de marché régionale, CAC régional
 
-### 5️⃣ **Priorité 5 : Transparence et communication**
+### **Priorité 5 : Transparence et communication**
 **Pourquoi** : Gap attente/réalité explique 30-40% insatisfaction  
 **Impact estimé** : Délais affichés précis → -20% reviews négatives délai  
 **Métriques** : Écart délai annoncé/réel, mentions "retard" dans reviews
 """
 
 reco_conclusion = """
-## 💡 Synthèse de l'Analyse
+## Synthèse de l'Analyse
 
 **Constat principal** : Le modèle one-shot (97%) n'est pas un bug, c'est une feature.
 
@@ -372,7 +372,7 @@ reco_conclusion = """
 3. Transparence communication (40% insatisfaction évitable)
 
 **Métriques de succès recommandées** :
-- % clients 5⭐ (objectif 65% vs 55% actuel)
+- % clients 5 étoiles (objectif 65% vs 55% actuel)
 - % livraisons <7j (objectif 50% vs 30% actuel)
 - NPS par catégorie (baseline à établir)
 - % croissance organique (source "recommandation")
@@ -388,14 +388,14 @@ intro_produits = """
 **Problématique centrale : Quelles catégories créent la meilleure première impression ?**
 
 Dans un contexte où **97% des clients ne commandent qu'une seule fois**, chaque catégorie de produit joue un rôle décisif :
-- 🌟 **Catégories Championnes** : Créent des ambassadeurs → bouche-à-oreille positif
-- ⚠️ **Catégories À Risque** : Génèrent des détracteurs → réputation négative
+- **Catégories Championnes** : Créent des ambassadeurs → bouche-à-oreille positif
+- **Catégories À Risque** : Génèrent des détracteurs → réputation négative
 
 Notre analyse identifie les catégories qui maximisent les expériences parfaites (5 étoiles) et celles qui sabotent la viralité.
 """
 
 analyse_categories_championnes = """
-### 🔍 Insights clés : Les créateurs d'ambassadeurs
+### Insights clés : Les créateurs d'ambassadeurs
 
 **% de 5 étoiles = indicateur de viralité**  
 Les catégories avec >60% de 5 étoiles transforment massivement les clients en prescripteurs. Ce sont les produits qui génèrent spontanément du bouche-à-oreille positif.
@@ -408,7 +408,7 @@ Concentrer l'acquisition sur ces catégories maximise la probabilité de créer 
 """
 
 analyse_categories_a_risque = """
-### 🔍 Insights clés : Les générateurs de détracteurs
+### Insights clés : Les générateurs de détracteurs
 
 **Faible % de 5 étoiles = risque viral négatif**  
 Les catégories avec <40% de 5 étoiles créent majoritairement des expériences décevantes. Chaque vente dans ces catégories risque de générer du bouche-à-oreille négatif.
@@ -421,7 +421,7 @@ Tant que ces catégories restent problématiques, elles annulent les efforts des
 """
 
 analyse_impact_delais_produits = """
-### 🔍 Insights clés : Le délai comme déterminant de la première impression
+### Insights clés : Le délai comme déterminant de la première impression
 
 **Corrélation délai/ambassadeurs**  
 Les catégories avec délais >15 jours ont systématiquement un % de 5 étoiles plus faible. L'attente érode la satisfaction, même si le produit est correct.
@@ -434,15 +434,15 @@ Réduire les délais de 3-5 jours sur les catégories à 12-15 jours peut augmen
 """
 
 analyse_recommandations_produits = """
-### 💡 Recommandations Data-Driven
+### Recommandations Data-Driven
 
 **1. Prioriser l'acquisition sur les catégories championnes**  
 → **Impact** : Maximise le ratio ambassadeurs/détracteurs dès le premier achat  
-→ **Métriques** : Tracker % nouvelles commandes sur catégories >60% de 5⭐
+→ **Métriques** : Tracker % nouvelles commandes sur catégories >60% de 5 étoiles
 
 **2. Audit urgent des catégories à risque**  
 → **Impact** : Stopper la génération de détracteurs  
-→ **Métriques** : Réduire volume ou améliorer jusqu'à atteindre >50% de 5⭐
+→ **Métriques** : Réduire volume ou améliorer jusqu'à atteindre >50% de 5 étoiles
 
 **3. Optimisation logistique ciblée**  
 → **Impact** : Transformer catégories moyennes en championnes via réduction délais  

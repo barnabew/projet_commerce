@@ -35,7 +35,7 @@ Cette page identifie :
 
 st.markdown("---")
 
-with st.expander("🗺️ Performance de l'Expérience par État", expanded=False):
+with st.expander("Performance de l'Expérience par État", expanded=False):
     st.markdown(textes.analyse_carte_geo)
     
     # Chargement du GeoJSON
@@ -77,7 +77,7 @@ with st.expander("🗺️ Performance de l'Expérience par État", expanded=Fals
 
 
 
-with st.expander("🚚 Routes Logistiques et Impact sur l'Expérience", expanded=False):
+with st.expander("Routes Logistiques et Impact sur l'Expérience", expanded=False):
     st.markdown(textes.analyse_flux_geo)
     
     # Chargement des flux
