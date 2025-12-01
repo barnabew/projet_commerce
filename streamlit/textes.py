@@ -405,7 +405,7 @@ Ces catégories réussissent le triptyque : qualité produit + description fidè
 
 **Levier stratégique**  
 Recruter des vendeurs dans ces catégories = garantir leur succès commercial dès le départ. Chaque vente renforce leur position concurrentielle.
-"""
+
 **Levier stratégique**  
 Concentrer l'acquisition sur ces catégories maximise la probabilité de créer des ambassadeurs dès le premier achat. Chaque vente devient un investissement dans la réputation.
 """
