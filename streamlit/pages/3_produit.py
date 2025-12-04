@@ -16,7 +16,7 @@ st.markdown(styles.get_custom_css(), unsafe_allow_html=True)
 # Navbar
 styles.render_navbar(st, current_page="produit")
 
-st.markdown(styles.render_section_header("📦 Analyse Produits Écosystème Olist"), unsafe_allow_html=True)
+st.markdown(styles.render_section_header("Analyse Produits Écosystème Olist"), unsafe_allow_html=True)
 st.markdown(textes.intro_produits)
 
 # Section 1: Catégories championnes - % de 5 étoiles

@@ -16,7 +16,7 @@ st.markdown(styles.get_custom_css(), unsafe_allow_html=True)
 # Navbar
 styles.render_navbar(st, current_page="clients")
 
-st.markdown(styles.render_section_header("👥 Comportements Clients Écosystème Olist"), unsafe_allow_html=True)
+st.markdown(styles.render_section_header("Comportements Clients Écosystème Olist"), unsafe_allow_html=True)
 st.markdown(textes.intro_clients)
 
 # Section 1: Indicateurs clés

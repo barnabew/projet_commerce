@@ -17,7 +17,7 @@ styles.render_navbar(st, current_page="resume")
 
 
 # Objectif du Dashboard
-with st.expander("📊 Comprendre l'Écosystème Olist", expanded=True):
+with st.expander("Comprendre l'Écosystème Olist", expanded=True):
     st.markdown("""
     **Olist** est une plateforme B2B SaaS qui connecte les petits vendeurs brésiliens aux grandes marketplaces 
     (Amazon, Mercado Libre, etc.). Ce dashboard analyse les données transactionnelles de l'écosystème Olist 
@@ -78,35 +78,36 @@ with chart_row1[0]:
     st.plotly_chart(fig_delay_sat, use_container_width=True)
 
 with chart_row1[1]:
-    # Top états par satisfaction (où vendeurs performent le mieux)
-    df_states = run_query(queries.QUERY_TOP_STATES_SATISFACTION)
+    # Volume par état (marché géographique de l'écosystème)
+    df_states_volume = run_query(queries.QUERY_TOP_STATES_ORDERS)
     
-    fig_states = px.bar(
-        df_states,
+    fig_states_volume = px.bar(
+        df_states_volume.head(8),  # Top 8 pour lisibilité
         x="state",
-        y="pct_5_stars",
-        title="Performance par État dans l'Écosystème Olist (% 5★)",
-        labels={"state": "État", "pct_5_stars": "% de 5 étoiles"}
+        y="nb_orders",
+        title="Volume de Commandes par État (Top Marchés)",
+        labels={"state": "État", "nb_orders": "Nombre de commandes"}
     )
-    visuel.apply_theme(fig_states)
-    st.plotly_chart(fig_states, use_container_width=True)
+    visuel.apply_theme(fig_states_volume)
+    st.plotly_chart(fig_states_volume, use_container_width=True)
 
 chart_row2 = st.columns(2, gap="large")
 
 with chart_row2[0]:
-    # Top catégories par satisfaction (avantage compétitif)
-    df_categories = run_query(queries.QUERY_TOP_CATEGORIES_SATISFACTION)
+    # Comportement clients (one-shot) - Insight écosystème
+    df_client_behavior = run_query(queries.QUERY_CLIENT_KPI)
+    one_time_pct = round(df_client_behavior["one_time"][0] * 100 / df_client_behavior["total_clients"][0], 1)
+    repeat_pct = round(100 - one_time_pct, 1)
     
-    fig_categories = px.bar(
-        df_categories,
-        x="pct_5_stars",
-        y="category",
-        orientation="h",
-        title="Catégories les Plus Performantes (% 5★)",
-        labels={"pct_5_stars": "% de 5 étoiles", "category": "Catégorie"}
+    # Graphique en secteurs
+    fig_behavior = px.pie(
+        values=[one_time_pct, repeat_pct],
+        names=["Clients one-shot", "Clients récurrents"],
+        title=f"Répartition Clients (Écosystème Olist)",
+        color_discrete_sequence=["#ff4b4b", "#5e81f4"]
     )
-    visuel.apply_theme(fig_categories)
-    st.plotly_chart(fig_categories, use_container_width=True)
+    visuel.apply_theme(fig_behavior)
+    st.plotly_chart(fig_behavior, use_container_width=True)
 
 with chart_row2[1]:
     # Distribution des notes

@@ -160,7 +160,7 @@ Envoyer la demande **48h après livraison réussie**, moment de satisfaction max
 
 # Textes page Recommandations - Approche Data Analyst
 intro_recommandations = """
-## 🎯 Recommandations pour Optimiser l'Écosystème Olist
+## Recommandations pour Optimiser l'Écosystème Olist
 
 **Constat principal** : L'analyse révèle des leviers d'amélioration pour la plateforme B2B Olist.
 

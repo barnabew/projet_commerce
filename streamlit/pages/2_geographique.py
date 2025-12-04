@@ -21,7 +21,7 @@ st.markdown(styles.get_custom_css(), unsafe_allow_html=True)
 styles.render_navbar(st, current_page="geographique")
 
 # Titre et intro
-st.markdown(styles.render_section_header("🌍 Performance Géographique de l'Écosystème Olist"), unsafe_allow_html=True)
+st.markdown(styles.render_section_header("Performance Géographique de l'Écosystème Olist"), unsafe_allow_html=True)
 
 st.markdown("""
 **Analyse spatiale des transactions facilitées par Olist pour optimiser le service B2B.**
