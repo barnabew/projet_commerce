@@ -33,9 +33,7 @@ with st.expander("Catégories Championnes – Créatrices d'Ambassadeurs", expan
         y="category",
         orientation="h",
         title="Top 15 catégories – % de 5 étoiles (expérience parfaite)",
-        labels={"pct_5_stars": "% de 5 étoiles", "category": "Catégorie"},
-        color="pct_5_stars",
-        color_continuous_scale=[[0, "#ff4b4b"], [0.5, "#ffa500"], [1, "#00cc66"]]
+        labels={"pct_5_stars": "% de 5 étoiles", "category": "Catégorie"}
     )
     visuel.apply_theme(fig)
     st.plotly_chart(fig, use_container_width=True)
@@ -54,9 +52,7 @@ with st.expander("Catégories À Risque – Génératrices de Détracteurs", exp
         y="category",
         orientation="h",
         title="Bottom 15 catégories – % de 5 étoiles (expérience décevante)",
-        labels={"pct_5_stars": "% de 5 étoiles", "category": "Catégorie"},
-        color="pct_5_stars",
-        color_continuous_scale=[[0, "#ff4b4b"], [0.5, "#ffa500"], [1, "#00cc66"]]
+        labels={"pct_5_stars": "% de 5 étoiles", "category": "Catégorie"}
     )
     visuel.apply_theme(fig)
     st.plotly_chart(fig, use_container_width=True)

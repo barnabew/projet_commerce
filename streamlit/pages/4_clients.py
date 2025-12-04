@@ -62,8 +62,6 @@ with st.expander("Catégories avec les pires premières expériences", expanded=
         df_bad,
         x="category",
         y="bad_review_rate",
-        color="bad_review_rate",
-        color_continuous_scale="Reds",
         title="Taux de mauvaises reviews (first-time buyers)",
         labels={"bad_review_rate": "% Bad Reviews", "category": "Catégorie"}
     )

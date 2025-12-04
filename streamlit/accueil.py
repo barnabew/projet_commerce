@@ -94,20 +94,19 @@ with chart_row1[1]:
 chart_row2 = st.columns(2, gap="large")
 
 with chart_row2[0]:
-    # Comportement clients (one-shot) - Insight écosystème
-    df_client_behavior = run_query(queries.QUERY_CLIENT_KPI)
-    one_time_pct = round(df_client_behavior["one_time"][0] * 100 / df_client_behavior["total_clients"][0], 1)
-    repeat_pct = round(100 - one_time_pct, 1)
+    # Top catégories par chiffre d'affaires (segments clés écosystème)
+    df_categories_revenue = run_query(queries.QUERY_TOP_CATEGORIES_REVENUE)
     
-    # Graphique en secteurs
-    fig_behavior = px.pie(
-        values=[one_time_pct, repeat_pct],
-        names=["Clients one-shot", "Clients récurrents"],
-        title=f"Répartition Clients (Écosystème Olist)",
-        color_discrete_sequence=["#ff4b4b", "#5e81f4"]
+    fig_categories_revenue = px.bar(
+        df_categories_revenue.head(8),  # Top 8 pour lisibilité
+        x="revenue",
+        y="category",
+        orientation="h",
+        title="Top Catégories par Chiffre d'Affaires (Segments Clés)",
+        labels={"revenue": "Chiffre d'affaires (R$)", "category": "Catégorie"}
     )
-    visuel.apply_theme(fig_behavior)
-    st.plotly_chart(fig_behavior, use_container_width=True)
+    visuel.apply_theme(fig_categories_revenue)
+    st.plotly_chart(fig_categories_revenue, use_container_width=True)
 
 with chart_row2[1]:
     # Distribution des notes

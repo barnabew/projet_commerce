@@ -95,14 +95,12 @@ def plot_sankey_flow(df_state, selected_state):
                 node=dict(
                     pad=15,
                     thickness=20,
-                    label=labels,
-                    color=["#1f77b4"] + ["#2ca02c"] * len(df_state),
+                    label=labels
                 ),
                 link=dict(
                     source=sources,
                     target=targets,
-                    value=values,
-                    color="rgba(31, 119, 180, 0.4)",
+                    value=values
                 ),
             )
         ]
