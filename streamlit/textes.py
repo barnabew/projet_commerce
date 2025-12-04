@@ -31,9 +31,7 @@ Identifier les segments stratégiques :
 - **High-Value One-Timers**
 - **Loyal Customers**
 - **Low-Value Customers**
-"""
-
-# Analyses géographiques - Focus Compétitivité Vendeurs Olist
+"""# Analyses géographiques - Focus Compétitivité Vendeurs Olist
 analyse_carte_geo = """
 ### Géographie de l'Expérience Client = Compétitivité Vendeurs
 
@@ -59,34 +57,7 @@ analyse_carte_geo = """
 **Insight clé** : La géographie détermine si les vendeurs Olist sont **compétitifs** (Sud) ou **désavantagés** (Nord).
 """
 
-analyse_flux_geo = """
-### Routes Logistiques et Compétitivité Vendeurs
 
-**Centralisation excessive sur São Paulo**  
-SP expédie vers tous les états, créant des **disparités de performance** pour les vendeurs Olist :
-
-**Routes courtes (SP → Sud/Sud-Est) : Avantage compétitif**
-- SP → RS/PR/SC : 8-12 jours
-- Satisfaction élevée → vendeurs Olist dominent sur reviews
-- **65% de notes 5 étoiles** sur ces routes
-
-**Routes longues (SP → Nord/Nord-Est) : Désavantage compétitif**
-- SP → PA/AM/RR : 25-35 jours
-- Satisfaction désastreuse → **vendeurs Olist pénalisés** vs concurrence locale
-- **Seulement 25% de notes 5 étoiles** sur ces routes
-
-**Absence de hubs régionaux**  
-- Aucun état ne joue un rôle de redistribution régionale
-- Toutes les commandes passent par SP = goulot d'étranglement
-
-**Recommandation data-driven** :  
-Analyser coût/bénéfice de **hubs secondaires** (RS pour le Sud, BA pour le Nord-Est) :
-- Impact estimé : Délais -40% sur routes critiques
-- Conséquence : +20-25% de clients 5 étoiles dans ces régions
-- **ROI business** : Vendeurs Olist deviennent compétitifs partout au Brésil (vs actuellement seulement Sud/Sud-Est)
-
-**Insight clé** : Les routes logistiques créent un **avantage compétitif** (Sud) ou un **handicap** (Nord) pour les vendeurs Olist.
-"""
 
 # Textes page Clients - Focus Expérience One-Shot
 intro_clients = """
@@ -117,46 +88,7 @@ insight_mauvaises_experiences = """
 Ces catégories nécessitent une action urgente pour éviter le bouche-à-oreille négatif.
 """
 
-insight_impact_delai = """
-**Le délai est le facteur #1 de satisfaction sur une première commande**  
-Livraison rapide (<7j) = 65% de notes 5 étoiles  
-Livraison lente (>20j) = 25% de notes 5 étoiles  
-**Impact direct sur la viralité potentielle**
-"""
 
-recommandations_clients = """
-### **1. Garantir une expérience 5 étoiles sur la première commande**  
-- Emballage premium  
-- Note manuscrite personnalisée  
-- Échantillon gratuit surprise  
-- Suivi proactif de livraison  
-
-### **2. Programme de parrainage agressif**  
-Offrir **R$ 50** pour chaque ami parrainé (coût acquisition < valeur panier moyen)
-
-### **3. Timing optimal pour demande d'avis**  
-Envoyer la demande **48h après livraison réussie**, moment de satisfaction maximale
-
-### **4. Incentives au partage social**  
-- Réduction 10% sur prochain achat si partage Instagram/Facebook  
-- Concours photos produits avec récompenses  
-
-### **5. Transformer clients 5 étoiles en créateurs de contenu**  
-- Programme ambassadeurs  
-- Reviews détaillées récompensées  
-- UGC (User Generated Content) pour marketing  
-
-### **Objectif mesurable : Croissance organique via viralité**  
-**Cible** : Atteindre **20% de croissance organique** (clients acquis via recommandations) dans les 12 prochains mois.
-
-**Métriques de suivi** :  
-- % nouveaux clients avec code parrainage  
-- Taux de partage social post-achat  
-- Net Promoter Score (NPS) global  
-- Volume de UGC généré mensuellement  
-
-**Impact business** : Chaque point de % gagné en croissance organique réduit directement les coûts d'acquisition payants et améliore la profitabilité.
-"""
 
 # Textes page Recommandations - Approche Data Analyst
 intro_recommandations = """

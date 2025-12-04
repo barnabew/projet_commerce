@@ -56,26 +56,3 @@ with st.expander("Catégories À Risque – Génératrices de Détracteurs", exp
     )
     visuel.apply_theme(fig)
     st.plotly_chart(fig, use_container_width=True)
-
-# Section 3: Impact des délais sur la première impression
-with st.expander("Impact des Délais sur la Première Impression", expanded=False):
-    st.markdown(textes.analyse_impact_delais_produits)
-    
-    min_sales_delay = st.slider("Min ventes par catégorie :", 20, 500, 50, key="slider_delay")
-
-    df_delivery = run_query(queries.get_query_delivery_by_category(min_sales_delay))
-
-    fig = px.bar(
-        df_delivery.head(15),
-        x="avg_delivery_days",
-        y="category",
-        orientation="h",
-        title="Catégories les plus lentes – Délai moyen de livraison",
-        labels={"avg_delivery_days": "Délai moyen (jours)", "category": "Catégorie"},
-    )
-    visuel.apply_theme(fig)
-    st.plotly_chart(fig, use_container_width=True)
-
-# Section 4: Recommandations
-with st.expander("Recommandations Data-Driven", expanded=False):
-    st.markdown(textes.analyse_recommandations_produits)

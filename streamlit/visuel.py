@@ -73,43 +73,7 @@ def plot_choropleth_map(df_state, geojson, metric_col, metric_title):
     return fig
 
 
-def plot_sankey_flow(df_state, selected_state):
-    """
-    Crée un diagramme Sankey pour les flux vendeur → client
-    
-    Args:
-        df_state: DataFrame filtré pour un état vendeur
-        selected_state: Code de l'état vendeur sélectionné
-    """
-    import plotly.graph_objects as go
-    
-    sources = [0] * len(df_state)
-    targets = list(range(1, len(df_state) + 1))
-    values = df_state["nb_orders"].tolist()
-    
-    labels = [f"{selected_state} (vendeur)"] + list(df_state["customer_state"])
-    
-    fig = go.Figure(
-        data=[
-            go.Sankey(
-                node=dict(
-                    pad=15,
-                    thickness=20,
-                    label=labels
-                ),
-                link=dict(
-                    source=sources,
-                    target=targets,
-                    value=values
-                ),
-            )
-        ]
-    )
-    
-    fig.update_layout(height=600)
-    apply_theme(fig)
-    
-    return fig
+
 
 # ===========================
 # Delivery Time by State

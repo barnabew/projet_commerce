@@ -34,75 +34,41 @@ Cette analyse identifie :
 
 st.markdown("---")
 
-with st.expander("Performance de l'Expérience par État", expanded=True):
-    st.markdown(textes.analyse_carte_geo)
-    
-    # Chargement du GeoJSON
-    @st.cache_resource
-    def load_geojson():
-        url = "https://raw.githubusercontent.com/codeforamerica/click_that_hood/master/public/data/brazil-states.geojson"
-        return requests.get(url).json()
+st.markdown(textes.analyse_carte_geo)
 
-    geojson = load_geojson()
+# Chargement du GeoJSON
+@st.cache_resource
+def load_geojson():
+    url = "https://raw.githubusercontent.com/codeforamerica/click_that_hood/master/public/data/brazil-states.geojson"
+    return requests.get(url).json()
 
-    # Récupération des données par état
-    df_state = run_query(queries.QUERY_STATES_METRICS)
-    
-    # Sélection du type d'analyse
-    analysis_type = st.selectbox(
-        "Sélectionnez l'analyse affichée sur la carte :",
-        [
-            "Chiffre d'affaires",
-            "Délai moyen",
-            "Nombre de commandes",
-            "Panier moyen",
-            "Note moyenne"
-        ]
-    )
+geojson = load_geojson()
 
-    metric_map = {
-        "Chiffre d'affaires": ("revenue", "Chiffre d'affaires (R$)"),
-        "Délai moyen": ("avg_delivery_days", "Délai moyen (jours)"),
-        "Nombre de commandes": ("nb_orders", "Nombre de commandes"),
-        "Panier moyen": ("avg_order_value", "Panier moyen (R$)"),
-        "Note moyenne": ("avg_review_score", "Note moyenne"),
-    }
+# Récupération des données par état
+df_state = run_query(queries.QUERY_STATES_METRICS)
 
-    metric_col, metric_title = metric_map[analysis_type]
+# Sélection du type d'analyse
+analysis_type = st.selectbox(
+    "Sélectionnez l'analyse affichée sur la carte :",
+    [
+        "Chiffre d'affaires",
+        "Délai moyen",
+        "Nombre de commandes",
+        "Panier moyen",
+        "Note moyenne"
+    ]
+)
 
-    # Carte choropleth
-    fig = visuel.plot_choropleth_map(df_state, geojson, metric_col, f"{analysis_type} par État")
-    st.plotly_chart(fig, use_container_width=True)
+metric_map = {
+    "Chiffre d'affaires": ("revenue", "Chiffre d'affaires (R$)"),
+    "Délai moyen": ("avg_delivery_days", "Délai moyen (jours)"),
+    "Nombre de commandes": ("nb_orders", "Nombre de commandes"),
+    "Panier moyen": ("avg_order_value", "Panier moyen (R$)"),
+    "Note moyenne": ("avg_review_score", "Note moyenne"),
+}
 
+metric_col, metric_title = metric_map[analysis_type]
 
-
-with st.expander("Routes Logistiques et Impact sur l'Expérience", expanded=False):
-    st.markdown(textes.analyse_flux_geo)
-    
-    # Chargement des flux
-    df = run_query(queries.QUERY_GEOGRAPHIC_FLOWS)
-
-    # Liste des états vendeurs
-    seller_list = sorted(df['seller_state'].unique())
-
-    # Sélecteur d'état vendeur
-    selected_state = st.selectbox(
-        "Sélectionner un État vendeur",
-        seller_list,
-        index=seller_list.index("SP") if "SP" in seller_list else 0
-    )
-
-    df_state = df[df["seller_state"] == selected_state].copy()
-
-    st.subheader(f"Flux depuis : **{selected_state}**")
-
-    if df_state.empty:
-        st.info("Aucun flux significatif pour cet état.")
-    else:
-        # Diagramme Sankey pour un seul état
-        fig = visuel.plot_sankey_flow(df_state, selected_state)
-        st.plotly_chart(fig, use_container_width=True)
-
-    # Tableau détaillé des flux
-    st.subheader("Détails des flux")
-    st.dataframe(df_state)
+# Carte choropleth
+fig = visuel.plot_choropleth_map(df_state, geojson, metric_col, f"{analysis_type} par État")
+st.plotly_chart(fig, use_container_width=True)

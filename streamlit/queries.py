@@ -80,28 +80,7 @@ ORDER BY revenue DESC
 LIMIT 15;
 """
 
-def get_query_delivery_by_category(min_sales):
-    """Requête pour délais de livraison par catégorie avec filtre"""
-    return f"""
-    SELECT 
-        COALESCE(tr.product_category_name_english, cp.product_category_name) AS category,
-        ROUND(AVG(
-            JULIANDAY(o.order_delivered_customer_date) 
-            - JULIANDAY(o.order_purchase_timestamp)
-        ), 2) AS avg_delivery_days,
-        COUNT(*) AS total_sales
-    FROM clean_orders o
-    JOIN clean_order_items coi ON o.order_id = coi.order_id
-    JOIN clean_products cp ON cp.product_id = coi.product_id
-    LEFT JOIN product_category_name_translation tr 
-        ON cp.product_category_name = tr.product_category_name
-    WHERE o.order_status = 'delivered'
-      AND o.order_delivered_customer_date IS NOT NULL
-      AND o.order_purchase_timestamp IS NOT NULL
-    GROUP BY category
-    HAVING total_sales > {min_sales}
-    ORDER BY avg_delivery_days DESC;
-    """
+
 
 def get_query_reviews_by_category(min_reviews):
     """Requête pour notes moyennes par catégorie avec filtre"""
@@ -159,88 +138,7 @@ HAVING nb_sales > 200
 ORDER BY nb_sales DESC;
 """
 
-# ===========================
-# CLIENTS
-# ===========================
 
-QUERY_CLIENT_KPI = """
-SELECT
-    SUM(CASE WHEN cnt = 1 THEN 1 ELSE 0 END) AS one_time,
-    COUNT(*) AS total_clients
-FROM (
-    SELECT customer_unique_id, COUNT(*) AS cnt
-    FROM clean_orders o
-    JOIN clean_customers c ON o.customer_id = c.customer_id
-    GROUP BY customer_unique_id
-);
-"""
-
-QUERY_ACQUISITION_CATEGORIES = """
-SELECT 
-    COALESCE(tr.product_category_name_english, cp.product_category_name) AS category,
-    COUNT(*) AS first_order_count,
-    ROUND(AVG(oi.price + oi.freight_value), 2) AS avg_basket
-FROM clean_orders o
-JOIN clean_order_items oi ON o.order_id = oi.order_id
-JOIN clean_products cp ON cp.product_id = oi.product_id
-LEFT JOIN product_category_name_translation tr 
-    ON cp.product_category_name = tr.product_category_name
-WHERE o.customer_id IN (
-    SELECT customer_id
-    FROM clean_orders
-    GROUP BY customer_id
-    HAVING COUNT(*) = 1
-)
-GROUP BY category
-ORDER BY first_order_count DESC
-LIMIT 15;
-"""
-
-QUERY_BAD_FIRST_EXPERIENCE = """
-SELECT 
-    COALESCE(tr.product_category_name_english, cp.product_category_name) AS category,
-    COUNT(*) AS first_orders,
-    SUM(CASE WHEN r.review_score <= 2 THEN 1 ELSE 0 END) AS bad_reviews,
-    ROUND(
-        SUM(CASE WHEN r.review_score <= 2 THEN 1 ELSE 0 END) * 100.0 / COUNT(*),
-        2
-    ) AS bad_review_rate
-FROM clean_orders o
-JOIN clean_order_items oi ON o.order_id = oi.order_id
-JOIN clean_products cp ON cp.product_id = oi.product_id
-LEFT JOIN product_category_name_translation tr 
-    ON cp.product_category_name = tr.product_category_name
-JOIN clean_reviews r ON r.order_id = o.order_id
-WHERE o.customer_id IN (
-    SELECT customer_id
-    FROM clean_orders
-    GROUP BY customer_id
-    HAVING COUNT(*) = 1
-)
-GROUP BY category
-HAVING first_orders > 50
-ORDER BY bad_review_rate DESC
-LIMIT 15;
-"""
-
-QUERY_DELAY_IMPACT_NEW_CLIENTS = """
-SELECT
-    ROUND(AVG(JULIANDAY(order_delivered_customer_date) 
-        - JULIANDAY(order_purchase_timestamp)), 2) AS avg_delivery_days,
-    ROUND(AVG(review_score), 2) AS avg_score,
-    COUNT(*) AS nb_orders
-FROM clean_orders o
-JOIN clean_reviews r ON o.order_id = r.order_id
-WHERE o.order_status = 'delivered'
-AND o.customer_id IN (
-    SELECT customer_id
-    FROM clean_orders
-    GROUP BY customer_id
-    HAVING COUNT(*) = 1
-)
-AND o.order_delivered_customer_date IS NOT NULL
-AND o.order_purchase_timestamp IS NOT NULL;
-"""
 
 # ===========================
 # GÉOGRAPHIE
@@ -266,22 +164,7 @@ WHERE o.order_status IN ('delivered', 'shipped', 'invoiced')
 GROUP BY c.customer_state;
 """
 
-QUERY_GEOGRAPHIC_FLOWS = """
-SELECT 
-    s.seller_state,
-    c.customer_state,
-    COUNT(*) AS nb_orders
-FROM clean_order_items coi
-JOIN clean_sellers s ON coi.seller_id = s.seller_id
-JOIN clean_orders o ON coi.order_id = o.order_id
-JOIN clean_customers c ON o.customer_id = c.customer_id
-WHERE o.order_status = 'delivered'
-  AND o.order_delivered_customer_date IS NOT NULL
-  AND o.order_purchase_timestamp IS NOT NULL
-GROUP BY s.seller_state, c.customer_state
-HAVING nb_orders > 10
-ORDER BY nb_orders DESC;
-"""
+
 
 # ===========================
 # ACCUEIL - GRAPHIQUES
