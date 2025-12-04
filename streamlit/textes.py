@@ -90,12 +90,15 @@ Analyser coût/bénéfice de **hubs secondaires** (RS pour le Sud, BA pour le No
 
 # Textes page Clients - Focus Expérience One-Shot
 intro_clients = """
-**97% des clients d'Olist n'achètent qu'une seule fois.**  
+**Analyse des comportements clients dans l'écosystème Olist (2016-2018).**  
 
-Plutôt que de lutter contre cette réalité, la stratégie optimale est d'**accepter le modèle one-shot** et de transformer chaque client en **ambassadeur** grâce à une expérience parfaite.
+Cette section analyse les patterns d'achat des consommateurs finaux qui achètent via les vendeurs utilisant la plateforme Olist. Comprendre ces comportements aide Olist à :
+- Optimiser ses services B2B pour ses clients vendeurs
+- Identifier les opportunités d'amélioration de l'expérience
+- Développer de nouveaux outils pour l'écosystème
 
-**Hypothèse centrale : Transformer clients en prescripteurs**  
-Un client qui vit une expérience 5 étoiles recommande spontanément la marketplace à 2-3 personnes de son entourage. Cette viralité organique peut générer une croissance sans coût d'acquisition supplémentaire.
+**Insight clé : 97% des clients n'achètent qu'une fois**  
+Cette caractéristique structurelle du marché brésilien e-commerce influence la stratégie d'Olist : focus sur l'excellence de la première expérience plutôt que sur la fidélisation.
 
 Cette page analyse :
 - Le profil des **clients très satisfaits** (5 étoiles) vs **insatisfaits** (<3 étoiles)
@@ -157,13 +160,13 @@ Envoyer la demande **48h après livraison réussie**, moment de satisfaction max
 
 # Textes page Recommandations - Approche Data Analyst
 intro_recommandations = """
-## Insights Clés et Recommandations Data-Driven
+## 🎯 Recommandations pour Optimiser l'Écosystème Olist
 
-**Constat principal** : 97% des clients n'achètent qu'une seule fois.
+**Constat principal** : L'analyse révèle des leviers d'amélioration pour la plateforme B2B Olist.
 
-**Approche recommandée** : Plutôt que lutter contre cette réalité, optimiser l'expérience one-shot pour maximiser la satisfaction et le bouche-à-oreille.
+**Approche recommandée** : Utiliser ces insights pour améliorer les services proposés aux vendeurs et optimiser l'écosystème global.
 
-Cette page présente les **recommandations basées sur l'analyse des données**, classées par **impact potentiel** et **leviers d'action**.
+Cette page présente les **recommandations basées sur l'analyse des données**, classées par **impact potentiel** et **faisabilité** pour Olist en tant qu'entreprise B2B.
 """
 
 # Section Logistique - Approche Data Analyst
@@ -385,13 +388,15 @@ Les décisions d'implémentation (roadmap, budget, ressources) relèvent du mana
 # ===========================
 
 intro_produits = """
-**Problématique centrale : Quelles catégories donnent un avantage compétitif aux vendeurs Olist ?**
+**Analyse des performances produits dans l'écosystème Olist pour optimiser le service B2B.**
 
-Dans un contexte où **97% des clients ne commandent qu'une seule fois**, chaque catégorie détermine la performance reviews des vendeurs :
-- **Catégories Championnes** : Reviews exceptionnelles → visibilité accrue sur marketplaces
-- **Catégories À Risque** : Mauvaises reviews → perte de compétitivité
+Cette section étudie les catégories de produits qui transitent par la plateforme Olist pour identifier :
+- Les catégories les plus performantes en satisfaction client
+- Les opportunités d'amélioration de l'expérience par catégorie  
+- Les insights pour aider Olist à mieux conseiller ses clients vendeurs
+- Les leviers d'optimisation de l'écosystème par segment produit
 
-Notre analyse identifie les catégories qui maximisent les 5 étoiles (arme commerciale) et celles qui pénalisent les vendeurs.
+**Objectif** : Fournir des données actionnables à Olist pour améliorer ses services B2B et l'expérience globale de l'écosystème.
 """
 
 analyse_categories_championnes = """

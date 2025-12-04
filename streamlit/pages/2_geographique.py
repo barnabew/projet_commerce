@@ -3,7 +3,6 @@ from utils import run_query
 import plotly.express as px
 import pandas as pd
 import requests
-import igraph as ig
 import plotly.graph_objects as go
 import styles
 import textes
@@ -22,15 +21,15 @@ st.markdown(styles.get_custom_css(), unsafe_allow_html=True)
 styles.render_navbar(st, current_page="geographique")
 
 # Titre et intro
-st.markdown(styles.render_section_header("Géographie = Compétitivité Vendeurs"), unsafe_allow_html=True)
+st.markdown(styles.render_section_header("🌍 Performance Géographique de l'Écosystème Olist"), unsafe_allow_html=True)
 
 st.markdown("""
-**Avec 97% de clients one-shot, la géographie détermine la performance reviews des vendeurs Olist.**
+**Analyse spatiale des transactions facilitées par Olist pour optimiser le service B2B.**
 
 Cette analyse identifie :
-- **Les régions d'excellence** : Où les vendeurs Olist obtiennent les meilleures reviews (avantage compétitif)
-- **Les zones à risque** : Où les vendeurs Olist sont désavantagés (mauvaises reviews structurelles)
-- **L'impact des routes logistiques** : Comment la géographie crée des gagnants et des perdants
+- **Les régions performantes** : Où l'écosystème Olist génère le plus de satisfaction
+- **Les zones à améliorer** : Où Olist peut développer de nouveaux services logistiques
+- **Les flux commerciaux** : Patterns géographiques pour optimiser les intégrations marketplace
 """)
 
 st.markdown("---")

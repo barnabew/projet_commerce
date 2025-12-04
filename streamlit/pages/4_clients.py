@@ -1,6 +1,5 @@
 import streamlit as st
 import pandas as pd
-import numpy as np
 import plotly.express as px
 from utils import run_query
 import styles
@@ -17,7 +16,7 @@ st.markdown(styles.get_custom_css(), unsafe_allow_html=True)
 # Navbar
 styles.render_navbar(st, current_page="clients")
 
-st.markdown(styles.render_section_header("Analyse Clients"), unsafe_allow_html=True)
+st.markdown(styles.render_section_header("👥 Comportements Clients Écosystème Olist"), unsafe_allow_html=True)
 st.markdown(textes.intro_clients)
 
 # Section 1: Indicateurs clés
