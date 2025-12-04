@@ -34,8 +34,6 @@ Cette analyse identifie :
 
 st.markdown("---")
 
-st.markdown(textes.analyse_carte_geo)
-
 # Chargement du GeoJSON
 @st.cache_resource
 def load_geojson():
@@ -70,29 +68,23 @@ metric_map = {
 # Explications contextuelles pour chaque métrique
 metric_explanations = {
     "Chiffre d'affaires": """
-    **Analyse du Chiffre d'Affaires par État**
+    **Concentration Géographique du Chiffre d'Affaires**
     
-    Cette visualisation identifie les **marchés les plus rentables** de l'écosystème Olist. L'analyse révèle une concentration sur les grands centres urbains (SP, RJ, MG) mais met en évidence des **opportunités d'expansion** dans les régions sous-représentées.
+    L'analyse révèle une forte concentration du chiffre d'affaires dans l'axe São Paulo - Rio de Janeiro - Minas Gerais, qui constitue le cœur économique de l'écosystème Olist. Cette polarisation reflète à la fois la densité démographique et le développement économique de ces régions.
     
-    **Insights clés :**
-    - Identifier les états à fort potentiel démographique mais faible pénétration Olist
-    - Évaluer le ROI potentiel d'investissements commerciaux par région
-    - Optimiser l'allocation des ressources de développement commercial
+    Les états du Nord présentent des performances nettement inférieures, illustrant les disparités économiques régionales du Brésil. Cette distribution géographique met en évidence les opportunités d'expansion dans les marchés sous-représentés, où le potentiel de croissance reste significatif malgré les défis logistiques.
     
-    **Recommandation analytique :** Croiser ces données avec les indicateurs démographiques et économiques pour prioriser l'expansion géographique.
+    Cette cartographie du chiffre d'affaires constitue un indicateur clé pour orienter les stratégies de développement commercial et d'allocation des ressources.
     """,
     
     "Délai moyen": """
-    **Performance Logistique par Région**
+    **Impact de la Distance et des Infrastructures sur les Délais de Livraison**
     
-    Les délais de livraison constituent un **facteur critique de compétitivité** dans l'e-commerce brésilien. Cette analyse géographique révèle des disparités importantes qui impactent directement la satisfaction client et la performance des vendeurs.
+    L'état de São Paulo bénéficie des délais de livraison les plus courts grâce à la concentration des infrastructures logistiques et des centres de distribution. Cette proximité des hubs logistiques se traduit par une performance opérationnelle optimale.
     
-    **Constats analytiques :**
-    - Forte corrélation entre proximité géographique des hubs logistiques et performance de livraison
-    - Impact direct sur les notes clients : +10 jours de délai = -15% de satisfaction moyenne
-    - Avantage concurrentiel marqué pour les régions Sud/Sud-Est
+    Les états du Nord subissent des délais jusqu'à quatre fois supérieurs, révélant l'impact combiné de la distance géographique et des limitations infrastructurelles. La géographie amazonienne complexifie davantage l'acheminement des marchandises vers ces régions.
     
-    **Optimisation suggérée :** Développement de centres de distribution régionaux pour réduire les écarts de performance logistique.
+    Cette corrélation entre éloignement géographique et dégradation des performances de livraison souligne l'importance critique du maillage logistique dans la stratégie d'expansion nationale d'Olist.
     """,
     
     "Nombre de commandes": """
