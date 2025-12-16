@@ -37,36 +37,33 @@ st.markdown(styles.get_custom_css(), unsafe_allow_html=True)
 st.markdown("---")
 
 # Objectif du Dashboard
-with st.expander("🎯 Recommandations Data-Driven", expanded=False):
+with st.expander("Recommandations", expanded=False):
     st.markdown("""
-    ## Stratégie Data-Driven : Optimisation de l'Expérience Unique
+    ## Stratégie : Optimisation de l'Expérience Unique
     
-    **Orientation stratégique** : L'analyse des données révèle que l'optimisation doit se concentrer sur 
-    l'excellence de l'expérience unique plutôt que sur la fidélisation client.
+    L'analyse des données révèle que l'optimisation doit se concentrer sur l'excellence de l'expérience unique 
+    plutôt que sur la fidélisation client. L'objectif principal est d'améliorer la satisfaction client grâce 
+    aux insights extraits des données.
     
-    **Objectif principal** : Améliorer la satisfaction client grâce aux insights data
+    ## Corrélations Identifiées dans les Données
     
-    ### Corrélations Identifiées dans les Données :
-    - **Satisfaction ↔ Délais de livraison** : Corrélation forte (r=0.76)
-    - **Satisfaction ↔ Catégories produits** : 25% des notes négatives concentrées sur 10% des produits
-    - **Satisfaction ↔ Communication** : 40% de l'insatisfaction est évitable par la transparence
+    L'analyse révèle deux corrélations majeures avec la satisfaction client. La plus forte corrélation 
+    concerne les délais de livraison. Par ailleurs, 25% des notes négatives se concentrent sur 
+    seulement 10% des produits, suggérant des problèmes spécifiques à certaines catégories.
                     
     ## Recommandations Basées sur l'Analyse des Données
 
-    ### **🚀 Action Prioritaire 1 : Optimiser les délais de livraison**
-    **Insight data** : Corrélation la plus forte identifiée (r=0.76) entre délais et satisfaction  
-    **Impact projeté** : Réduction de 10 jours → +15-20% de notes 5 étoiles  
-    **KPI à suivre** : % commandes <7j, délai moyen par route
+    **Optimisation des délais de livraison**
+    
+    La corrélation la plus forte identifiée dans les données concerne la relation entre délais et satisfaction. 
+    Cette relation suggère que l'amélioration des délais de livraison pourrait avoir un impact significatif 
+    sur la satisfaction client. Les métriques à suivre incluent le pourcentage de commandes livrées en moins 
+    de 7 jours et le délai moyen par états.
 
-    ### **📦 Action Prioritaire 2 : Améliorer le mix catégories**
-    **Insight data** : Concentration des problèmes sur un faible nombre de catégories  
-    **Impact projeté** : Optimisation ciblée → +5-8% satisfaction globale  
-    **KPI à suivre** : Distribution notes par catégorie, taux de retour produits
-
-    ### **🎯 Recommandation Complémentaire : Communication transparente**
-    **Insight data** : Gap entre attentes et réalité explique une large part de l'insatisfaction  
-    **Impact projeté** : Délais affichés précis → -20% reviews négatives liées aux délais  
-    **KPI à suivre** : Écart délai annoncé/réel, mentions "retard" dans les avis
+    **Amélioration du mix catégories**
+    
+    Les données montrent une concentration des problèmes sur un faible nombre de catégories. Une optimisation 
+    ciblée de ces catégories problématiques pourrait améliorer la satisfaction globale.
         """)
 
 st.markdown("---")
@@ -85,7 +82,7 @@ with kpi_cols[0]:
     st.markdown(styles.render_kpi_card("Excellence (5★)", f"{pct_5_stars}%"), unsafe_allow_html=True)
 
 with kpi_cols[1]:
-    st.markdown(styles.render_kpi_card("Livraisons Rapides", f"{pct_fast}%"), unsafe_allow_html=True)
+    st.markdown(styles.render_kpi_card("Livraisons Rapides (<7j)", f"{pct_fast}%"), unsafe_allow_html=True)
 
 with kpi_cols[2]:
     st.markdown(styles.render_kpi_card("Délai Moyen", f"{avg_delivery_delay:.1f} jours"), unsafe_allow_html=True)
@@ -119,35 +116,41 @@ with chart_row1[0]:
     st.plotly_chart(fig_delay_sat, use_container_width=True)
 
 with chart_row1[1]:
-    # Satisfaction par état (performance expérience client)
-    df_states_satisfaction = run_query(queries.QUERY_TOP_STATES_SATISFACTION)
+    # États avec les pires délais de livraison (zones à améliorer)
+    df_states_metrics = run_query(queries.QUERY_STATES_METRICS)
+    df_worst_states_delay = df_states_metrics[df_states_metrics['nb_orders'] > 50].nlargest(10, 'avg_delivery_days')
     
-    fig_states_satisfaction = px.bar(
-        df_states_satisfaction.head(10),
+    fig_worst_states_delay = px.bar(
+        df_worst_states_delay,
         x="state",
-        y="pct_5_stars",
-        title="Top États - Satisfaction Client (% 5 étoiles)",
-        labels={"state": "État", "pct_5_stars": "% Notes 5 étoiles"}
+        y="avg_delivery_days",
+        title="États avec les Pires Délais de Livraison (Zones à Améliorer)",
+        labels={"state": "État", "avg_delivery_days": "Délai moyen (jours)"},
+        color="avg_delivery_days",
+        color_continuous_scale="Reds"
     )
-    apply_theme(fig_states_satisfaction)
-    st.plotly_chart(fig_states_satisfaction, use_container_width=True)
+    apply_theme(fig_worst_states_delay)
+    st.plotly_chart(fig_worst_states_delay, use_container_width=True)
 
 chart_row2 = st.columns(2, gap="large")
 
 with chart_row2[0]:
-    # Top catégories par satisfaction client
+    # Pires catégories par satisfaction client (produits à améliorer)
     df_categories_satisfaction = run_query(queries.QUERY_TOP_CATEGORIES_SATISFACTION)
+    df_worst_categories = df_categories_satisfaction.tail(10)  # Les 10 pires
     
-    fig_categories_satisfaction = px.bar(
-        df_categories_satisfaction.head(10),
+    fig_worst_categories_satisfaction = px.bar(
+        df_worst_categories,
         x="pct_5_stars",
         y="category",
         orientation="h",
-        title="Top Catégories - Satisfaction Client (% 5 étoiles)",
-        labels={"pct_5_stars": "% Notes 5 étoiles", "category": "Catégorie"}
+        title="Pires Catégories - Satisfaction Client (Produits à Améliorer)",
+        labels={"pct_5_stars": "% Notes 5 étoiles", "category": "Catégorie"},
+        color="pct_5_stars",
+        color_continuous_scale="Reds"
     )
-    apply_theme(fig_categories_satisfaction)
-    st.plotly_chart(fig_categories_satisfaction, use_container_width=True)
+    apply_theme(fig_worst_categories_satisfaction)
+    st.plotly_chart(fig_worst_categories_satisfaction, use_container_width=True)
 
 with chart_row2[1]:
     # Distribution des délais de livraison
