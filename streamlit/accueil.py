@@ -134,24 +134,7 @@ chart_row2 = st.columns(2, gap="large")
 
 with chart_row2[0]:
     # Catégories avec le plus de notes 1 étoile (problèmes critiques)
-    df_categories_1_star = run_query("""
-    SELECT 
-        COALESCE(tr.product_category_name_english, cp.product_category_name) AS category,
-        COUNT(r.review_id) AS nb_reviews,
-        ROUND(100.0 * SUM(CASE WHEN r.review_score = 1 THEN 1 ELSE 0 END) / COUNT(r.review_id), 1) AS pct_1_stars
-    FROM clean_reviews r
-    JOIN clean_orders o ON r.order_id = o.order_id
-    JOIN clean_order_items coi ON o.order_id = coi.order_id
-    JOIN clean_products cp ON coi.product_id = cp.product_id
-    LEFT JOIN product_category_name_translation tr 
-        ON cp.product_category_name = tr.product_category_name
-    WHERE o.order_status = 'delivered'
-      AND r.review_score = 1
-    GROUP BY category
-    HAVING nb_reviews > 20
-    ORDER BY pct_1_stars DESC
-    LIMIT 10;
-    """)
+    df_categories_1_star = run_query(queries.QUERY_CATEGORIES_1_STAR)
     
     fig_worst_categories_1_star = px.bar(
         df_categories_1_star,

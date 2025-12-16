@@ -1,16 +1,11 @@
 """
 Fichier centralisé contenant toutes les requêtes SQL du projet.
-Organisation par thème : KPI, Produits, Clients, Géographie
+Organisation par thème : KPI, Graphiques
 """
 
 # ===========================
-# KPI GLOBAUX (Accueil) - Focus Expérience One-Shot
+# KPI GLOBAUX (Accueil)
 # ===========================
-
-QUERY_TOTAL_REVENUE = """
-SELECT SUM(price + freight_value) AS rev 
-FROM clean_order_items
-"""
 
 QUERY_TOTAL_ORDERS = """
 SELECT COUNT(DISTINCT order_id) AS c 
@@ -40,14 +35,6 @@ AND order_delivered_customer_date IS NOT NULL
 AND order_purchase_timestamp IS NOT NULL
 """
 
-QUERY_AVG_BASKET = """
-SELECT ROUND(
-    SUM(price + freight_value) * 1.0 / COUNT(DISTINCT order_id), 
-    2
-) AS avg_basket
-FROM clean_order_items
-"""
-
 QUERY_AVG_REVIEW_SCORE = """
 SELECT ROUND(AVG(review_score), 2) AS avg 
 FROM clean_reviews
@@ -62,87 +49,20 @@ WHERE order_status = 'delivered'
 """
 
 # ===========================
-# PRODUITS
+# GRAPHIQUES (Accueil)
 # ===========================
 
-QUERY_TOP_CATEGORIES_REVENUE = """
+QUERY_DELAY_VS_SATISFACTION = """
 SELECT 
-    COALESCE(tr.product_category_name_english, cp.product_category_name) AS category,
-    SUM(coi.price + coi.freight_value) AS revenue
-FROM clean_order_items coi
-JOIN clean_products cp ON coi.product_id = cp.product_id
-JOIN clean_orders co ON coi.order_id = co.order_id
-LEFT JOIN product_category_name_translation tr 
-    ON cp.product_category_name = tr.product_category_name
-WHERE co.order_status IN ('delivered', 'shipped', 'invoiced')
-GROUP BY category
-ORDER BY revenue DESC
-LIMIT 15;
-"""
-
-
-
-def get_query_reviews_by_category(min_reviews):
-    """Requête pour notes moyennes par catégorie avec filtre"""
-    return f"""
-    SELECT 
-        COALESCE(tr.product_category_name_english, cp.product_category_name) AS category,
-        ROUND(AVG(r.review_score), 2) AS avg_review_score,
-        COUNT(r.review_id) AS nb_reviews
-    FROM clean_reviews r
-    JOIN clean_orders o ON r.order_id = o.order_id
-    JOIN clean_order_items coi ON o.order_id = coi.order_id
-    JOIN clean_products cp ON cp.product_id = coi.product_id
-    LEFT JOIN product_category_name_translation tr 
-        ON cp.product_category_name = tr.product_category_name
-    WHERE r.review_score BETWEEN 1 AND 5
-    GROUP BY category
-    HAVING nb_reviews > {min_reviews}
-    ORDER BY avg_review_score;
-    """
-
-def get_query_percent_5_stars_by_category(min_sales):
-    """Requête pour % de 5 étoiles par catégorie (focus expérience parfaite)"""
-    return f"""
-    SELECT 
-        COALESCE(tr.product_category_name_english, cp.product_category_name) AS category,
-        COUNT(r.review_id) AS nb_reviews,
-        ROUND(100.0 * SUM(CASE WHEN r.review_score = 5 THEN 1 ELSE 0 END) / COUNT(r.review_id), 1) AS pct_5_stars
-    FROM clean_reviews r
-    JOIN clean_orders o ON r.order_id = o.order_id
-    JOIN clean_order_items coi ON o.order_id = coi.order_id
-    JOIN clean_products cp ON cp.product_id = coi.product_id
-    LEFT JOIN product_category_name_translation tr 
-        ON cp.product_category_name = tr.product_category_name
-    WHERE r.review_score BETWEEN 1 AND 5
-    GROUP BY category
-    HAVING nb_reviews > {min_sales}
-    ORDER BY pct_5_stars DESC;
-    """
-
-QUERY_PROBLEMATIC_CATEGORIES = """
-SELECT 
-    COALESCE(tr.product_category_name_english, cp.product_category_name) AS category,
-    COUNT(coi.order_id) AS nb_sales,
-    ROUND(AVG(r.review_score), 2) AS avg_review_score
-FROM clean_order_items coi
-JOIN clean_orders o ON coi.order_id = o.order_id
-JOIN clean_products cp ON coi.product_id = cp.product_id
+    r.review_score,
+    ROUND(JULIANDAY(o.order_delivered_customer_date) - JULIANDAY(o.order_purchase_timestamp), 1) AS delivery_days
+FROM clean_orders o
 JOIN clean_reviews r ON o.order_id = r.order_id
-LEFT JOIN product_category_name_translation tr 
-    ON cp.product_category_name = tr.product_category_name
-WHERE o.order_status = 'delivered'
-GROUP BY category
-HAVING nb_sales > 200
-   AND avg_review_score < 3.8
-ORDER BY nb_sales DESC;
+WHERE o.order_delivered_customer_date IS NOT NULL
+  AND o.order_purchase_timestamp IS NOT NULL
+  AND r.review_score BETWEEN 1 AND 5
+  AND JULIANDAY(o.order_delivered_customer_date) - JULIANDAY(o.order_purchase_timestamp) BETWEEN 0 AND 100;
 """
-
-
-
-# ===========================
-# GÉOGRAPHIE
-# ===========================
 
 QUERY_STATES_METRICS = """
 SELECT 
@@ -164,75 +84,11 @@ WHERE o.order_status IN ('delivered', 'shipped', 'invoiced')
 GROUP BY c.customer_state;
 """
 
-
-
-# ===========================
-# ACCUEIL - GRAPHIQUES
-# ===========================
-
-QUERY_MONTHLY_SALES = """
-SELECT 
-    strftime('%Y-%m', o.order_purchase_timestamp) AS month,
-    COUNT(DISTINCT o.order_id) AS nb_orders,
-    SUM(oi.price + oi.freight_value) AS revenue
-FROM clean_orders o
-JOIN clean_order_items oi ON o.order_id = oi.order_id
-WHERE o.order_status IN ('delivered', 'shipped', 'invoiced')
-  AND o.order_purchase_timestamp IS NOT NULL
-GROUP BY month
-ORDER BY month;
-"""
-
-QUERY_TOP_STATES_ORDERS = """
-SELECT 
-    c.customer_state AS state,
-    COUNT(DISTINCT o.order_id) AS nb_orders
-FROM clean_orders o
-JOIN clean_customers c ON o.customer_id = c.customer_id
-WHERE o.order_status IN ('delivered', 'shipped', 'invoiced')
-GROUP BY c.customer_state
-ORDER BY nb_orders DESC
-LIMIT 10;
-"""
-
-QUERY_TOP_STATES_SATISFACTION = """
-SELECT 
-    c.customer_state AS state,
-    COUNT(r.review_id) AS nb_reviews,
-    ROUND(100.0 * SUM(CASE WHEN r.review_score = 5 THEN 1 ELSE 0 END) / COUNT(r.review_id), 1) AS pct_5_stars,
-    ROUND(AVG(r.review_score), 2) AS avg_score
-FROM clean_orders o
-JOIN clean_customers c ON o.customer_id = c.customer_id
-JOIN clean_reviews r ON o.order_id = r.order_id
-WHERE o.order_status = 'delivered'
-  AND r.review_score BETWEEN 1 AND 5
-GROUP BY c.customer_state
-HAVING nb_reviews > 100
-ORDER BY pct_5_stars DESC
-LIMIT 10;
-"""
-
-QUERY_TOP_CATEGORIES_SALES = """
-SELECT 
-    COALESCE(tr.product_category_name_english, cp.product_category_name) AS category,
-    COUNT(DISTINCT coi.order_id) AS nb_sales
-FROM clean_order_items coi
-JOIN clean_products cp ON coi.product_id = cp.product_id
-JOIN clean_orders co ON coi.order_id = co.order_id
-LEFT JOIN product_category_name_translation tr 
-    ON cp.product_category_name = tr.product_category_name
-WHERE co.order_status IN ('delivered', 'shipped', 'invoiced')
-GROUP BY category
-ORDER BY nb_sales DESC
-LIMIT 10;
-"""
-
-QUERY_TOP_CATEGORIES_SATISFACTION = """
+QUERY_CATEGORIES_1_STAR = """
 SELECT 
     COALESCE(tr.product_category_name_english, cp.product_category_name) AS category,
     COUNT(r.review_id) AS nb_reviews,
-    ROUND(100.0 * SUM(CASE WHEN r.review_score = 5 THEN 1 ELSE 0 END) / COUNT(r.review_id), 1) AS pct_5_stars,
-    ROUND(AVG(r.review_score), 2) AS avg_score
+    ROUND(100.0 * SUM(CASE WHEN r.review_score = 1 THEN 1 ELSE 0 END) / COUNT(r.review_id), 1) AS pct_1_stars
 FROM clean_reviews r
 JOIN clean_orders o ON r.order_id = o.order_id
 JOIN clean_order_items coi ON o.order_id = coi.order_id
@@ -242,19 +98,9 @@ LEFT JOIN product_category_name_translation tr
 WHERE o.order_status = 'delivered'
   AND r.review_score BETWEEN 1 AND 5
 GROUP BY category
-HAVING nb_reviews > 100
-ORDER BY pct_5_stars DESC
+HAVING nb_reviews > 200
+ORDER BY pct_1_stars DESC
 LIMIT 10;
-"""
-
-QUERY_REVIEW_DISTRIBUTION = """
-SELECT 
-    review_score,
-    COUNT(*) AS nb_reviews
-FROM clean_reviews
-WHERE review_score BETWEEN 1 AND 5
-GROUP BY review_score
-ORDER BY review_score;
 """
 
 QUERY_DELIVERY_DISTRIBUTION = """
@@ -279,16 +125,4 @@ ORDER BY
         WHEN '21-30 jours' THEN 4
         WHEN '> 30 jours' THEN 5
     END;
-"""
-
-QUERY_DELAY_VS_SATISFACTION = """
-SELECT 
-    r.review_score,
-    ROUND(JULIANDAY(o.order_delivered_customer_date) - JULIANDAY(o.order_purchase_timestamp), 1) AS delivery_days
-FROM clean_orders o
-JOIN clean_reviews r ON o.order_id = r.order_id
-WHERE o.order_delivered_customer_date IS NOT NULL
-  AND o.order_purchase_timestamp IS NOT NULL
-  AND r.review_score BETWEEN 1 AND 5
-  AND JULIANDAY(o.order_delivered_customer_date) - JULIANDAY(o.order_purchase_timestamp) BETWEEN 0 AND 100;
 """
