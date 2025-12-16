@@ -31,43 +31,47 @@ st.set_page_config(**styles.get_page_config())
 # Application du CSS personnalisé
 st.markdown(styles.get_custom_css(), unsafe_allow_html=True)
 
+
+
+
+st.markdown("---")
+
 # Objectif du Dashboard
 with st.expander("Recommandations", expanded=False):
     st.markdown("""
     **Recommandation stratégique** : Optimiser pour l'excellence de l'expérience unique plutôt que forcer la fidélisation.
+    **Leviers à impact rapide** :
+    1. Délais de livraison (corrélation r=0.76 avec satisfaction)
+    2. Qualité catégories (25% notes négatives concentrées sur 10% produits)
+    3. Transparence communication (40% insatisfaction évitable)
+                    
+    ## Leviers Prioritaires (Classement par Impact Estimé)
 
-**Leviers à impact rapide** :
-1. Délais de livraison (corrélation r=0.76 avec satisfaction)
-2. Qualité catégories (25% notes négatives concentrées sur 10% produits)
-3. Transparence communication (40% insatisfaction évitable)
-                
-## Leviers Prioritaires (Classement par Impact Estimé)
+    ### **Priorité 1 : Réduire les délais de livraison**
+    **Pourquoi** : Corrélation la plus forte avec satisfaction (r=0.76)  
+    **Impact estimé** : -10 jours délai → +15-20% notes 5 étoiles  
+    **Métriques** : % commandes <7j, délai moyen par route, écart estimé/réel
 
-### **Priorité 1 : Réduire les délais de livraison**
-**Pourquoi** : Corrélation la plus forte avec satisfaction (r=0.76)  
-**Impact estimé** : -10 jours délai → +15-20% notes 5 étoiles  
-**Métriques** : % commandes <7j, délai moyen par route, écart estimé/réel
+    ### **Priorité 2 : Améliorer catégories problématiques**
+    **Pourquoi** : 25% notes négatives = frein réputation globale  
+    **Impact estimé** : Retrait produits <3.5 → +5-8% satisfaction globale  
+    **Métriques** : Distribution notes par catégorie, % produits audités
 
-### **Priorité 2 : Améliorer catégories problématiques**
-**Pourquoi** : 25% notes négatives = frein réputation globale  
-**Impact estimé** : Retrait produits <3.5 → +5-8% satisfaction globale  
-**Métriques** : Distribution notes par catégorie, % produits audités
+    ### **Priorité 3 : Optimiser expérience première commande**
+    **Pourquoi** : 97% one-shot = une seule chance de bien faire  
+    **Impact estimé** : +10% notes 5 étoiles 1ère commande → +3-5% croissance organique  
+    **Métriques** : % 5 étoiles 1ère commande, taux recommandation, NPS
 
-### **Priorité 3 : Optimiser expérience première commande**
-**Pourquoi** : 97% one-shot = une seule chance de bien faire  
-**Impact estimé** : +10% notes 5 étoiles 1ère commande → +3-5% croissance organique  
-**Métriques** : % 5 étoiles 1ère commande, taux recommandation, NPS
+    ### **Priorité 4 : Expansion géographique ciblée**
+    **Pourquoi** : Sud sous-exploité (bons délais + faible pénétration)  
+    **Impact estimé** : Focus RS/PR/SC → +15-20% volume dans ces états  
+    **Métriques** : Volume par état, part de marché régionale, CAC régional
 
-### **Priorité 4 : Expansion géographique ciblée**
-**Pourquoi** : Sud sous-exploité (bons délais + faible pénétration)  
-**Impact estimé** : Focus RS/PR/SC → +15-20% volume dans ces états  
-**Métriques** : Volume par état, part de marché régionale, CAC régional
-
-### **Priorité 5 : Transparence et communication**
-**Pourquoi** : Gap attente/réalité explique 30-40% insatisfaction  
-**Impact estimé** : Délais affichés précis → -20% reviews négatives délai  
-**Métriques** : Écart délai annoncé/réel, mentions "retard" dans reviews
-    """)
+    ### **Priorité 5 : Transparence et communication**
+    **Pourquoi** : Gap attente/réalité explique 30-40% insatisfaction  
+    **Impact estimé** : Délais affichés précis → -20% reviews négatives délai  
+    **Métriques** : Écart délai annoncé/réel, mentions "retard" dans reviews
+        """)
 
 st.markdown("---")
 
