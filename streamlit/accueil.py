@@ -12,12 +12,8 @@ st.set_page_config(**styles.get_page_config())
 # Application du CSS personnalisé
 st.markdown(styles.get_custom_css(), unsafe_allow_html=True)
 
-# Navbar
-styles.render_navbar(st, current_page="resume")
-
-
 # Objectif du Dashboard
-with st.expander("Comprendre l'Écosystème Olist", expanded=True):
+with st.expander("Recommandations", expanded=False):
     st.markdown("""
     **Olist** est une plateforme B2B SaaS qui connecte les petits vendeurs brésiliens aux grandes marketplaces 
     (Amazon, Mercado Libre, etc.). Ce dashboard analyse les données transactionnelles de l'écosystème Olist 
