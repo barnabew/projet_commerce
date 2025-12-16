@@ -125,9 +125,7 @@ with chart_row1[1]:
         x="state",
         y="avg_delivery_days",
         title="États avec les Pires Délais de Livraison (Zones à Améliorer)",
-        labels={"state": "État", "avg_delivery_days": "Délai moyen (jours)"},
-        color="avg_delivery_days",
-        color_continuous_scale="Reds"
+        labels={"state": "État", "avg_delivery_days": "Délai moyen (jours)"}
     )
     apply_theme(fig_worst_states_delay)
     st.plotly_chart(fig_worst_states_delay, use_container_width=True)
@@ -135,22 +133,36 @@ with chart_row1[1]:
 chart_row2 = st.columns(2, gap="large")
 
 with chart_row2[0]:
-    # Pires catégories par satisfaction client (produits à améliorer)
-    df_categories_satisfaction = run_query(queries.QUERY_TOP_CATEGORIES_SATISFACTION)
-    df_worst_categories = df_categories_satisfaction.tail(10)  # Les 10 pires
+    # Catégories avec le plus de notes 1 étoile (problèmes critiques)
+    df_categories_1_star = run_query("""
+    SELECT 
+        COALESCE(tr.product_category_name_english, cp.product_category_name) AS category,
+        COUNT(r.review_id) AS nb_reviews,
+        ROUND(100.0 * SUM(CASE WHEN r.review_score = 1 THEN 1 ELSE 0 END) / COUNT(r.review_id), 1) AS pct_1_stars
+    FROM clean_reviews r
+    JOIN clean_orders o ON r.order_id = o.order_id
+    JOIN clean_order_items coi ON o.order_id = coi.order_id
+    JOIN clean_products cp ON coi.product_id = cp.product_id
+    LEFT JOIN product_category_name_translation tr 
+        ON cp.product_category_name = tr.product_category_name
+    WHERE o.order_status = 'delivered'
+      AND r.review_score = 1
+    GROUP BY category
+    HAVING nb_reviews > 20
+    ORDER BY pct_1_stars DESC
+    LIMIT 10;
+    """)
     
-    fig_worst_categories_satisfaction = px.bar(
-        df_worst_categories,
-        x="pct_5_stars",
+    fig_worst_categories_1_star = px.bar(
+        df_categories_1_star,
+        x="pct_1_stars",
         y="category",
         orientation="h",
-        title="Pires Catégories - Satisfaction Client (Produits à Améliorer)",
-        labels={"pct_5_stars": "% Notes 5 étoiles", "category": "Catégorie"},
-        color="pct_5_stars",
-        color_continuous_scale="Reds"
+        title="Catégories avec le Plus de Notes 1 Étoile (Problèmes Critiques)",
+        labels={"pct_1_stars": "% Notes 1 étoile", "category": "Catégorie"}
     )
-    apply_theme(fig_worst_categories_satisfaction)
-    st.plotly_chart(fig_worst_categories_satisfaction, use_container_width=True)
+    apply_theme(fig_worst_categories_1_star)
+    st.plotly_chart(fig_worst_categories_1_star, use_container_width=True)
 
 with chart_row2[1]:
     # Distribution des délais de livraison
